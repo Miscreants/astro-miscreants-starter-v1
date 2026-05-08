@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "astro-miscreants-starter",
+  // No `main` — @astrojs/cloudflare v13 supplies the Worker entry via its
+  // Vite plugin. Setting it would fail dev-time checks before the build runs.
+  "compatibility_date": "2026-04-04",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": "./dist", "binding": "ASSETS" },
+  "observability": { "enabled": true },
+
+  // Cloudflare's native send_email binding. Requires:
+  //   1. The sending zone (the domain in FROM_EMAIL below) to be on Cloudflare
+  //      with Email Routing enabled.
+  //   2. The destination_address below to be verified in Email Routing's
+  //      "Destination addresses" list.
+  // See Doc/contact-form-cloudflare-email.md for the full setup checklist.
+  "send_email": [
+    {
+      "name": "NOTIFY_EMAIL",
+      "destination_address": "jarsson@gmail.com"
+    }
+  ],
+
+  // Sender identity. FROM_EMAIL must be on the Cloudflare-managed zone whose
+  // Email Routing has the destination above verified.
+  "vars": {
+    "FROM_EMAIL": "noreply@yourdomain.tld",
+    "FROM_NAME": "Miscreants Starter",
+    "NOTIFY_TO": "jarsson@gmail.com"
+  }
+}
