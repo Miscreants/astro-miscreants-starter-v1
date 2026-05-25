@@ -89,7 +89,7 @@ const dropdowns = links.filter(
 {/* Root element — `data-nav-morph` is the JS init hook. Fixed to the top across all breakpoints. */}
 <header
   data-nav-morph
-  class="section-grid-outside fixed inset-x-0 top-0 z-50 transition-all duration-300"
+  class="container-page fixed inset-x-0 top-0 z-50 transition-all duration-300"
 >
   {/* Optional announcement bar slot (rendered above the nav bar by the parent layout). */}
   <slot name="announcement" />
@@ -97,7 +97,7 @@ const dropdowns = links.filter(
   {/* The nav bar itself. `data-nav-bar` toggles the .is-scrolled style once the page scrolls > 12px. */}
   <div
     data-nav-bar
-    class="col-start-3 px-4 relative flex h-14 items-center justify-between border border-stroke bg-canvas/0 transition-all duration-300"
+    class="px-4 relative flex h-14 items-center justify-between border border-stroke bg-canvas/0 transition-all duration-300"
   >
     {/* Decorative corner accents — invisible until the bar is scrolled. */}
     <div data-accent="tl"></div><div data-accent="tr"></div>
@@ -260,7 +260,7 @@ const dropdowns = links.filter(
   <div
     id="nav-morph-mobile-panel"
     data-nav-morph-mobile
-    class="col-span-full md:hidden mt-2 hidden overflow-hidden px-4"
+    class="md:hidden mt-2 hidden overflow-hidden"
   >
     <div class="border border-stroke bg-panel p-4 shadow-popover">
       <nav class="flex flex-col gap-1 text-sm" aria-label="Mobile primary">

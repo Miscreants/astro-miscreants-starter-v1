@@ -80,13 +80,13 @@ const megaLinks = links.filter(
 
 <header
   data-nav
-  class="section-grid-outside fixed inset-x-0 top-0 z-50 transition-all duration-300"
+  class="container-page fixed inset-x-0 top-0 z-50 transition-all duration-300"
 >
   <slot name="announcement" />
 
   <div
     data-nav-bar
-    class="col-span-full relative md:col-span-1 md:col-start-3 flex h-14 items-center justify-between border border-stroke bg-panel/0 transition-all duration-300"
+    class="relative flex h-14 items-center justify-between border border-stroke bg-panel/0 transition-all duration-300"
   >
     <div data-accent="tl"></div><div data-accent="tr"></div>
     <div data-accent="bl"></div><div data-accent="br"></div>
@@ -197,7 +197,7 @@ const megaLinks = links.filter(
         data-nav-mega
         role="region"
         aria-label={`${link.label} menu`}
-        class="col-span-full md:col-span-1 md:col-start-3 hidden pt-2"
+        class="hidden pt-2"
       >
         <div class="border border-stroke bg-panel p-8 shadow-popover">
           <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -233,7 +233,7 @@ const megaLinks = links.filter(
     id="nav-mobile-panel"
     data-nav-panel
     data-nav-mobile
-    class="col-span-full md:hidden mt-2 hidden overflow-hidden px-4"
+    class="md:hidden mt-2 hidden overflow-hidden"
   >
     <div class=" border border-stroke bg-panel p-4 shadow-popover">
       <nav class="flex flex-col gap-1 text-sm" aria-label="Mobile primary">

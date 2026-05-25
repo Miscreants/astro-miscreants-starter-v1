@@ -70,22 +70,22 @@ const {
 } = Astro.props;
 ---
 
-{/* Footer root — `section-grid-outside` keeps it aligned with every other
-    section on the page; the side columns render the same edge pattern. */}
+{/* Footer root — `container-page` keeps it aligned with every other boxed
+    component (Nav, SectionMain). */}
 <footer
   id="site-footer"
-  class:list={[
-    "section-grid-outside",
-    borderTop && "border-t border-stroke",
-    borderBottom && "border-b border-stroke",
-  ]}
+  class="container-page"
   aria-labelledby="footer-heading"
 >
   <h2 id="footer-heading" class="sr-only">Footer</h2>
 
-  <div class="section-pattern relative col-start-2 border-x border-stroke" aria-hidden="true"></div>
-
-  <div class="col-start-3 flex flex-col px-6 section-pt-md section-pb-md">
+  <div
+    class:list={[
+      "flex flex-col px-6 section-pt-md section-pb-md",
+      borderTop && "border-t border-l border-r border-stroke",
+      borderBottom && "border-b border-stroke",
+    ]}
+  >
     {/* Top region: brand column + link columns. */}
     <div class="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-8">
       {/* Brand column — logo, tagline, social icons. */}
@@ -159,6 +159,4 @@ const {
       )}
     </div>
   </div>
-
-  <div class="section-pattern col-start-4 border-x border-stroke" aria-hidden="true"></div>
 </footer>

@@ -62,7 +62,7 @@ interface Props {
 }
 
 const {
-  items,
+  items = [],
   // Don't add `h-full` here — the slider track uses `items-stretch`, which
   // equalizes heights to the tallest card. `height: 100%` on a flex item with
   // an indefinite parent height resolves to auto and overrides stretch.

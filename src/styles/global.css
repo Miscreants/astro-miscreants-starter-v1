@@ -37,6 +37,12 @@
 
   --container-7xl: 90rem;
 
+  /* Page-edge breathing room. Auto-generates `px-site-margin`, `mx-site-margin`
+     (and `-mx-site-margin` to bleed past it). Used by `container-page` so the
+     centered page box never touches the viewport on small screens — this
+     replaces the gutter columns the old `section-grid-outside` grid provided. */
+  --spacing-site-margin: clamp(1rem, 1vw, 2rem);
+
   /* Fluid-type anchor points (unitless rem values).
      Type interpolates linearly from MIN at 20rem → MAX at 90rem of the
      nearest query container. Keep unitless so the math works in calc(). */
@@ -458,9 +464,14 @@
 @utility section-pb-md { @apply pb-24 md:pb-32; }
 @utility section-pb-lg { @apply pb-32 md:pb-48; }
 @utility section-pb-xl { @apply pb-48 md:pb-64; }
+/* DISABLED — the 5-column "pattern on the sides" grid. Kept for reference but
+   no longer applied anywhere; sections/nav/footer now center via `container-page`
+   instead. The middle column was the 90rem content area; columns 2 & 4 were the
+   1rem/2.5rem gutters that hosted the decorative `section-pattern` stripes.
 @utility section-grid-outside {
   @apply grid grid-cols-[1fr_1rem_minmax(0,90rem)_1rem_1fr] md:grid-cols-[1fr_2.5rem_minmax(0,90rem)_2.5rem_1fr];
 }
+*/
 
 
 
@@ -470,10 +481,11 @@
   z-index: 2;
 }
 
-/* Matches col 3 of section-grid-outside (the 90rem content column)
-   so fixed elements like the nav align with section content edges. */
+/* The page box: a centered 90rem content cap with `site-margin` edge padding.
+   Every top-level boxed element (SectionMain, Nav, Footer) uses this so they
+   line up with each other. Replaces the old `section-grid-outside` centering. */
 @utility container-page {
-  @apply mx-auto w-full max-w-[90rem];
+  @apply mx-auto w-full max-w-[90rem] px-site-margin;
 }
 
 @utility animate-marquee {

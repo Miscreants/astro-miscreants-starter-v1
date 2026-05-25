@@ -36,17 +36,15 @@ const pbClass = {
 
 const contentPaddingClass = {
   none: "px-0",
-  default: "px-6",
+  default: "px-2 md:px-6",
 }[contentPadding];
 ---
 
 <section
   {...rest}
-  class:list={["section-grid-outside", borderTop && "border-t border-stroke", className]}
+  class:list={["container-page", className]}
 >
-  <div class="section-pattern relative col-start-2 border-x border-stroke" aria-hidden="true"></div>
-  <div class:list={[ptClass, pbClass, "col-start-3 flex flex-col relative", contentPaddingClass, contentClass]}>
+  <div class:list={[ptClass, pbClass, "flex flex-col relative", borderTop && "border-t border-stroke", contentPaddingClass, contentClass]}>
     <slot />
   </div>
-  <div class="section-pattern col-start-4 border-x border-stroke" aria-hidden="true"></div>
 </section>
