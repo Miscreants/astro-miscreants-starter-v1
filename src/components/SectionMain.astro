@@ -44,7 +44,7 @@ const contentPaddingClass = {
   {...rest}
   class:list={["container-page", className]}
 >
-  <div class:list={[ptClass, pbClass, "flex flex-col relative", borderTop && "border-t border-stroke", contentPaddingClass, contentClass]}>
+  <div class:list={[ptClass, pbClass, "flex flex-col relative border-l border-r border-stroke", borderTop && "border-t border-stroke", contentPaddingClass, contentClass]}>
     <slot />
   </div>
 </section>
