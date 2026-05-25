@@ -4,10 +4,11 @@ import Form from "../components/Form.astro";
 import Field from "../components/Field.astro";
 import Button from "../components/Button.astro";
 import SectionMain from "../components/SectionMain.astro";
-// Astro mounts every action at `/_actions/<name>`. The existing <Form>
-// component takes a string URL, so we pass that path directly. The `contact`
-// action is defined in src/actions/index.ts.
-const contactUrl = "/_actions/contact";
+// The form POSTs to a Cloudflare Pages Function (functions/api/contact.ts),
+// which runs server-side next to the static assets — no Astro adapter, so the
+// site keeps build-time image optimization. (Email isn't wired up yet; the
+// function validates + returns success. See that file to connect email.)
+const contactUrl = "/api/contact";
 ---
 
 <Layout title="Contact">
