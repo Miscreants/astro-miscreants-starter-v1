@@ -4,7 +4,7 @@
   "compatibility_date": "2026-04-04",
   // Pure static site (no adapter): the build emits the whole tree to dist/.
   // No `main` worker — Cloudflare just serves the static assets.
-  "assets": { "directory": "./dist", "binding": "ASSETS" },
+  "assets": { "directory": "./dist" },
   "observability": { "enabled": true }
 
   // NOTE: the contact-form email path is disabled for now. To re-enable it you
