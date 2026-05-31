@@ -20,6 +20,8 @@
 //
 // You can still drop manual children inside (they render after the mapped items).
 
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 import SliderBasic from "./SliderBasic.astro";
 import CardFeatured from "./CardFeatured.astro";
 
@@ -30,7 +32,7 @@ type SlideItem = {
   description?: string;
   eyebrow?: string;
   href?: string;
-  imageSrc?: string;
+  imageSrc?: string | ImageMetadata;
   imageAlt?: string;
   // Optional per-item overrides — useful when one slide needs a different
   // heading size from the rest.
@@ -84,14 +86,24 @@ const {
       titleTag={item.titleTag ?? titleTag}
     >
       {item.eyebrow && <span slot="eyebrow">{item.eyebrow}</span>}
-      {item.imageSrc && (
-        <img
-          slot="media"
-          src={item.imageSrc}
-          alt={item.imageAlt ?? ""}
-          class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%"
-        />
-      )}
+      {item.imageSrc && (typeof item.imageSrc === "string"
+        ? (
+          <img
+            slot="media"
+            src={item.imageSrc}
+            alt={item.imageAlt ?? ""}
+            class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%"
+          />
+        ) : (
+          <Image
+            slot="media"
+            src={item.imageSrc}
+            alt={item.imageAlt ?? ""}
+            class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%"
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
     </CardFeatured>
   ))}
   {/* Pass-through slot — manually placed slides render alongside mapped items. */}

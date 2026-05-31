@@ -12,11 +12,15 @@
 //   - If a `[data-media-toggle]` element is slotted, it is the click target.
 //   - Otherwise the wrapper itself becomes the button (role, keyboard, focus).
 
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
 interface Props {
   /** Video URL. Loaded lazily on first activation. */
   src: string;
-  /** Poster image URL shown until the video plays. */
-  poster?: string;
+  /** Poster image shown until the video plays — an imported asset (optimized
+   *  via astro:assets) or a URL string. */
+  poster?: string | ImageMetadata;
   /** Alt text for the poster image. Empty = decorative. */
   alt?: string;
   /** Activation mode. */
@@ -81,16 +85,26 @@ const aspectStyle = aspect === "auto" ? undefined : `--media-aspect: ${aspect};`
   aria-pressed={wrapperIsButton ? "false" : undefined}
   aria-label={wrapperIsButton ? (ariaLabel ?? "Play video") : undefined}
 >
-  {poster && (
-    <img
-      data-media="poster"
-      class="media__poster"
-      src={poster}
-      alt={alt}
-      loading="lazy"
-      decoding="async"
-    />
-  )}
+  {poster && (typeof poster === "string"
+    ? (
+      <img
+        data-media="poster"
+        class="media__poster"
+        src={poster}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <Image
+        data-media="poster"
+        class="media__poster"
+        src={poster}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+      />
+    ))}
   <video
     data-media="video"
     data-media-src={src}

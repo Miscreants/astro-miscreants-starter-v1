@@ -8,18 +8,37 @@ import "../styles/global.css";
 import { getCollection, render } from "astro:content";
 import Nav from "../components/NavMorph.astro";
 import AnnouncementBanner from "../components/AnnouncementBanner.astro";
+import Seo from "../components/Seo.astro";
 interface Props {
   title?: string;
+  /** Meta description for SEO + social cards. */
+  description?: string;
+  /** Social share image (root-relative or absolute). */
+  image?: string;
+  /** og:type — "article" for posts. */
+  ogType?: "website" | "article";
+  /** Ask crawlers not to index this page. */
+  noindex?: boolean;
+  /** JSON-LD structured data graph(s). See src/lib/schema.ts. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   /** Theme attribute applied at the document root — flips tokens for the whole page (nav included). */
   theme?: "light" | "dark" | "brand";
   /** Frontmatter object, present when this layout is used from a Markdown/MDX page. */
-  frontmatter?: { title?: string; theme?: "light" | "dark" | "brand" };
+  frontmatter?: { title?: string; theme?: "light" | "dark" | "brand"; description?: string };
 }
 
 // MDX/Markdown pages with `layout:` pass their frontmatter under `frontmatter`,
 // while `.astro` pages pass props flat. Fall back so both work.
 const fm = Astro.props.frontmatter ?? {};
-const { title = fm.title ?? "Astro Playground", theme = fm.theme ?? "light" } = Astro.props;
+const {
+  title = fm.title ?? "Astro Playground",
+  description = fm.description,
+  image,
+  ogType,
+  noindex,
+  jsonLd,
+  theme = fm.theme ?? "light",
+} = Astro.props;
 const gtagId = import.meta.env.PUBLIC_GTAG_ID;
 
 // Pick the currently-active announcement, if any.
@@ -48,10 +67,9 @@ const AnnouncementContent = announcement
 <html lang="en" data-theme={theme}>
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <Seo title={title} description={description} ogType={ogType} image={image} noindex={noindex} jsonLd={jsonLd} />
 
     {gtagId && (
       <>

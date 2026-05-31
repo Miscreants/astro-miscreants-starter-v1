@@ -9,12 +9,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "typecheck": "astro sync && tsc --noEmit",
+    "check": "npm run typecheck && astro build",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.5.0",
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/partytown": "^2.1.6",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/archivo": "^5.2.8",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.5",

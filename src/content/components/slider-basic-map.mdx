@@ -59,7 +59,7 @@ type SlideItem = {
   description?: string;
   eyebrow?: string;
   href?: string;
-  imageSrc?: string;
+  imageSrc?: string | ImageMetadata;  // imported asset (optimized) or URL string
   imageAlt?: string;
   // Optional per-item overrides — useful when one slide needs a different
   // heading size from the rest.
@@ -106,7 +106,7 @@ const items = posts.map((p) => ({
   title: p.data.title,
   description: p.data.excerpt,
   eyebrow: p.data.category,
-  imageSrc: p.data.cover?.src,
+  imageSrc: p.data.cover, // pass the ImageMetadata (schema uses image()) so it's optimized — not .src
   imageAlt: p.data.title,
 }));
 ---

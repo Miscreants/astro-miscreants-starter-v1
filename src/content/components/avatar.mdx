@@ -71,7 +71,7 @@ Compact author block — avatar circle (image or initials) plus an optional name
 
 <PropsTable props={[
   { name: "name", type: "string", description: "Person's full name. Required — drives initials, alt text, and the accessible label when `hideLabel` is set." },
-  { name: "src", type: "string", description: "Image URL. If omitted, or if the image fails to load, initials are shown instead." },
+  { name: "src", type: "string | ImageMetadata", description: "Avatar image — an imported astro:assets asset (optimized) or a URL string (CMS/remote). If omitted, or if it fails to load, initials are shown instead." },
   { name: "alt", type: "string", description: "Image alt text. Defaults to `name`. Set to an empty string when a sibling label already announces the person." },
   { name: "position", type: "string", description: "Sub-label rendered under the name (job title, team, role)." },
   { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Avatar diameter. Label font size scales with the avatar size." },

@@ -1,0 +1,8 @@
+# robots.txt — update the Sitemap domain to match `site` in astro.config.mjs.
+# STAGING/PREVIEW: replace the rule below with  "User-agent: *\nDisallow: /"
+# so the staging deploy is never indexed.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://example.com/sitemap-index.xml

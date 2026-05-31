@@ -87,6 +87,8 @@ All three slots use `Astro.slots.has(...)` at build time, so nothing renders (an
 ---
 import CardFeatured from "@components/CardFeatured.astro";
 import Button from "@components/Button.astro";
+import { Image } from "astro:assets";
+import screenshot from "@images/feature-1.webp";
 ---
 
 <CardFeatured
@@ -95,7 +97,9 @@ import Button from "@components/Button.astro";
   border="all"
 >
   <span slot="eyebrow">Schema Builder</span>
-  <img slot="media" src="/screenshot.png" alt="Schema builder interface" />
+  {/* media slot takes any markup; prefer <Image> from astro:assets for
+      raster screenshots so the build emits an optimized, sized /_astro/* file */}
+  <Image slot="media" src={screenshot} alt="Schema builder interface" loading="lazy" decoding="async" />
 </CardFeatured>
 
 <CardFeatured title="Build faster with our REST API." description="..." border="y" titleTag="h2">

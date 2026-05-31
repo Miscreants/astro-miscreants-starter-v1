@@ -6,6 +6,7 @@ import ButtonGroup from "../components/ButtonGroup.astro";
 import SectionMain from "../components/SectionMain.astro";
 import CardFeatured from "../components/CardFeatured.astro";
 import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
 import featureOne from "../images/feature-1.webp";
 import CardIcon from "../components/CardIcon.astro";
 import Tabs from "../components/Tabs.astro";
@@ -67,7 +68,7 @@ const faqs = (await getCollection("faq"))
             >
               <span slot="eyebrow">Schema Builder</span>
               <Icon slot="icon" name="lucide:layers" class="w-6 h-6 text-fg-muted" aria-hidden="true" />
-              <img slot="media" src={featureOne.src} alt="Schema builder screenshot" class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%" />
+              <Image slot="media" src={featureOne} alt="Schema builder screenshot" class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%" loading="lazy" decoding="async" />
             </CardFeatured>
             <CardFeatured
               border="none"
@@ -77,7 +78,7 @@ const faqs = (await getCollection("faq"))
             >
               <span slot="eyebrow">Schema Builder</span>
               <Icon slot="icon" name="lucide:database" class="w-6 h-6 text-fg-muted" aria-hidden="true" />
-              <img slot="media" src={featureOne.src} alt="Schema builder screenshot" class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%" />
+              <Image slot="media" src={featureOne} alt="Schema builder screenshot" class="w-full h-auto mt-4 mask-b-from-30% mask-b-to-95%" loading="lazy" decoding="async" />
             </CardFeatured>
             <CardFeatured
               border="none"
@@ -285,7 +286,7 @@ const faqs = (await getCollection("faq"))
             <p class="mt-4 text-fg-muted max-w-prose">
               Every change syncs instantly across teammates. Cursors, selections, and comments stay in lockstep so reviews happen in the document, not in a separate thread.
             </p>
-            <img src={featureOne.src} alt="Workflow screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" />
+            <Image src={featureOne} alt="Workflow screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" loading="lazy" decoding="async" />
           </article>
 
           <article id="spy-lifecycle">
@@ -294,7 +295,7 @@ const faqs = (await getCollection("faq"))
             <p class="mt-4 text-fg-muted max-w-prose">
               Track every dataset through versioning, review, and approval. Audit trails are immutable; reverting is one click; nothing falls through the cracks.
             </p>
-            <img src={featureOne.src} alt="Lifecycle screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" />
+            <Image src={featureOne} alt="Lifecycle screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" loading="lazy" decoding="async" />
           </article>
 
           <article id="spy-schema">
@@ -303,7 +304,7 @@ const faqs = (await getCollection("faq"))
             <p class="mt-4 text-fg-muted max-w-prose">
               Define schemas with the same primitives as your codebase. Strong typing flows through forms, validation, and the public API — no runtime surprises.
             </p>
-            <img src={featureOne.src} alt="Schema screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" />
+            <Image src={featureOne} alt="Schema screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" loading="lazy" decoding="async" />
           </article>
 
           <article id="spy-perf">
@@ -312,7 +313,7 @@ const faqs = (await getCollection("faq"))
             <p class="mt-4 text-fg-muted max-w-prose">
               Hundreds of millions of daily fetches, sub-50ms p95s in every region. Performance isn't an upgrade tier — it's the baseline.
             </p>
-            <img src={featureOne.src} alt="Performance screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" />
+            <Image src={featureOne} alt="Performance screenshot" class="mt-6 w-full mask-b-from-30% mask-b-to-95%" loading="lazy" decoding="async" />
           </article>
         </FeatureScrollSpy>
       </SectionMain>
@@ -480,8 +481,7 @@ const faqs = (await getCollection("faq"))
         </FlowSteps>
       </SectionMain>
 
-
-
     </main>
     <Footer borderTop={true} />
-  </Layout>
+  </Layout> 
+  

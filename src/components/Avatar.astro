@@ -8,11 +8,15 @@
 //   <Avatar name="Sam Lee" />              {/* initials only */}
 //   <Avatar name="Sam Lee" hideLabel />    {/* avatar circle only, name still wired for a11y */}
 
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
 interface Props {
   /** Person's full name. Required — drives initials, alt text, and aria-label. */
   name: string;
-  /** Image URL. If omitted (or load fails) initials are shown instead. */
-  src?: string;
+  /** Avatar image — an imported asset (optimized via astro:assets) or a URL
+   *  string (CMS/remote). If omitted (or load fails) initials are shown instead. */
+  src?: string | ImageMetadata;
   /** Image alt text. Defaults to `name`. Set to "" only if a sibling label
    *  already names the person (avoids duplicate announcement). */
   alt?: string;
@@ -42,6 +46,10 @@ const {
   class: className,
 } = Astro.props;
 
+// Alt text: explicit `alt` wins; else the name when the label is hidden,
+// otherwise empty (a visible sibling label already names the person).
+const imgAlt = alt ?? (hideLabel ? name : "");
+
 const initials = (() => {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return "?";
@@ -69,15 +77,24 @@ const statusLabels: Record<NonNullable<Props["status"]>, string> = {
     aria-label={hideLabel ? name : undefined}
   >
     <span data-avatar-initials aria-hidden="true">{initials}</span>
-    {src && (
-      <img
-        data-avatar-img
-        src={src}
-        alt={alt ?? (hideLabel ? name : "")}
-        loading="lazy"
-        decoding="async"
-      />
-    )}
+    {src && (typeof src === "string"
+      ? (
+        <img
+          data-avatar-img
+          src={src}
+          alt={imgAlt}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <Image
+          data-avatar-img
+          src={src}
+          alt={imgAlt}
+          loading="lazy"
+          decoding="async"
+        />
+      ))}
     {status && (
       <span
         data-avatar-status={status}

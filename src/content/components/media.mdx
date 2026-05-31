@@ -61,7 +61,7 @@ State is exposed via `data-media-status` (`not-active` | `loading` | `playing` |
 
 <PropsTable props={[
   { name: "src", type: "string", required: true, description: "Video URL. Loaded lazily on first activation, never up-front." },
-  { name: "poster", type: "string", description: "Poster image URL shown until the video plays. Strongly recommended." },
+  { name: "poster", type: "string | ImageMetadata", description: "Poster shown until the video plays — an imported astro:assets asset (optimized) or a URL string. Strongly recommended." },
   { name: "alt", type: "string", default: '""', description: "Alt text for the poster. Empty = decorative (sets aria-hidden on the <video>)." },
   { name: "mode", type: '"autoplay" | "hover" | "click"', default: '"autoplay"', description: "How the video starts." },
   { name: "touchMode", type: '"autoplay" | "click"', description: "Fallback mode on no-hover devices. Default: hover→autoplay, others unchanged." },
@@ -192,5 +192,5 @@ On `(hover: hover) and (pointer: fine)` = false, the resolved mode follows `touc
 
 - **No web/mp4 fallback array.** If you need multi-format sources, replace the inner `<video>` with `<source>` children — the lazy-load logic uses `video.src` so you'd need to adapt that, but the rest of the script works unchanged.
 - **No native `controls`.** Intentional — the component is for ambient/marketing video, not a player. Wrap a real `<video controls>` if that's what you need.
-- **Poster is a plain URL string**, not an `astro:assets` `ImageMetadata`. Run your asset through `astro:assets` and pass `.src` if you want optimization.
+- **Poster accepts an imported asset _or_ a URL string.** Pass an `astro:assets` import (`import poster from "@images/poster.webp"`) and it's optimized through `<Image>`; pass a string (CMS/remote) and it renders a plain `<img>`. See the **Image & Picture** doc.
 - **`muted` is hardcoded.** Browsers block sound autoplay anyway; if you genuinely need sound, switch to click mode and remove the attribute on the rendered `<video>`.
