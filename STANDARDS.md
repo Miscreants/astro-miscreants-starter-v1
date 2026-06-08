@@ -203,7 +203,7 @@ When bumping a major (Astro, Tailwind), bump the **starter first**, validate, th
 
 ### 3.8 Repo as an agent platform (`CLAUDE.md`)
 
-The client builds pages with an AI agent, so the repo must **brief that agent** — the docs are part of the deliverable (§1, principle 6). Every client repo ships a root **`CLAUDE.md`** (and/or `AGENTS.md`) that:
+The client builds pages with an AI agent, so the repo must **brief that agent** — the docs are part of the deliverable (§1, principle 10). Every client repo ships a root **`CLAUDE.md`** (and/or `AGENTS.md`) that:
 - points to `DESIGN.md` (tokens/brand) and `STANDARDS.md` as **authoritative**;
 - states the non-negotiables once: semantic tokens only, accessibility required, **pages compose sections** (§5.0), `astro:assets` for images, gate animated canvases (§10.5);
 - gives a **"how to add a page" recipe**: create `src/pages/<route>.astro` → wrap in `Layout` with `title`/`description`/`jsonLd` → compose existing sections → add new `Section*` components for new chunks → `npm run check`;
@@ -499,7 +499,7 @@ const { label = "Learn More", variant = "primary", arrowDirection = "right" } = 
 
 ### 5.8 Documentation & not modifying shared components
 
-- Every reusable component ships with a header comment (purpose, key props, gotcha) and a `Doc/<Component>.md` entry (migrating to `content/components/*.mdx` for the live showcase).
+- Every reusable component ships with a header comment (purpose, key props, gotcha) and a docs entry in `components/_docs/` for now. The target home for live showcase docs is `content/components/*.mdx`.
 - **Don't modify a shared component for a one-off page need.** Add a prop or build a page-local wrapper. If a shared primitive genuinely must change, that's a deliberate, reviewed change — ask first, don't drive-by edit.
 
 ### 5.9 Prop & event naming
@@ -586,7 +586,7 @@ const uid = `cmp-${Math.random().toString(36).slice(2, 9)}`;
 </style>
 
 <script>
-  function init() {
+  function initComponent() {
     document.querySelectorAll("[data-component]").forEach((el) => {
       const node = el as HTMLElement;
       if (node.dataset.scriptInitialized) return;   // standardized flag name
@@ -594,8 +594,8 @@ const uid = `cmp-${Math.random().toString(36).slice(2, 9)}`;
       // wire interactions here
     });
   }
-  init();
-  document.addEventListener("astro:page-load", init);
+  initComponent();
+  document.addEventListener("astro:page-load", initComponent);
 </script>
 ```
 
@@ -769,7 +769,7 @@ Wrap every animation in `@media (prefers-reduced-motion: reduce)`, **and** gate 
 ## 10. Performance & build optimization
 
 ### 10.1 Images — use `astro:assets`
-- **Import from `src/images/` and render with `<Image>`/`<Picture>` from `astro:assets`.** Build emits optimized `dist/_astro/*.webp`. This is the standard — don't reference raw `/public` paths for content images. Pass the *imported asset* (`src={img}`), not `img.src` — the latter is just a URL string and skips optimization + dimension inference. Reference usage: `src/pages/index.astro` (and ghost-build's hero `<Picture>` for the multi-format above-the-fold case). Works on Cloudflare with **no** adapter — Sharp runs at build and CF serves the static output.
+- **Import from `src/images/` and render with `<Image>`/`<Picture>` from `astro:assets`.** Build emits optimized `dist/_astro/*.webp`. This is the standard — don't reference raw `/public` paths for content images.
 - Put only un-optimized assets (favicons, OG/social images) in `public/`.
 - Always set `width`/`height` (or let `<Image>` infer) to prevent CLS. `loading="lazy" decoding="async"` below the fold.
 - **Don't lazy-load the LCP image.** The hero / above-the-fold image gets `loading="eager"` + `fetchpriority="high"`; lazy-loading the LCP element delays it and directly tanks the LCP metric. Only below-the-fold images use `lazy`.
@@ -878,6 +878,7 @@ An animated `<canvas>` (WebGL or 2D) driven by a `requestAnimationFrame` loop is
 Phase numbers map to §2.
 
 **1. Scaffold**
+
 1. Copy `astro-miscreants-starter-v1` → `<client>-build`. Reset git history.
 2. Update `package.json` `name`, README, and add the §3.5 scripts.
 3. Set `site` in `astro.config.mjs` (`inlineStylesheets: 'always'` is already on).
@@ -887,25 +888,30 @@ Phase numbers map to §2.
 7. Demo/showcase routes are already dev-only (`src/demos/` + `demoRoutes()`), so they don't ship to production — no stripping needed. Keep them for the client's local reference. Update `SITEMAP_EXCLUDE` only if you add new internal routes.
 
 **2. Design-system intake**
+
 8. Fill every `--color-*` role in `global.css` `@theme`. Add brand-named accents separately; map `--color-intent` to the primary.
 9. Decide default theme + which `[data-theme]` overrides exist; register `@custom-variant`s.
 10. Set per-client decisions (§4.2): radius stance, shadows, accents.
 11. Wire fonts via `@fontsource-variable/*`; set `--font-heading/-sans/-mono`. Tune the fluid type clamps. Rewrite `DESIGN.md`.
 
 **3. Componentize**
+
 12. Build pages from starter primitives; keep `components/` flat. New components → §6 template + §11.1.
 13. **Keep the full starter component set** — don't delete unused components (they're agent fuel and reuse fodder; §1, principle 10). Production stays lean via route gating and tree-shaking, not by stripping the repo. Remove only deprecated, broken, or project-harmful code.
 
 **4. Content & SEO**
+
 14. Define collections in `content.config.ts` (lean; `reference()` taxonomies; `image()` for hero images).
 15. Author `lib/schema.ts` graphs (homepage Organization/WebSite + per-template builders); pass `jsonLd` from pages.
 16. Set per-page `title`/`description`/`image`/`noindex`. Extend the sitemap filter.
 
 **5. Optimize & QA**
+
 17. Import images via `astro:assets`; run Lighthouse to §10.7.
 18. Run §11.2 / §11.3.
 
 **6. Launch**
+
 19. Run §11.4. Deploy to CF Pages. Verify production. Hand off.
 
 ---
@@ -920,7 +926,7 @@ Phase numbers map to §2.
 ### 13.2 Linting (to add)
 `eslint` + `eslint-plugin-astro` + `@typescript-eslint`. Custom rules worth enforcing:
 - ban raw hex/rgba **and raw Tailwind neutral classes** (`text-gray-*`, `bg-zinc-*`) in components
-- require `interface Props` (flag `type Props =` except documented native-attribute cases)
+- require `interface Props`; flag `type Props =` except temporary allowlisted legacy components until normalized
 - flag bare global selectors in `is:global` blocks (require a `[data-*]` namespace)
 
 ### 13.3 Formatting (to add)
@@ -960,7 +966,6 @@ Concrete follow-up work, prioritized.
 - ✅ `typecheck` + `check` scripts (§3.5); fixed deprecated `baseUrl` in tsconfig.
 - ✅ Expanded `CLAUDE.md` agent brief (§3.8); `AGENTS.md` now points to it (no more duplicate).
 - ✅ Host files scaffolded: `public/_headers` (immutable cache + security), `public/_redirects` (migration template), `public/robots.txt`, `src/pages/404.astro`.
-- ✅ Demo image usage converted to `astro:assets` `<Image>` (homepage `index.astro`) as the reference pattern — adapter-free static build runs Sharp and emits optimized, hashed `/_astro/*` with intrinsic `width`/`height` (§10.1).
 
 ### P1 — codify + highest-value additions
 1. Stand up linting (§13.2) with the three custom rules; run inside `check`.
@@ -968,14 +973,11 @@ Concrete follow-up work, prioritized.
 3. Add a minimal CI workflow: `check` + eslint on PR (§13.4).
 
 ### P2 — consistency cleanups
-7. Work through §14.
+1. Work through §14.
 
 ### P3 — roadmap
-8. Turn the starter into a GitHub **template repository** once a second build validates it.
-9. Build the in-repo component showcase (`/components` + MDX live previews).
-10. Evaluate a shadcn-style CLI registry after 4–5 projects (`npx <our-cli> add <component>`).
-11. Lighthouse CI budgets (§13.4) and `axe-core` in CI (§13.5).
-12. Cookie-consent gating for marketing tags as a reusable component (§10.4).
+1. Lighthouse CI budgets (§13.4) and `axe-core` in CI (§13.5).
+2. Cookie-consent gating for marketing tags as a reusable component (§10.4).
 
 ---
 
