@@ -215,7 +215,7 @@ const dropdowns = links.filter(
                 {link.items.map((item) => (
                   <a
                     href={item.href}
-                    class="block px-3 py-2 text-fg-muted transition hover:bg-panel-muted hover:text-fg focus-visible:bg-panel-muted focus-visible:text-fg outline-none"
+                    class="block px-3 py-2 text-body-md text-fg transition hover:bg-panel-muted focus-visible:bg-panel-muted outline-none"
                   >
                     {item.label}
                   </a>
@@ -237,9 +237,9 @@ const dropdowns = links.filter(
                             href={item.href}
                             class="block px-3 py-2 transition hover:bg-panel-muted focus-visible:bg-panel-muted outline-none"
                           >
-                            <div class="text-sm text-fg">{item.label}</div>
+                            <div class="text-body-md text-fg">{item.label}</div>
                             {item.description && (
-                              <div class="text-xs text-fg-muted">{item.description}</div>
+                              <div class="text-body-sm text-fg-muted">{item.description}</div>
                             )}
                           </a>
                         </li>
