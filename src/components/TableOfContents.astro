@@ -204,48 +204,48 @@ const filtered = (headings ?? []).filter(
       currentSlug = slug;
     };
 
-    // Track headings that are in (or above) the viewport. The "active" one
-    // is the lowest one on the page that has crossed the top reading line.
-    const visible = new Map<string, IntersectionObserverEntry>();
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) visible.set(e.target.id, e);
-          else visible.delete(e.target.id);
-        });
+    // Only track headings that have a matching TOC link — ignore stray
+    // headings inside `main` (e.g. a "Keep reading" section) that aren't listed.
+    const onlyHeadings = headings.filter((h) => h.id && linkBySlug.has(h.id));
+    const stickyOffset =
+      parseFloat(getComputedStyle(root).getPropertyValue("--toc-sticky-offset")) || 96;
 
-        if (visible.size > 0) {
-          // Pick the topmost intersecting heading.
-          let best: { id: string; top: number } | null = null;
-          visible.forEach((e, id) => {
-            const top = e.boundingClientRect.top;
-            if (!best || top < best.top) best = { id, top };
-          });
-          if (best) setCurrent(best.id);
-        } else {
-          // No heading currently in view — find the last one above the fold.
-          const viewportTop = 0;
-          let lastAbove: HTMLHeadingElement | null = null;
-          for (const h of headings) {
-            if (h.getBoundingClientRect().top < viewportTop) lastAbove = h;
-            else break;
-          }
-          setCurrent(lastAbove?.id ?? null);
-        }
-      },
-      {
-        // Activate once a heading crosses the top 20% of the viewport;
-        // de-activate when it leaves the bottom 30%.
-        rootMargin: "-20% 0px -70% 0px",
-        threshold: 0,
+    // Active = the last heading whose top has scrolled past a single reading
+    // line near the top of the viewport. Using one line (not an Intersection
+    // Observer band) keeps the choice monotonic, so it never flips back and
+    // forth while reading through a long section.
+    const update = () => {
+      if (!onlyHeadings.length) return;
+      const line = Math.max(stickyOffset, window.innerHeight * 0.28);
+
+      let activeId = onlyHeadings[0].id;
+      for (const h of onlyHeadings) {
+        if (h.getBoundingClientRect().top <= line) activeId = h.id;
+        else break;
       }
-    );
 
-    headings.forEach((h) => io.observe(h));
+      // At the very bottom of the page, force the last heading active so the
+      // final (often short) section can be reached.
+      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+        activeId = onlyHeadings[onlyHeadings.length - 1].id;
+      }
 
-    // Initial: pick the heading closest to the current scroll position.
-    const initialBest = headings.find((h) => h.getBoundingClientRect().top >= 0) ?? headings[headings.length - 1];
-    if (initialBest) setCurrent(initialBest.id);
+      setCurrent(activeId);
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
   };
 
   const initAll = () =>
