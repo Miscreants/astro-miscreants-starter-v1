@@ -54,6 +54,9 @@ export default defineConfig({
   // and the sitemap. Replace the placeholder per project.
   site: 'https://example.com',
   output: 'static',
+  // Astro 7 defaults compressHTML to 'jsx' (JSX-style whitespace stripping).
+  // Keep the v6 HTML-aware behaviour so inline spacing doesn't shift.
+  compressHTML: true,
   build: {
     // Inline page CSS into <head> instead of emitting render-blocking
     // stylesheet requests — a material FCP/LCP win for static sites.
