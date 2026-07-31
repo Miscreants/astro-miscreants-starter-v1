@@ -1,6 +1,10 @@
-// hero-global.js
+﻿// simplex-noise — vendored 2D/3D/4D simplex noise (Jonas Wagner, MIT).
+// Converted from the UMD bundle that used to live at public/scripts/hero-global.js
+// into an ES module so it is bundled, hashed and cached by Vite instead of being
+// served as an unbundled <script is:inline>. Body is byte-identical to the
+// original; only the UMD tail was replaced with a `return`.
 
-!(function () {
+const SimplexNoise = (function () {
   'use strict';
   var r = 0.5 * (Math.sqrt(3) - 1),
     e = (3 - Math.sqrt(3)) / 6,
@@ -276,86 +280,9 @@
     },
   }),
     (i._buildPermutationTable = n),
-    'undefined' != typeof define &&
-      define.amd &&
-      define(function () {
-        return i;
-      }),
-    'undefined' != typeof exports
-      ? (exports.SimplexNoise = i)
-      : 'undefined' != typeof window && (window.SimplexNoise = i),
-    'undefined' != typeof module && (module.exports = i));
+    void 0);
+  return i;
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const simplex = new SimplexNoise();
+export default SimplexNoise;
 
-  // Defaults
-  const defaults = {
-    cols: 16,
-    rows: 60,
-    scale: 0.37,
-    speed: 0.015,
-    padding: 0,
-  };
-
-  // Read data attributes from canvas element, fall back to defaults
-  const d = canvas.dataset;
-  const config = {
-    cols: d.cols !== undefined ? parseFloat(d.cols) : defaults.cols,
-    rows: d.rows !== undefined ? parseFloat(d.rows) : defaults.rows,
-    scale: d.scale !== undefined ? parseFloat(d.scale) : defaults.scale,
-    speed: d.speed !== undefined ? parseFloat(d.speed) : defaults.speed,
-    padding: d.padding !== undefined ? parseFloat(d.padding) : defaults.padding,
-    time: 0,
-  };
-
-  // Resize handler
-  let width, height;
-
-  function resize() {
-    width = canvas.parentElement.offsetWidth;
-    height = canvas.parentElement.offsetHeight;
-    canvas.width = width;
-    canvas.height = height;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function draw() {
-    // Background
-    ctx.fillStyle = '#EFF0F1';
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.fillStyle = '#DBE0E3';
-
-    const cellWidth = width / config.cols;
-    const cellHeight = height / config.rows;
-
-    for (let i = 0; i < config.cols; i++) {
-      for (let j = 0; j < config.rows; j++) {
-        const x = i * cellWidth;
-        const y = j * cellHeight;
-        const centerY = y + cellHeight / 2;
-
-        const noiseVal = simplex.noise3D(i * config.scale, j * config.scale, config.time);
-
-        let norm = (noiseVal + 1) / 2;
-
-        const barHeight = cellHeight * norm * 1.5;
-        const barWidth = cellWidth - config.padding;
-        const h = Math.max(0, barHeight);
-
-        ctx.fillRect(x + config.padding / 2, centerY - h / 2, Math.max(0, barWidth), h);
-      }
-    }
-
-    config.time += config.speed;
-    requestAnimationFrame(draw);
-  }
-
-  draw();
-});

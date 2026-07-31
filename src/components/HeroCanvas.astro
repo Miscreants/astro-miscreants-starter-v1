@@ -1,13 +1,30 @@
 ---
-// HeroCanvas — simplex noise bar animation.
-// Config is passed as props → data attributes → read by the script at runtime.
-
+/**
+ * HeroCanvas — animated simplex-noise bar field painted to a <canvas>.
+ *
+ * @prop cols    - Bars across. Default 16.
+ * @prop rows    - Bars down. Default 60.
+ * @prop scale   - Noise sampling scale; higher = busier field. Default 0.37.
+ * @prop speed   - Field drift per 1/60s. Default 0.015.
+ * @prop padding - Horizontal gap between bars, in px. Default 0.
+ * @prop fps     - Desktop frame-rate cap. Default 30.
+ *
+ * Gotcha: per §10.5 this never runs a perpetual rAF loop on mobile or under
+ * reduced motion — it paints exactly one frame and stops. The loop is also
+ * paused when the canvas scrolls out of view or the tab is hidden, and capped
+ * to `fps` otherwise. Config is passed as props → data attributes → read by the
+ * script, so several instances can coexist with different settings.
+ *
+ * Colors come from --hero-canvas-bg / --hero-canvas-bar (declared below).
+ * Override them per project to map the field onto brand tokens.
+ */
 interface Props {
   cols?: number;
   rows?: number;
   scale?: number;
   speed?: number;
   padding?: number;
+  fps?: number;
   class?: string;
 }
 
@@ -17,21 +34,208 @@ const {
   scale = 0.37,
   speed = 0.015,
   padding = 0,
+  fps = 30,
   class: className,
 } = Astro.props;
 ---
 
 <div class:list={["overflow-hidden", className]}>
   <canvas
-    id="canvas"
+    data-hero-canvas="component"
     data-cols={cols}
     data-rows={rows}
     data-scale={scale}
     data-speed={speed}
     data-padding={padding}
+    data-fps={fps}
     class="block w-full h-full"
-    aria-hidden="true"
-  ></canvas>
+    aria-hidden="true"></canvas>
 </div>
 
-<script is:inline src="/scripts/hero-global.js"></script>
+<style>
+  /* Namespaced under the component's data attribute (§5.5). Point these at
+     semantic tokens per project if the field should follow the theme. */
+  [data-hero-canvas="component"] {
+    --hero-canvas-bg: #eff0f1;
+    --hero-canvas-bar: #dbe0e3;
+  }
+</style>
+
+<script>
+  import SimplexNoise from "@/lib/simplex-noise.js";
+
+  const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+  const MOBILE_QUERY = "(max-width: 768px)";
+  // The original loop advanced `speed` once per animation frame on a 60Hz
+  // display. Time is now advanced by real elapsed ms against this baseline so
+  // the fps cap changes cost, not visual speed.
+  const BASELINE_FPS = 60;
+
+  function setup(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext("2d");
+    const host = canvas.parentElement;
+    if (!ctx || !host) return;
+
+    const simplex = new SimplexNoise();
+
+    const num = (value: string | undefined, fallback: number) => {
+      const parsed = value === undefined ? Number.NaN : parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+
+    const d = canvas.dataset;
+    const cfg = {
+      cols: num(d.cols, 16),
+      rows: num(d.rows, 60),
+      scale: num(d.scale, 0.37),
+      speed: num(d.speed, 0.015),
+      padding: num(d.padding, 0),
+      fps: Math.max(1, num(d.fps, 30)),
+    };
+
+    const styles = getComputedStyle(canvas);
+    const bg = styles.getPropertyValue("--hero-canvas-bg").trim() || "#eff0f1";
+    const bar = styles.getPropertyValue("--hero-canvas-bar").trim() || "#dbe0e3";
+
+    const reduced = matchMedia(REDUCED_QUERY);
+    const mobile = matchMedia(MOBILE_QUERY);
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    let width = 0;
+    let height = 0;
+    let time = 0;
+    let rafId = 0;
+    let lastFrame = 0;
+    let running = false;
+    let onScreen = false;
+    let resizeQueued = false;
+
+    /** Static single frame on mobile and under reduced motion (§10.5, §8.5). */
+    const isStatic = () => reduced.matches || mobile.matches;
+
+    function measure() {
+      const w = Math.max(0, Math.round(host!.offsetWidth));
+      const h = Math.max(0, Math.round(host!.offsetHeight));
+      if (w === width && h === height) return false;
+      width = w;
+      height = h;
+      canvas.width = w;
+      canvas.height = h;
+      return true;
+    }
+
+    function drawFrame() {
+      if (!width || !height) return;
+      ctx!.fillStyle = bg;
+      ctx!.fillRect(0, 0, width, height);
+      ctx!.fillStyle = bar;
+
+      const cellWidth = width / cfg.cols;
+      const cellHeight = height / cfg.rows;
+      const barWidth = Math.max(0, cellWidth - cfg.padding);
+
+      for (let i = 0; i < cfg.cols; i++) {
+        for (let j = 0; j < cfg.rows; j++) {
+          const centerY = j * cellHeight + cellHeight / 2;
+          const norm = (simplex.noise3D(i * cfg.scale, j * cfg.scale, time) + 1) / 2;
+          const h = Math.max(0, cellHeight * norm * 1.5);
+          ctx!.fillRect(i * cellWidth + cfg.padding / 2, centerY - h / 2, barWidth, h);
+        }
+      }
+    }
+
+    function loop(now: number) {
+      rafId = requestAnimationFrame(loop);
+      const minDelta = 1000 / cfg.fps;
+      const elapsed = now - lastFrame;
+      if (elapsed < minDelta) return;
+      lastFrame = now - (elapsed % minDelta);
+      time += cfg.speed * (elapsed / (1000 / BASELINE_FPS));
+      drawFrame();
+    }
+
+    function start() {
+      if (running || isStatic() || !onScreen || document.hidden) return;
+      running = true;
+      lastFrame = performance.now();
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function stop() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+      running = false;
+    }
+
+    /** Single entry point for every state change. */
+    function sync() {
+      if (isStatic()) {
+        stop();
+        drawFrame();
+        return;
+      }
+      start();
+    }
+
+    // rAF-batched so layout settling can't thrash buffer reallocation (§10.5).
+    const resizeObserver = new ResizeObserver(() => {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      requestAnimationFrame(() => {
+        resizeQueued = false;
+        if (measure()) drawFrame();
+      });
+    });
+    resizeObserver.observe(host);
+
+    const viewObserver = new IntersectionObserver(
+      (entries) => {
+        onScreen = entries.some((entry) => entry.isIntersecting);
+        if (onScreen) sync();
+        else stop();
+      },
+      { rootMargin: "100px" }
+    );
+    viewObserver.observe(canvas);
+
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.hidden) stop();
+        else sync();
+      },
+      { signal }
+    );
+
+    reduced.addEventListener("change", sync, { signal });
+    mobile.addEventListener("change", sync, { signal });
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        stop();
+        resizeObserver.disconnect();
+        viewObserver.disconnect();
+        controller.abort();
+      },
+      { once: true }
+    );
+
+    measure();
+    drawFrame();
+  }
+
+  function initHeroCanvas() {
+    document
+      .querySelectorAll<HTMLCanvasElement>('[data-hero-canvas="component"]')
+      .forEach((canvas) => {
+        if (canvas.dataset.scriptInitialized) return;
+        canvas.dataset.scriptInitialized = "true";
+        setup(canvas);
+      });
+  }
+
+  initHeroCanvas();
+  document.addEventListener("astro:page-load", initHeroCanvas);
+</script>
