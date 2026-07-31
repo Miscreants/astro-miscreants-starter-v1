@@ -22,6 +22,7 @@ Astro 6 + Tailwind v4 static site. (Replace with the client name + one-line desc
 - **Semantic tokens only.** Style with Tailwind utilities mapped to roles (`bg-intent`, `text-fg-muted`, `border-stroke`). **Never** hardcode hex/rgba or raw Tailwind neutrals (`text-gray-700`). Tokens live in `@theme` in `src/styles/global.css`.
 - **Accessibility is required**, authored from the start (see rules below).
 - **Pages compose sections.** `pages/*.astro` is a thin table of contents wrapping `Layout` + section components. Push markup *down* into sections; no page-level `<style>`/`<script>`. (STANDARDS §5.0.)
+- **Build sections on `SectionMain`.** It is the section primitive: it owns the `<section>` landmark, the centered `container-page` column, the vertical rhythm presets, the side rules, and the horizontal content padding. Don't hand-roll `<section class="section-gutter section-padding">` — you'll drift from the page rhythm and lose the side rules. Bespoke markup only for a genuinely full-bleed or self-framed section, and say why. (STANDARDS §5.0.)
 - **Images** go through `astro:assets` (`<Image>`/`<Picture>` from `src/images/`), never raw `/public` paths. Don't lazy-load the LCP/hero image.
 - **Animated canvases / rAF loops**: static on mobile + reduced-motion, fps-capped, paused offscreen, compile deferred. (STANDARDS §10.5 — the #1 mobile perf killer.)
 - **Components:** `interface Props`, defaults in the destructure, typed-union variants, slots for rich content, always accept a `class` passthrough.
@@ -32,7 +33,7 @@ Astro 6 + Tailwind v4 static site. (Replace with the client name + one-line desc
 1. Create `src/pages/<route>.astro` (kebab-case route).
 2. Wrap content in `<Layout title="…" description="…" jsonLd={…}>` (SEO + head handled for you — STANDARDS §7).
 3. **Compose existing sections/components** from `components/`. Reuse before creating.
-4. For a new page chunk, create a `Section*` component (owns its `<section>`, content inline, no props unless reused) — STANDARDS §5.0.
+4. For a new page chunk, create a `Section*` component (content inline, no props unless reused) and have it render `<SectionMain>` as its root — that supplies the `<section>` landmark, centering, rhythm and side rules. STANDARDS §5.0.
 5. `npm run check`.
 
 ## Where to look

@@ -380,6 +380,27 @@ Reusable UI units with a clear identity: `Button`, `Card`, `Field`, `Tag`, `Reso
 **2. Sections — *closed* components (little or no props).**
 A whole page section: `Hero`, `SectionWhyGhost`, `SectionGetInTouch`. Lives flat in `components/` with a `Section*` prefix (group into `components/<domain>/` only once a build has many — per §3.1), **owns its own semantic `<section>` landmark**, and composes primitives + content inline. **Closed by default**: it bakes in its content and exposes *no* props. A section's job is to encapsulate a chunk of a page so the page file stays readable — not to be reusable.
 
+> **Required — build sections on `SectionMain`.** `SectionMain.astro` is the section primitive, and a new `Section*` component should render it as its root rather than hand-rolling a wrapper. It supplies, in one place:
+> - the semantic `<section>` element (pass `id` for anchor links, and any `aria-*` — it spreads native attributes);
+> - the centered `container-page` column (`max-w-[90rem]` + `px-site-margin`), so every section lines up with the nav and footer;
+> - the vertical rhythm presets — `padding` (`none`–`xl`), plus `paddingTop` / `paddingBottom` for asymmetric spacing;
+> - the left/right `border-stroke` side rules, and an optional `borderTop` divider;
+> - the horizontal content padding (`contentPadding`) and a `contentClass` hook onto the inner flex column.
+>
+> Writing `<section class="section-gutter section-padding">` by hand drifts from the shared rhythm and silently drops the side rules. Reach for bespoke markup **only** when a section is genuinely full-bleed or frames itself (a full-width media band, a self-contained hero) — an *allowed-with-reason* deviation, so state the reason.
+>
+> Components that already manage their own grid and padding (`FlowSteps`, `FeatureScrollSpy`) still go *inside* `SectionMain`, with `padding="none" contentPadding="none"` so you don't double-indent.
+>
+> ```astro
+> ---
+> import SectionMain from "@components/SectionMain.astro";
+> ---
+> <SectionMain id="features" padding="lg">
+>   <h2 class="h2">Features</h2>
+>   <p class="text-body-lg text-fg-muted">…</p>
+> </SectionMain>
+> ```
+
 **3. Pages — composition only.**
 `pages/*.astro` reads like a table of contents: a `<Layout>` wrapping a short list of sections. Push markup *down* into sections; keep pages thin. **Avoid page-level `<style>`/`<script>`** — custom CSS or behavior in a page file is a signal it belongs in a section component (or, if reusable, in `global.css` / an `@utility`). Astro allows both in pages, but a page growing its own styles/scripts is the cue to extract a section. Small, genuinely page-unique one-offs are the rare exception.
 

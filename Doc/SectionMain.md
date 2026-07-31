@@ -4,45 +4,57 @@
 
 ## What it does
 
-A page section wrapper that provides the site's standard layout grid — a centered content column flanked by decorative pattern gutters with grid borders.
+The section primitive. **Build every `Section*` component on this** instead of hand-rolling a wrapper — it owns the semantic `<section>` landmark, the centered content column, the vertical rhythm presets and the left/right rules, so sections stay aligned with each other, the nav and the footer.
+
+Hand-rolling `<section class="section-gutter section-padding">` drifts from the shared rhythm and silently drops the side rules. Bespoke markup is an allowed-with-reason deviation for genuinely full-bleed or self-framed sections — see STANDARDS §5.0.
+
+It extends `HTMLAttributes<"section">`, so `id`, `aria-*` and any other native attribute pass straight through.
 
 ## Props
 
 | Prop             | Type                                        | Default     | Description                                    |
 |------------------|---------------------------------------------|-------------|------------------------------------------------|
-| `id`             | `string`                                    | —           | HTML `id` for anchor linking                   |
-| `padding`        | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl"` | `"md"`  | Vertical padding preset                        |
-| `contentPadding` | `"none" \| "default"`                       | `"default"` | Horizontal padding inside the content column   |
-| `contentClass`   | `string`                                    | `""`        | Additional classes on the content column        |
+| `id`             | `string`                                    | —           | HTML `id` for anchor linking (any native section attribute passes through) |
+| `padding`        | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl"` | `"md"`  | Vertical padding preset — shorthand for both edges |
+| `paddingTop`     | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl"` | —       | Overrides the top edge only                    |
+| `paddingBottom`  | `"none" \| "xs" \| "sm" \| "md" \| "lg" \| "xl"` | —       | Overrides the bottom edge only                 |
+| `contentPadding` | `"none" \| "default"`                       | `"default"` | Horizontal padding inside the content column (`px-0` / `px-2 md:px-6`) |
+| `contentClass`   | `string`                                    | `""`        | Additional classes on the inner flex column     |
 | `borderTop`      | `boolean`                                   | `false`     | Add a top border to the section                |
 
 ## How it works
 
-### Grid structure
+### Structure
 
-Uses `section-grid-outside` — a 5-column CSS grid:
+Two elements — an outer `<section>` that centers, and an inner column that carries rhythm and rules:
 
 ```
-[gutter-left] [pattern-left] [content (90rem max)] [pattern-right] [gutter-right]
+<section class="container-page">          <!-- max-w-[90rem] + px-site-margin -->
+  <div class="section-pt-* section-pb-*   <!-- vertical rhythm -->
+              flex flex-col relative
+              border-l border-r border-stroke  <!-- side rules -->
+              px-2 md:px-6">              <!-- contentPadding -->
+    <slot />
+  </div>
+</section>
 ```
 
-- **Column 2 & 4** (pattern columns): Get `section-pattern` (diagonal stripes) and `border-x` for vertical grid lines. Marked `aria-hidden="true"`.
-- **Column 3** (content): Receives the vertical padding and holds the `<slot />`.
+Centering comes from the `container-page` utility. An earlier 5-column `section-grid-outside` grid with decorative `section-pattern` gutters was replaced by this — it still exists in `global.css` but is commented out and applied nowhere.
 
 ### Padding map
 
-The `padding` prop maps to utilities defined in `global.css`:
+`padding` / `paddingTop` / `paddingBottom` map to the `section-pt-*` and `section-pb-*` utilities in `global.css`. They **do** step up at `md:`:
 
-| Value  | Utility               | Result   |
-|--------|-----------------------|----------|
-| `none` | (none)                | No padding |
-| `xs`   | `section-padding-xs`  | `py-12`  |
-| `sm`   | `section-padding-sm`  | `py-16`  |
-| `md`   | `section-padding`     | `py-24`  |
-| `lg`   | `section-padding-lg`  | `py-32`  |
-| `xl`   | `section-padding-xl`  | `py-48`  |
+| Value  | Utility               | Mobile  | `md:` and up |
+|--------|-----------------------|---------|--------------|
+| `none` | (none)                | —       | —            |
+| `xs`   | `section-p{t,b}-xs`   | `3rem`  | `4rem`       |
+| `sm`   | `section-p{t,b}-sm`   | `4rem`  | `5rem`       |
+| `md`   | `section-p{t,b}-md`   | `6rem`  | `8rem`       |
+| `lg`   | `section-p{t,b}-lg`   | `8rem`  | `12rem`      |
+| `xl`   | `section-p{t,b}-xl`   | `12rem` | `16rem`      |
 
-These presets now resolve to the same value at every breakpoint — no `md:`-prefix increase. Use `paddingTop` / `paddingBottom` if you need asymmetric vertical rhythm.
+`paddingTop` / `paddingBottom` each override `padding` for that edge.
 
 ## Usage
 
@@ -70,6 +82,7 @@ import SectionMain from "../components/SectionMain.astro";
 
 ## Notes
 
-- This is the primary building block for page layout. Most sections on the page should be wrapped in this component.
-- The pattern gutters are purely decorative — they create the "blueprint" aesthetic with diagonal stripes and vertical borders.
+- This is the primary building block for page layout. Every section should be built on it unless it's full-bleed or self-framed.
+- The left/right `border-stroke` rules give the page its ruled-column look, and they're the main thing you lose by hand-rolling a section.
 - `contentClass` lets you add things like `items-center` to the flex column without overriding the base layout classes.
+- Components like `FlowSteps` and `FeatureScrollSpy` already manage their own grid and padding — wrap them in `SectionMain padding="none" contentPadding="none"` so you don't double-indent.
