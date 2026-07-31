@@ -123,12 +123,25 @@ const hasControls = Astro.slots.has("controls");
 </style>
 
 <script>
-  import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  // GSAP (~21 KB) is the heaviest script on the page, and every Tabs instance
+  // on the site sits below the fold — so defer it: dynamically import GSAP and
+  // run setup only once a tab component nears the viewport. This keeps GSAP's
+  // parse/eval off the initial critical path (lower Total Blocking Time)
+  // without changing any behaviour once a component is initialized.
+  // (Ported from ghost-build's Tabs.)
+  let gsap: any;
+  let ScrollTrigger: any;
+  let tabsStarted = false;
 
-  gsap.registerPlugin(ScrollTrigger);
+  async function startTabs() {
+    if (tabsStarted) return;
+    tabsStarted = true;
 
-  document.querySelectorAll<HTMLElement>('[data-tab="component"]').forEach((tabWrap, componentIndex) => {
+    gsap = (await import("gsap")).default;
+    ScrollTrigger = (await import("gsap/ScrollTrigger")).ScrollTrigger;
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.querySelectorAll<HTMLElement>('[data-tab="component"]').forEach((tabWrap, componentIndex) => {
     if (tabWrap.dataset.scriptInitialized) return;
     tabWrap.dataset.scriptInitialized = "true";
 
@@ -543,4 +556,26 @@ const hasControls = Astro.slots.has("controls");
       });
     }
   });
+
+  }
+
+  // Kick off once any tab component is within 200px of the viewport. If one is
+  // already on-screen at load, the observer fires on the first callback.
+  function observeTabs() {
+    const comps = document.querySelectorAll<HTMLElement>('[data-tab="component"]');
+    if (!comps.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          startTabs();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    comps.forEach((c) => io.observe(c));
+  }
+
+  observeTabs();
+  document.addEventListener("astro:page-load", observeTabs);
 </script>
