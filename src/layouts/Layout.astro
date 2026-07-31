@@ -3,7 +3,13 @@
 // Anything you put between <Layout>...</Layout> in a page lands in <slot />.
 //
 // Props are declared via an interface and read from Astro.props.
+// One variable font per role (§10.2). --font-heading / --font-sans / --font-mono
+// in global.css name these families, so all three must actually be loaded —
+// otherwise the stack silently falls through to system-ui/Menlo and renders
+// differently on machines that happen to have the font installed locally.
 import "@fontsource-variable/archivo";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 import { getCollection, render } from "astro:content";
 import Nav from "../components/NavMorph.astro";

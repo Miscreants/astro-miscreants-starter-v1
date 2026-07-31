@@ -28,12 +28,15 @@
    ========================================================================== */
 @theme {
   /* ---------- Typography ---------- */
+  /* Family names must match what @fontsource-variable/* registers (they all end
+     in " Variable") and each family must be imported in Layout.astro, or the
+     stack silently falls through to the system fallback. */
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    "Inter Variable", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   --font-heading:
     "Archivo Variable", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   --font-mono:
-    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --container-7xl: 90rem;
 
@@ -90,9 +93,13 @@
   /* Focus */
   --color-focus: #0a0a0a;              /* focus ring color */
 
-  /* Status */
+  /* Status — the only permitted accent hues.
+     `warning` deliberately carries one value across every theme (like the
+     amber it replaces did); add per-theme overrides at design intake if the
+     brand needs them. */
   --color-error: #dc2626;
   --color-success: #16a34a;
+  --color-warning: #d97706;
 
   /* ---------- Radius ----------
      Standard scale (xs–2xl) comes from Tailwind v4 defaults. Add semantic
