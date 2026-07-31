@@ -166,8 +166,12 @@ const aspectStyle = aspect === "auto" ? undefined : `--media-aspect: ${aspect};`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    background: rgb(0 0 0 / 0.25);
+    /* Scrim-relative, not theme-relative: the overlay always sits on a dark
+       scrim over the media, so it stays light in every theme. Namespaced
+       component props (§5.5) rather than raw values, so a project can retune
+       the scrim without forking the component. */
+    color: var(--media-overlay-fg, #fff);
+    background: var(--media-overlay-scrim, rgb(0 0 0 / 0.25));
     pointer-events: none;
     transition: opacity 250ms ease;
   }

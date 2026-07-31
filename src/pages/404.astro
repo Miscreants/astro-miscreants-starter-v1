@@ -6,15 +6,17 @@ import Button from "@components/Button.astro";
 ---
 
 <Layout title="Page not found — 404" noindex>
-  <section class="section-gutter section-padding-lg">
-    <div class="container-large flex flex-col items-start gap-6">
-      <p class="text-body-sm text-fg-muted uppercase tracking-wide">Error 404</p>
-      <h1 class="h1">This page wandered off.</h1>
-      <p class="text-body-lg text-fg-muted max-w-prose">
-        The page you're looking for doesn't exist or may have moved. Check the URL,
-        or head back to safe ground.
-      </p>
-      <Button href="/" withArrow>Back to home</Button>
-    </div>
-  </section>
+  <main id="main">
+    <section class="section-gutter section-padding-lg">
+      <div class="container-large flex flex-col items-start gap-6">
+        <p class="text-body-sm text-fg-muted uppercase tracking-wide">Error 404</p>
+        <h1 class="h1">This page wandered off.</h1>
+        <p class="text-body-lg text-fg-muted max-w-prose">
+          The page you're looking for doesn't exist or may have moved. Check the URL,
+          or head back to safe ground.
+        </p>
+        <Button href="/" withArrow>Back to home</Button>
+      </div>
+    </section>
+  </main>
 </Layout>

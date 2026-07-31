@@ -33,7 +33,7 @@ Panels are defined in the `panels` array. Top-level plain links go in `topLinks`
 - A shared `data-dropdown-container` morphs its `height` smoothly between panels using CSS `transition: height 0.35s`.
 - Panel measurement happens by briefly toggling `data-state="active"` with `visibility: hidden` to get the natural height without a flash.
 - Content inside panels uses staggered fade-in via CSS `transition-delay` driven by a `--stagger-i` variable set per element.
-- A semi-transparent backdrop (`bg-black/20 backdrop-blur-sm`) appears behind the dropdown.
+- A semi-transparent backdrop (`--nav-backdrop-scrim`, plus `backdrop-blur-sm`) appears behind the dropdown. It's a scrim over the page rather than a themed surface, so it stays dark in every theme; override the custom property to retune it.
 
 ### Mobile behavior (below 991px)
 

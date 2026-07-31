@@ -54,7 +54,11 @@ const safeRel =
 </Tag>
 
 <style is:global>
-  :root {
+  /* Scoped to the component, not :root — these are deliberately NOT design
+     tokens (see the header note), so they must not leak site-wide from an
+     is:global block (§5.5). Every consumer is inside .shiny-cta or its
+     pseudo-elements, so they inherit fine from here. */
+  .shiny-cta {
     --shiny-cta-bg: #000000;
     --shiny-cta-bg-subtle: #1a1818;
     --shiny-cta-fg: #ffffff;

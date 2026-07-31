@@ -97,9 +97,9 @@ const {
     border-color: color-mix(in srgb, var(--color-success) 40%, var(--color-stroke));
   }
   [data-tag][data-tag-variant="warning"] {
-    background: color-mix(in srgb, #d97706 15%, var(--color-panel));
-    color: #d97706;
-    border-color: color-mix(in srgb, #d97706 40%, var(--color-stroke));
+    background: color-mix(in srgb, var(--color-warning) 15%, var(--color-panel));
+    color: var(--color-warning);
+    border-color: color-mix(in srgb, var(--color-warning) 40%, var(--color-stroke));
   }
   [data-tag][data-tag-variant="error"] {
     background: color-mix(in srgb, var(--color-error) 15%, var(--color-panel));
@@ -125,8 +125,8 @@ const {
     border-color: var(--color-success);
   }
   [data-tag][data-tag-outline="true"][data-tag-variant="warning"] {
-    color: #d97706;
-    border-color: #d97706;
+    color: var(--color-warning);
+    border-color: var(--color-warning);
   }
   [data-tag][data-tag-outline="true"][data-tag-variant="error"] {
     color: var(--color-error);

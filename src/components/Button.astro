@@ -2,20 +2,23 @@
 import { Icon } from "astro-icon/components";
 import type { HTMLAttributes } from "astro/types";
 
-// Extends both <button> and <a> attribute sets so callers can pass any native
-// attribute (data-*, aria-*, onclick, etc.) without us listing each one.
-type Props = HTMLAttributes<"button"> & HTMLAttributes<"a"> & {
+// Polymorphic: renders <a> when `href` is set, otherwise <button>. Extends the
+// button attribute set so callers can pass any native attribute (data-*,
+// aria-*, …) without us listing each one, plus the few anchor props we forward
+// (§5.1). Deliberately NOT an intersection with HTMLAttributes<"a"> — that form
+// makes every attribute optional-on-both and weakens the hints callers get.
+interface Props extends HTMLAttributes<"button"> {
   label?: string;
   variant?: "primary" | "secondary" | "tertiary";
+  /** Render as an <a> pointing here instead of a <button>. */
   href?: string;
-  type?: "button" | "submit" | "reset";
+  /** Anchor-only; forwarded when `href` is set. */
   target?: string;
+  /** Anchor-only; defaults to "noopener noreferrer" when target="_blank". */
   rel?: string;
-  disabled?: boolean;
   withArrow?: boolean;
   arrowDirection?: "right" | "left";
-  class?: string;
-};
+}
 
 const {
   label = "Learn More",
