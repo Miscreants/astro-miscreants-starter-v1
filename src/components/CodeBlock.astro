@@ -17,13 +17,19 @@
 // Line numbers are CSS-counter based.
 
 import { Code } from "astro:components";
+import type { ComponentProps } from "astro/types";
 import CopyButton from "./CopyButton.astro";
+
+// Derive the language union from <Code /> itself rather than re-declaring it —
+// a plain `string` doesn't satisfy shiki's CodeLanguage, and deriving it keeps
+// this correct if Astro's accepted set changes.
+type CodeLanguage = ComponentProps<typeof Code>["lang"];
 
 interface Props {
   /** Source code. Required. */
   code: string;
   /** Shiki language id. Default "plaintext". */
-  lang?: string;
+  lang?: CodeLanguage;
   /** Filename or label shown in the title bar. */
   title?: string;
   /** 1-based line numbers to highlight. */

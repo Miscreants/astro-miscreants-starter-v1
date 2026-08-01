@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "typecheck": "astro sync && tsc --noEmit",
+    "typecheck": "astro check --minimumFailingSeverity warning",
     "check": "npm run typecheck && npm run docs:check && npm run build",
     "docs:build": "node scripts/build-standards.mjs",
     "docs:check": "node scripts/check-docs.mjs",

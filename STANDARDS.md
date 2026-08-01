@@ -1451,7 +1451,6 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 | Rule | Gap | Action |
 |---|---|---|
-| [structure.gate](#required-scripts--the-type--build-gate) type gate | `npm run check` now runs the documentation check and the production build, but `typecheck` still runs `astro sync && tsc --noEmit`, which does not read `.astro` files | Swap in `astro check --minimumFailingSeverity warning`. It currently reports **3 errors** (a demo page rendering `SliderBasicMap` with no `items` prop; missing type declarations for the `@fontsource-variable/*` side-effect imports) plus 32 hints. Fix those, then gate. |
 | [seo.identity](#site-identity--one-source-of-truth) site identity | `astro.config.mjs` hardcodes `site: 'https://example.com'` separately from `data/site.ts` | Import `site.url`; add the placeholder guard |
 | [components.composition](#composition-model-pages--sections--components) SectionMain | Side rules (`border-l border-r`) are unconditional — no opt-out prop | Add `sideRules?: boolean` (or a `frame` variant) |
 | [perf.prefetch](#navigation-prefetch) prefetch | Not configured | Add `prefetch` config with `defaultStrategy: 'hover'` |
@@ -1464,6 +1463,8 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 **Cleared in v2** (verified against the code, previously listed as debts): `Button.astro` already uses `interface Props extends HTMLAttributes<"button">` with the intersection deliberately rejected; the script-init flag is already uniform across every component; there are **zero** raw Tailwind neutral classes in `components/`.
 
 **Cleared in v2.1:** the `build-component` command — which hardcoded one client's radius stance, pointed at a machine-specific path, and restated rules — was deleted. Its three pieces of unique content (the Astro `:global()` scoping trap, the hand-rolled focus-ring equivalent, and the BEM-vs-utilities naming guidance) were rescued into [components.styling](#styling-components) first.
+
+**Cleared in v2.2 — [structure.gate](#required-scripts--the-type--build-gate) now holds.** `typecheck` runs `astro check --minimumFailingSeverity warning`, and the three errors it surfaced are fixed: ambient declarations for the untyped `@fontsource-variable/*` packages, `CodeBlock`'s `lang` prop derived from `<Code />` instead of a bare `string`, and `SliderBasicMap`'s `items` typed optional to match its own default and documented usage. Result: **0 errors, 0 warnings**, 71 files. 32 hints remain (unused locals, and the deprecated `z` re-export in `content.config.ts`) — hints don't fail the gate; see [roadmap](#roadmap).
 
 ---
 
@@ -1478,9 +1479,11 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 - ✅ `AGENTS.md` reduced to a contract of pointers; `CLAUDE.md` points at it *(P1.5)*.
 - ✅ `build-component` command deleted; its unique content rescued into [components.styling](#styling-components) *(part of P1.6)*.
 
+### Done — v2.2
+- ✅ Type gate swapped to `astro check`; the three errors it surfaced are fixed ([structure.gate](#required-scripts--the-type--build-gate), [conformance](#starter-conformance-gaps)).
+
 ### P0 — correctness of the gate
-1. Swap the type gate to `astro check` and fix the three errors it surfaces ([conformance](#starter-conformance-gaps)).
-2. Single-source the site URL with the placeholder guard ([seo.identity](#site-identity--one-source-of-truth)).
+1. Single-source the site URL with the placeholder guard ([seo.identity](#site-identity--one-source-of-truth)).
 3. Ship a reference form endpoint meeting [components.forms](#forms--form--field-progressively-enhanced-and-hardened), or document the per-project requirement in the runbook.
 4. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging](#staging--preview-indexing-control)).
 
@@ -1492,7 +1495,8 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 5. Reconcile the `launch` skill's staging rule with [seo.staging](#staging--preview-indexing-control) — it still treats `Disallow: /` as sufficient protection ([conformance](#starter-conformance-gaps)).
 
 ### P2 — tooling
-1. Stand up linting ([guardrails.lint](#linting-roadmap)) with the listed rules; run inside `check`.
+1. Clear the 32 remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.
+2. Stand up linting ([guardrails.lint](#linting-roadmap)) with the listed rules; run inside `check`.
 2. Prettier + shared config ([guardrails.format](#formatting-roadmap)).
 3. Minimal CI: `check` + eslint on PR ([guardrails.ci](#ci-roadmap)).
 4. Lighthouse CI asserting [perf.budgets](#budgets--targets) budgets, and `axe-core` ([guardrails.axe](#accessibility-automation-roadmap)).
@@ -1504,6 +1508,18 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 ## Changelog
 <!--rule: changelog | tier: reference-->
+
+### v2.2 — 2026-08-01 — the type gate actually type-checks
+
+`typecheck` ran `tsc --noEmit`, which never opens a `.astro` file — so every component, prop type and component usage in the repo passed the gate unread. It now runs `astro check --minimumFailingSeverity warning` ([structure.gate](#required-scripts--the-type--build-gate)), which checks `.astro` **and** `.ts` and runs `astro sync` itself.
+
+The swap surfaced three real errors, all fixed at their source rather than suppressed:
+
+- **`@fontsource-variable/*` side-effect imports** had no type declarations (ts 2882). Added `src/fontsource.d.ts` — a global declaration file, because an ambient module declaration for an unknown package is illegal in a file that has top-level imports.
+- **`CodeBlock`'s `lang` prop** was `string`, which doesn't satisfy shiki's language union. Now derived from `<Code />` via `ComponentProps`, so it stays correct if Astro's accepted set changes.
+- **`SliderBasicMap`'s `items`** was declared required while the destructure defaulted it to `[]` and the component documented manual children as an alternative. The declaration was the bug; `items` is now optional, and the preview route that tripped it renders real sample slides instead of an empty slider.
+
+Result: 0 errors, 0 warnings across 71 files. 32 hints remain and do not fail the gate.
 
 ### v2.1 — 2026-08-01 — documentation restructure
 

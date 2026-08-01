@@ -44,7 +44,12 @@ type PerView = 1 | 2 | 3 | 4 | 5 | 6;
 type Gap = "none" | "sm" | "md" | "lg";
 
 interface Props {
-  items: SlideItem[];
+  /**
+   * Slides to render. Optional — the destructure defaults to `[]`, and the
+   * component also accepts manual children, so requiring this contradicted
+   * both the default and the documented usage.
+   */
+  items?: SlideItem[];
   id?: string;
   ariaLabel?: string;
   mobile?: PerView;
