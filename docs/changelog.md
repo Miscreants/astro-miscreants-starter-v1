@@ -4,6 +4,14 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.4 — 2026-08-02 — escape hatch for the starter's own preview
+
+The [seo.identity] placeholder guard was too absolute. It throws whenever `CI` is set and the origin is still `example.com` — correct for a client repo, but this starter deploys its *own* hosted preview while legitimately keeping the placeholder, so the guard broke that build.
+
+`ALLOW_PLACEHOLDER_SITE=1` now bypasses it, and the failure message names the variable so anyone who hits the error sees both routes out. **Only the starter's preview environment sets it**; a client repo leaving it unset is the entire mechanism that keeps a placeholder domain out of production, which is why the runbook's scaffold step and the `launch` skill both flag it as a blocker if it appears in a client project.
+
+Verified across four paths: `CI` + placeholder throws; `CI` + placeholder + hatch builds; local + placeholder warns and builds; real domain + `CI` builds.
+
 ### v2.3 — 2026-08-02 — one home per thing
 
 Three artifacts removed, each because something else already did its job better.

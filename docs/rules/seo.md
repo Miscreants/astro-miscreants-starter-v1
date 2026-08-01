@@ -30,8 +30,9 @@ import { site } from './src/data/site.ts';
 
 const PLACEHOLDER_ORIGIN = 'example.com';
 const isPlaceholderOrigin = site.url.includes(PLACEHOLDER_ORIGIN);
+const placeholderAllowed = ['1', 'true'].includes(process.env.ALLOW_PLACEHOLDER_SITE ?? '');
 
-if (isPlaceholderOrigin && process.env.CI) {
+if (isPlaceholderOrigin && process.env.CI && !placeholderAllowed) {
   throw new Error(`site.url is still the ${PLACEHOLDER_ORIGIN} placeholder. Set the real domain in src/data/site.ts before deploying.`);
 }
 if (isPlaceholderOrigin) {
@@ -42,6 +43,8 @@ export default defineConfig({ site: site.url, /* … */ });
 ```
 
 Don't make the guard unconditional: the starter itself must stay buildable with the placeholder, and a rule that forces the reference implementation to violate it isn't a rule anyone keeps.
+
+**`ALLOW_PLACEHOLDER_SITE=1` is the starter's escape hatch, and only the starter's.** The starter deploys its own hosted preview while legitimately keeping the placeholder origin, so that one build environment sets the variable. **A client repo must never set it** — leaving it unset is the entire mechanism that stops a placeholder domain reaching production. If a client build fails on this, the fix is the real domain in `site.ts`, never the variable.
 
 ### The `Layout.astro` contract
 <!--rule: seo.layout-contract | tier: required-->

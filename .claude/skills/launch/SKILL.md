@@ -45,6 +45,7 @@ Report each finding with its severity:
 - `astro.config.mjs` declares its own `site` string instead of importing `site.url` from `src/data/site.ts` — **BLOCKER**, the two-source drift [seo.identity] exists to prevent
 - In production, `site.ts` `url` is not the client's real domain, including protocol, host and no trailing slash — **BLOCKER**
 - `site.ts` still contains `Your Site Name` or `One-line description of the site…` — **BLOCKER**
+- `ALLOW_PLACEHOLDER_SITE` is set in this project's host build environment — **BLOCKER**. It disables the guard that stops a placeholder origin reaching production, and belongs only to the starter's own preview ([seo.identity]). Not visible in the repo, so mark **NEEDS HUMAN** unless the host config was checked directly
 - `package.json` `name` is `astro-playground` — **NIT**
 
 ### Indexing control
