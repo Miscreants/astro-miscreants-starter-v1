@@ -12,7 +12,7 @@
 
 ### Done — v2.2
 - ✅ Type gate swapped to `astro check`; the three errors it surfaced are fixed ([structure.gate], [conformance]).
-- ✅ Site URL single-sourced, with a CI-gated placeholder guard ([seo.identity]).
+- ✅ Site URL single-sourced ([seo.identity]); the placeholder guard shipped with it was reverted in v2.4.
 
 ### Done — v2.1
 - ✅ Split the rulebook into task-scoped modules with a router ([guardrails.docs-check], [changelog]).
@@ -33,7 +33,7 @@
 4. `starterVersion` + upstream-remote workflow ([structure.git]).
 
 ### P2 — tooling
-1. Clear the 32 remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.
+1. Clear the remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.
 2. Stand up linting ([guardrails.lint]) with the listed rules; run inside `check`.
 3. Prettier + shared config ([guardrails.format]).
 4. Minimal CI: `check` + eslint on PR ([guardrails.ci]).
@@ -46,7 +46,7 @@
 [changelog]: ./changelog.md#changelog
 [checklist.a11y]: ./checklists/accessibility.md#accessibility-audit-per-page
 [components.docs]: ./rules/components.md#documentation--shared-components
-[components.forms]: ./rules/components.md#forms-----progressively-enhanced-and-hardened
+[components.forms]: ./rules/components.md#forms--form--field-progressively-enhanced-and-hardened
 [components.styling]: ./rules/components.md#styling-components
 [conformance]: ./conformance.md#starter-conformance-gaps
 [guardrails.axe]: ./guardrails.md#accessibility-automation-roadmap

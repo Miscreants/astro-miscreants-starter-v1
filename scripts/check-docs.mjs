@@ -131,6 +131,28 @@ for (const file of citing) {
   }
 }
 
+// ---------------------------------------------------------------- 7
+// DESIGN.md records decisions, not values. A literal value here is by
+// definition a second copy of something in global.css, and the copy is the one
+// that goes stale — silently, because nothing renders from it.
+const designFile = join(ROOT, "DESIGN.md");
+if (existsSync(designFile)) {
+  const design = stripFences(readFileSync(designFile, "utf8"));
+  const LITERALS = [
+    [/#[0-9a-fA-F]{6}\b/g, "colour value", "src/styles/global.css"],
+    [/\b\d+(?:\.\d+)?\s?px\b/g, "pixel value", "src/styles/global.css"],
+    [/\b\d+(?:\.\d+)?\s?ms\b/g, "duration", "the --duration-* tokens in global.css"],
+  ];
+  design.split(/\r?\n/).forEach((line, i) => {
+    // The rule that forbids literals has to be able to name them.
+    if (/it's a bug|belongs|lives in|Don't|Never/i.test(line)) return;
+    for (const [pattern, label, home] of LITERALS) {
+      const hit = line.match(pattern);
+      if (hit) fail(designFile, `line ${i + 1}: ${label} "${hit[0]}" — DESIGN.md records decisions, not values. This belongs in ${home}`);
+    }
+  });
+}
+
 // ---------------------------------------------------------------- 6
 try {
   execFileSync(process.execPath, [join(ROOT, "scripts", "build-doc-links.mjs"), "--check"], { stdio: "pipe" });

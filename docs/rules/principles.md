@@ -37,7 +37,7 @@ These ten principles are the spine of the system; every section below is an elab
 | `docs/rules/*.md` | the rules themselves — the only place a rule is *stated* |
 | `docs/workflow.md` | the router: task → which modules to read → which verification tier |
 | `docs/checklists/*.md` | what a reviewer gates on; cites rules, never restates them |
-| `DESIGN.md` | the client's token *values* — brand decisions, not rules |
+| `DESIGN.md` | the client's brand **decisions and constraints, with their reasoning** — never values; those live in `global.css` ([tokens.design-doc]) |
 | `AGENTS.md` | the vendor-neutral agent contract and entry point; routes, states non-negotiables in one line each |
 | `CLAUDE.md` | a pointer to `AGENTS.md`, nothing more |
 | `.agents/skills/*` | executable procedures; state *what to check and at what severity*, never the rule itself |
@@ -58,4 +58,5 @@ A rule written twice drifts twice. If you find yourself explaining a rule outsid
 [seo]: ./seo.md#seo-head--metadata
 [structure.git]: ./structure.md#git-branching-deploy--starter-lineage
 [tokens]: ./tokens.md#design-tokens--styling
+[tokens.design-doc]: ./tokens.md#designmd-records-decisions-not-values
 <!-- /rule-links -->

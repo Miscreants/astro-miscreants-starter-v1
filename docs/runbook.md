@@ -21,7 +21,8 @@ Phase numbers map to [lifecycle].
 8. Fill every `--color-*` role in `global.css` `@theme`, for every theme the project ships. Add brand-named accents separately; map `--color-intent` to the primary.
 9. Decide the theme set and register the `@custom-variant`s.
 10. Set per-client decisions ([tokens.per-client]): radius stance, depth, accents.
-11. Wire fonts ([perf.fonts]); set `--font-heading/-sans/-mono`. Tune the fluid type clamps. Rewrite `DESIGN.md`.
+11. Wire fonts ([perf.fonts]); set `--font-heading/-sans/-mono`. Tune the fluid type clamps.
+11b. Rewrite `DESIGN.md` — the decisions from steps 8–11 **and the reasoning behind them**, plus this brand's hard constraints. Answer its "Decide per project" section and replace it. No values: they live in `global.css`, and the gate rejects them here ([tokens.design-doc]).
 
 **3. Componentize**
 
@@ -63,5 +64,6 @@ Phase numbers map to [lifecycle].
 [structure.gate]: ./rules/structure.md#required-scripts--the-type--build-gate
 [structure.git]: ./rules/structure.md#git-branching-deploy--starter-lineage
 [templates]: ./rules/component-templates.md#component-author-templates
+[tokens.design-doc]: ./rules/tokens.md#designmd-records-decisions-not-values
 [tokens.per-client]: ./rules/tokens.md#per-client-design-decisions-set-at-intake
 <!-- /rule-links -->

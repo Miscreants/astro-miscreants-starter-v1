@@ -4,6 +4,21 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.7 — 2026-08-02 — DESIGN.md records decisions, not values
+
+`DESIGN.md` was 233 lines, of which **155 were frontmatter duplicating `global.css`** — the full palette, the type ramp, the radius and spacing scales, and per-component specs. Nothing read that frontmatter. It existed only to go stale, and it had:
+
+- **status colours already wrong** — `#dc2626` / `#16a34a` documented against `#841B20` / `#4C6649` actually rendering, so an agent would build bright red/green state styling for a maroon-and-olive site;
+- **an internal contradiction** — "This build does not use rounded corners… Pills are off the table" three paragraphs above "**Nav (pill)** — a pill-rounded panel", with `nav-pill.rounded: {rounded.pill}` in the frontmatter backing the wrong one;
+- **motion documented as "150–300 ms linear or ease-out"** against tokens of 0.2–1.6s on a custom bezier;
+- a framework version two majors behind.
+
+The rewrite ([tokens.design-doc]) keeps decisions, rationale and hard constraints, and drops every value in favour of pointers to `global.css`, `/styleguide` and `/components`. The file is ~45% shorter and considerably more specific about the things that can't rot — the editorial reasoning for sharp corners, why `intent` equals `fg`, the shadow-last depth order, what is deliberately not done.
+
+**The reframe that drove it:** the problem was never specific-versus-general, it was derivable-versus-not. A stale *description* is worse than no description, because a description reads to an agent as an instruction — "the nav is a pill" becomes *make pills*. Normative statements ("never use rounded corners") can't fail that way: when code contradicts one, it identifies a bug instead of licensing it. So the fix was to be **more** specific about intent, not vaguer.
+
+Enforced rather than remembered: [guardrails.docs-check] now fails the gate on any hex, `px` or `ms` literal in `DESIGN.md`. Discipline is what failed the first time.
+
 ### v2.6 — 2026-08-02 — the starter itself ships blocked
 
 The AI crawler policy landed as allow-all in the starter's own `robots.txt`, which was the wrong file to put it in. The starter is a template: its preview deployment has no reason to be crawled, indexed, or used as training data.
@@ -149,11 +164,11 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [checklist.page]: ./checklists/page.md#page-done
 [checklist.pre-launch]: ./checklists/pre-launch.md#pre-launch
 [components.docs]: ./rules/components.md#documentation--shared-components
-[components.forms]: ./rules/components.md#forms-----progressively-enhanced-and-hardened
+[components.forms]: ./rules/components.md#forms--form--field-progressively-enhanced-and-hardened
 [components.props]: ./rules/components.md#props-typing
 [components.scripting]: ./rules/components.md#client-side-scripting
 [conformance]: ./conformance.md#starter-conformance-gaps
-[content.md-vs-mdx]: ./rules/content.md#vs---pick-by-whether-the-author-places-components
+[content.md-vs-mdx]: ./rules/content.md#md-vs-mdx--pick-by-whether-the-author-places-components
 [content.source-seam]: ./rules/content.md#content-source-seam
 [deploy.static]: ./rules/deployment.md#deployment--static
 [guardrails.docs-check]: ./guardrails.md#documentation-integrity-check-required--shipped
@@ -168,7 +183,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [principles]: ./rules/principles.md#why-this-exists
 [seo.ai-crawlers]: ./rules/seo.md#ai-crawler-policy
 [seo.identity]: ./rules/seo.md#site-identity--one-source-of-truth
-[seo.layout-contract]: ./rules/seo.md#the--contract
+[seo.layout-contract]: ./rules/seo.md#the-layoutastro-contract
 [seo.sitemap]: ./rules/seo.md#sitemap
 [seo.staging]: ./rules/seo.md#staging--preview-indexing-control
 [structure.gate]: ./rules/structure.md#required-scripts--the-type--build-gate
@@ -177,6 +192,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [structure.naming]: ./rules/structure.md#naming-conventions
 [structure.versions]: ./rules/structure.md#versions--engines
 [templates]: ./rules/component-templates.md#component-author-templates
+[tokens.design-doc]: ./rules/tokens.md#designmd-records-decisions-not-values
 [tokens.model]: ./rules/tokens.md#the-token-model
 [tokens.per-client]: ./rules/tokens.md#per-client-design-decisions-set-at-intake
 [tokens.responsive]: ./rules/tokens.md#responsive-contract

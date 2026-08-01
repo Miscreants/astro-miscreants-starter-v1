@@ -42,8 +42,8 @@ const walk = (dir) =>
     return full.endsWith(".md") ? [full] : [];
   });
 
-/** Blank out code so examples aren't mistaken for declarations or citations. */
-const stripCode = (text) => {
+/** Blank fenced blocks: headings and declarations inside one are examples. */
+const stripFences = (text) => {
   let inFence = false;
   return text
     .split(/\r?\n/)
@@ -52,10 +52,24 @@ const stripCode = (text) => {
         inFence = !inFence;
         return "";
       }
-      return inFence ? "" : line.replace(/`[^`]*`/g, "");
+      return inFence ? "" : line;
     })
     .join("\n");
 };
+
+/**
+ * Also blank inline code spans — used when scanning for citations, where a
+ * bracketed id shown as code is an example.
+ *
+ * Deliberately NOT used for heading text: a heading like
+ * "`DESIGN.md` records decisions, not values" must keep its code span, or the
+ * generated anchor drops those words and stops matching the real one.
+ */
+const stripCode = (text) =>
+  stripFences(text)
+    .split(/\r?\n/)
+    .map((line) => line.replace(/`[^`]*`/g, ""))
+    .join("\n");
 
 /** GitHub heading anchor: lowercase, drop punctuation, spaces to hyphens (runs preserved). */
 const slug = (text) =>
@@ -71,7 +85,8 @@ const moduleFiles = walk(DOCS).filter((f) => !EXEMPT.some((d) => f.startsWith(d)
 const rules = new Map(); // id -> { file, anchor }
 
 for (const file of moduleFiles) {
-  const lines = stripCode(readFileSync(file, "utf8")).split("\n");
+  // Fences only — heading text keeps its inline code, or the anchor loses words.
+  const lines = stripFences(readFileSync(file, "utf8")).split("\n");
   for (let i = 0; i < lines.length; i++) {
     const heading = lines[i].match(/^(#{2,4})\s+(.+)$/);
     if (!heading) continue;

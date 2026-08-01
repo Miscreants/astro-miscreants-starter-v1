@@ -21,7 +21,8 @@ It fails on:
 - a duplicate rule id, a duplicate module `order`, or an unknown tier;
 - any surviving `§N` section reference — the banned syntax that ids replaced;
 - a relative `.md` link that doesn't resolve on disk;
-- a stale rule-link block (a rule moved or a citation changed without `npm run docs:build`).
+- a stale rule-link block (a rule moved or a citation changed without `npm run docs:build`);
+- a hex, `px` or `ms` literal in `DESIGN.md` — that file records decisions, and a value there is a second copy of something in `global.css` ([tokens.design-doc]).
 
 Declarations and citations inside fenced code blocks are treated as examples and ignored. `docs/learn/` is exempt: it is explicitly non-authoritative.
 
@@ -94,5 +95,6 @@ The repo ships **executable forms of this document** under `.claude/`. They are 
 [roadmap]: ./roadmap.md#roadmap
 [runbook]: ./runbook.md#new-client-setup-runbook
 [structure.gate]: ./rules/structure.md#required-scripts--the-type--build-gate
+[tokens.design-doc]: ./rules/tokens.md#designmd-records-decisions-not-values
 [tokens.per-client]: ./rules/tokens.md#per-client-design-decisions-set-at-intake
 <!-- /rule-links -->

@@ -162,6 +162,6 @@ The named groups are technically redundant against `User-agent: *`. They exist s
 [guardrails.local-dev]: ../guardrails.md#local-development-notes
 [runbook]: ../runbook.md#new-client-setup-runbook
 [seo.ai-crawlers]: ./seo.md#ai-crawler-policy
-[seo.json-ld]: ./seo.md#json-ld-via
+[seo.json-ld]: ./seo.md#json-ld-via-libschemats
 [seo.staging]: ./seo.md#staging--preview-indexing-control
 <!-- /rule-links -->

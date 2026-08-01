@@ -253,5 +253,5 @@ On a pure-static site the endpoint is a separate function/Worker mounted on a sa
 [components.scripting]: ./components.md#client-side-scripting
 [components.slots]: ./components.md#slots--default--named-with-introspection
 [conformance]: ../conformance.md#starter-conformance-gaps
-[tokens.scoped-styles]: ./tokens.md#accessing-tokens-inside-scoped---the-1-gotcha
+[tokens.scoped-styles]: ./tokens.md#accessing-tokens-inside-scoped-style--the-1-gotcha
 <!-- /rule-links -->
