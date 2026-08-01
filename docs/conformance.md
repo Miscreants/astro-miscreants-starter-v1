@@ -10,7 +10,6 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 | Rule | Gap | Action |
 |---|---|---|
-| [components.composition] SectionMain | Side rules (`border-l border-r`) are unconditional — no opt-out prop | Add `sideRules?: boolean` (or a `frame` variant) |
 | [perf.prefetch] prefetch | Not configured | Add `prefetch` config with `defaultStrategy: 'hover'` |
 | [tokens.scoped-styles] raw values | `HeroCanvas` and `ShinyButton` declare literal hex custom properties that don't follow the theme | Either promote to theme-aware tokens or document them under the [tokens.scoped-styles] allowance |
 | [structure.git] lineage | No `starterVersion` field or upstream-remote convention in place yet | Add the field; document the pull workflow |
@@ -18,6 +17,8 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 | [structure.env] env | No build-time assertion for required env keys | Add assertions; revisit when `astro:env` is adopted |
 
 ### Cleared
+
+**v2.9 — not a gap, a decision.** `SectionMain`'s unconditional side rules were logged as needing an opt-out prop. They stay as they are: the shared frame is the reason the primitive exists, and a per-section prop would reintroduce the drift it prevents. A project without section borders edits `SectionMain` in its own repo — client repos own their component set ([components.composition]).
 
 **v2.3 — the `launch` skill no longer contradicts [seo.staging].** It previously blocked on a *missing* `Disallow: /` and accepted its presence as sufficient staging protection, so it would have passed an indexable staging site. It now checks for one of the four real methods, marks the two it cannot see from the repo as `NEEDS HUMAN`, adds the inverse production check (a blanket `X-Robots-Tag: noindex` in `public/_headers` deindexes the live site), and is explicitly barred from "fixing" the finding by adding `Disallow: /`.
 

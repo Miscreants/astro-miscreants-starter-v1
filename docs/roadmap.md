@@ -27,10 +27,9 @@
 2. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging]).
 
 ### P1 — authoring quality
-1. `sideRules` opt-out on `SectionMain` ([conformance]).
-2. Split the component templates into the three of [templates] and update `ComponentTemplate*`.
-3. Add `prefetch` config ([perf.prefetch]).
-4. `starterVersion` + upstream-remote workflow ([structure.git]).
+1. Split the component templates into the three of [templates] and update `ComponentTemplate*`.
+2. Add `prefetch` config ([perf.prefetch]).
+3. `starterVersion` + upstream-remote workflow ([structure.git]).
 
 ### P2 — tooling
 1. Clear the remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.

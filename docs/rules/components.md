@@ -26,7 +26,9 @@ A whole page section: `Hero`, `SectionFeatures`, `SectionContact`. Lives flat in
 >
 > Components that manage their own grid and padding (`FlowSteps`, `FeatureScrollSpy`) still go *inside* `SectionMain`, with `padding="none" contentPadding="none"`.
 >
-> **Visual framing is a brand decision.** The side rules are currently unconditional; a client whose design has no section borders needs an opt-out prop rather than bespoke markup ([conformance]). Width and border color are already token-driven (`container-page`, `border-stroke`) and are tuned in `global.css`, not in the component.
+> **The side rules are deliberate and stay unconditional.** They are part of the shared frame every section inherits — that consistency is the reason `SectionMain` exists, and a per-section opt-out prop would reintroduce exactly the drift it prevents. Width and border colour are already token-driven (`container-page`, `border-stroke`) and tuned in `global.css`.
+>
+> A project whose design has no section borders **edits `SectionMain` in its own repo**. Client repos own their copy of the component set; changing a primitive to match the brand is normal work, not a deviation. The rule is that every section goes through `SectionMain` — not that `SectionMain` looks identical on every project.
 >
 > ```astro
 > ---
@@ -252,6 +254,5 @@ On a pure-static site the endpoint is a separate function/Worker mounted on a sa
 [components.props]: ./components.md#props-typing
 [components.scripting]: ./components.md#client-side-scripting
 [components.slots]: ./components.md#slots--default--named-with-introspection
-[conformance]: ../conformance.md#starter-conformance-gaps
 [tokens.scoped-styles]: ./tokens.md#accessing-tokens-inside-scoped-style--the-1-gotcha
 <!-- /rule-links -->
