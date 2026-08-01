@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "//starterVersion": "The starter release this tree is at. A template-repo copy inherits this value and never bumps it again, which is what records the baseline a client build was cut from. Bump it here in the same change as a docs/changelog.md entry.",
-  "starterVersion": "2.9",
+  "starterVersion": "2.10",
   "engines": {
     "node": ">=22.12.0"
   },

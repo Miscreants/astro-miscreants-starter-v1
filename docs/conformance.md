@@ -10,12 +10,14 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 | Rule | Gap | Action |
 |---|---|---|
-| [perf.prefetch] prefetch | Not configured | Add `prefetch` config with `defaultStrategy: 'hover'` |
-| [tokens.scoped-styles] raw values | `HeroCanvas` and `ShinyButton` declare literal hex custom properties that don't follow the theme | Either promote to theme-aware tokens or document them under the [tokens.scoped-styles] allowance |
 | [components.forms] forms | The starter ships the `Form`/`Field` UI only; no reference endpoint implements the security requirements | Ship a reference endpoint meeting [components.forms], or state per-project that it must be built |
 | [structure.env] env | No build-time assertion for required env keys | Add assertions; revisit when `astro:env` is adopted |
 
 ### Cleared
+
+**v2.10 — [perf.prefetch] now holds.** `prefetch` is configured with `prefetchAll` and the hover strategy; the runtime is verified present in the built page entry script.
+
+**v2.10 — [tokens.scoped-styles] now holds.** The two components carrying literal hex custom properties, `HeroCanvas` and `ShinyButton`, were removed rather than tokenised. Neither had a showcase entry, so neither was reachable from `/components`; `HeroCanvas` was also the sole consumer of `src/lib/simplex-noise.js`, which went with it. Nothing in `src/` referenced either.
 
 **v2.9 — [structure.git] now holds.** `starterVersion` ships in the starter's `package.json` and is inherited by every template copy. The `upstream` remote requirement was dropped: builds come from the GitHub template repo, which has no upstream link by design, so the rule was describing a workflow nobody uses.
 

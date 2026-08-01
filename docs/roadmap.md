@@ -4,6 +4,10 @@
 ## Roadmap
 <!--rule: roadmap | tier: reference-->
 
+### Done — v2.10
+- ✅ `prefetch` enabled, hover strategy, all internal links ([perf.prefetch]).
+- ✅ `HeroCanvas` and `ShinyButton` removed, clearing the last raw-value holdouts ([tokens.scoped-styles]).
+
 ### Done — v2.9
 - ✅ `SectionMain` side rules confirmed as intentional, not a gap ([components.composition]).
 - ✅ Starter lineage rewritten around the template repo; `starterVersion` inherited automatically ([structure.git]).
@@ -32,7 +36,6 @@
 
 ### P1 — authoring quality
 1. Split the component templates into the three of [templates] and update `ComponentTemplate*`.
-2. Add `prefetch` config ([perf.prefetch]).
 
 ### P2 — tooling
 1. Clear the remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.
@@ -69,4 +72,5 @@
 [structure.gate]: ./rules/structure.md#required-scripts--the-type--build-gate
 [structure.git]: ./rules/structure.md#git-branching-deploy--starter-lineage
 [templates]: ./rules/component-templates.md#component-author-templates
+[tokens.scoped-styles]: ./rules/tokens.md#accessing-tokens-inside-scoped-style--the-1-gotcha
 <!-- /rule-links -->

@@ -73,7 +73,7 @@ The template is **the best current snapshot of "how to start a new Astro project
 
 ## Component roadmap
 
-Brainstorm of components that recur across multi-build Astro work, grouped by frequency-of-need. Existing components (Tabs, Accordion, Modal, Dropdown, Media, Cards, Nav, Footer, FlowSteps, FilterBar, ComboboxGrouped, Slider, LogoMarquee, HubspotForm, Breadcrumbs, AnimatedTags, ButtonGroup, Button, Logo, LogoMenu, ShinyButton, Icon, HeroCanvas, FeatureScrollSpy, Grid, SectionMain, Layout, Clickable) are not re-listed.
+Brainstorm of components that recur across multi-build Astro work, grouped by frequency-of-need. Existing components (Tabs, Accordion, Modal, Dropdown, Media, Cards, Nav, Footer, FlowSteps, FilterBar, ComboboxGrouped, Slider, LogoMarquee, HubspotForm, Breadcrumbs, AnimatedTags, ButtonGroup, Button, Logo, LogoMenu, Icon, FeatureScrollSpy, Grid, SectionMain, Layout, Clickable) are not re-listed.
 
 ### Almost certainly needed on every project
 
@@ -106,7 +106,7 @@ Brainstorm of components that recur across multi-build Astro work, grouped by fr
 
 ### Marketing / landing-page specific
 
-- **HeroSplit** — left text / right media split layout. Sibling to `HeroCanvas`.
+- **HeroSplit** — left text / right media split layout.
 - **FeatureGrid** — N×M grid of icon + title + description.
 - **LogoCloud** — static counterpart to `LogoMarquee`.
 - **TimelineVertical** — `FlowSteps` may already cover this; check.

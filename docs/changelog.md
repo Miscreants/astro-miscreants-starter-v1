@@ -4,6 +4,16 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.10 — 2026-08-02 — prefetch on, two components out
+
+**Navigation prefetch enabled** ([perf.prefetch]) — `prefetchAll` with the hover strategy, so every internal link warms when a visitor signals intent and the navigation lands instantly. On a static site the pages are already built, so the cost is one cheap fetch for a link someone is about to click. It works without the client router; prefetch and view transitions are independent. Verified present in the built page entry script rather than assumed from config.
+
+`viewport` was deliberately not used: it prefetches everything on screen, which on a long marketing page spends real bandwidth on links nobody follows.
+
+**`HeroCanvas` and `ShinyButton` removed.** They were the last two components carrying literal hex custom properties that don't follow the theme — resolved by deletion rather than tokenisation. Neither had a showcase entry, so neither was reachable from `/components` or visible to a client's agent; nothing in `src/` referenced either. `HeroCanvas` was also the only consumer of `src/lib/simplex-noise.js`, which went with it — four files in total.
+
+That leaves the animated-canvas rules in [perf.canvas] with no in-repo example. They stay: the guidance is about what to do when a project needs an effect like that, and it was written from the failure mode, not from the component.
+
 ### v2.9 — 2026-08-02 — two rules corrected against how work actually happens
 
 **`SectionMain`'s side rules stay unconditional.** Logged as a gap needing a `sideRules` opt-out prop; it isn't a gap, it's the design. The shared frame is the reason the primitive exists, and a per-section prop to switch off part of it reintroduces exactly the drift `SectionMain` prevents. A project whose design has no section borders edits `SectionMain` in its own repo — client repos own their component set. The rule is that every section goes *through* `SectionMain`, not that it looks identical on every project.

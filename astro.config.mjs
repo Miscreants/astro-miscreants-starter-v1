@@ -77,6 +77,18 @@ export default defineConfig({
   // Astro 7 defaults compressHTML to 'jsx' (JSX-style whitespace stripping).
   // Keep the v6 HTML-aware behaviour so inline spacing doesn't shift.
   compressHTML: true,
+  // Every internal link warms on hover. On a static site the pages are already
+  // built, so this costs one cheap fetch for a link the visitor has signalled
+  // intent on, and the navigation lands instantly. Independent of the client
+  // router — this works without view transitions enabled.
+  //
+  // `viewport` would prefetch everything on screen; on a long marketing page
+  // that is a lot of bandwidth spent on links nobody follows. Reconsider
+  // prefetchAll on a content-heavy site with hundreds of routes.
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
   build: {
     // Inline page CSS into <head> instead of emitting render-blocking
     // stylesheet requests — a material FCP/LCP win for static sites.
