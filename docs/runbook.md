@@ -10,7 +10,7 @@ Phase numbers map to [lifecycle].
 
 1. Copy the starter → `<client>-build`. Record `starterVersion` in `package.json` and add the starter as an `upstream` remote ([structure.git]).
 2. Update `package.json` `name` and README; confirm the [structure.gate] scripts.
-3. Fill in `src/data/site.ts` (name, url, description, ogImage, logo, socials). `astro.config.mjs` reads the URL from it ([seo.identity]). **Never set `ALLOW_PLACEHOLDER_SITE` in a client project** — that variable exists only for the starter's own preview, and setting it disables the guard that stops a placeholder domain reaching production.
+3. Fill in `src/data/site.ts` (name, url, description, ogImage, logo, socials). `astro.config.mjs` reads the URL from it ([seo.identity]). The domain can stay the placeholder while previewing — the build warns, and [checklist.pre-launch] is what blocks on it at cutover.
 4. Add host config for the chosen target ([deploy.static]). Add `public/_headers` and, for a migration, `public/_redirects`.
 5. Add `public/robots.txt` + `src/pages/404.astro`.
 6. Add `.env` keys; commit `.env.example` ([structure.env]). Write the per-client agent brief ([structure.agent-brief]).

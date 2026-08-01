@@ -4,13 +4,17 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
-### v2.4 — 2026-08-02 — escape hatch for the starter's own preview
+### v2.4 — 2026-08-02 — the placeholder origin warns, it doesn't block
 
-The [seo.identity] placeholder guard was too absolute. It throws whenever `CI` is set and the origin is still `example.com` — correct for a client repo, but this starter deploys its *own* hosted preview while legitimately keeping the placeholder, so the guard broke that build.
+The build-failing placeholder guard is gone, along with the `ALLOW_PLACEHOLDER_SITE` variable added to work around it. A placeholder origin now warns in every environment and never fails a build.
 
-`ALLOW_PLACEHOLDER_SITE=1` now bypasses it, and the failure message names the variable so anyone who hits the error sees both routes out. **Only the starter's preview environment sets it**; a client repo leaving it unset is the entire mechanism that keeps a placeholder domain out of production, which is why the runbook's scaffold step and the `launch` skill both flag it as a blocker if it appears in a client project.
+It was the wrong instrument at the wrong moment. Failing a build is the most disruptive response available, and a preview deploying with placeholder canonicals is harmless — nothing is indexed or linked. Client sites legitimately sit on a `*.pages.dev` URL for weeks before a domain is decided, and blocking every one of those deploys to prevent one launch mistake is a bad trade. It broke this starter's own preview on its first deploy, which is the kind of evidence worth listening to.
 
-Verified across four paths: `CI` + placeholder throws; `CI` + placeholder + hatch builds; local + placeholder warns and builds; real domain + `CI` builds.
+The escape hatch was worse than the problem: a variable that switches the check off is a footgun in a client repo, where setting it once silently removes the protection for good.
+
+[checklist.pre-launch] remains the gate. It blocks on a placeholder origin in production mode and runs deliberately at cutover, which is the only moment this matters. The `launch` skill no longer implies a failed build would have caught it — it reads `site.ts` directly and treats the build's `[site]` warning as a hint, not proof.
+
+The single-source import from [seo.identity] is unaffected and stays: the domain is still declared exactly once.
 
 ### v2.3 — 2026-08-02 — one home per thing
 

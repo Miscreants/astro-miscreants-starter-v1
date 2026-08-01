@@ -41,12 +41,13 @@ Trust project files and built output over stale notes or TODOs.
 
 Report each finding with its severity:
 
-- `site.ts` `url` is `https://example.com` — **BLOCKER**. A host build fails on this by design ([seo.identity]), so it also means the site has never deployed.
+- `site.ts` `url` is `https://example.com` — **BLOCKER** in production, **SHOULD FIX** in staging. The build only warns about this ([seo.identity]); this audit is the gate, so do not assume a successful deploy means the domain is set
 - `astro.config.mjs` declares its own `site` string instead of importing `site.url` from `src/data/site.ts` — **BLOCKER**, the two-source drift [seo.identity] exists to prevent
 - In production, `site.ts` `url` is not the client's real domain, including protocol, host and no trailing slash — **BLOCKER**
 - `site.ts` still contains `Your Site Name` or `One-line description of the site…` — **BLOCKER**
-- `ALLOW_PLACEHOLDER_SITE` is set in this project's host build environment — **BLOCKER**. It disables the guard that stops a placeholder origin reaching production, and belongs only to the starter's own preview ([seo.identity]). Not visible in the repo, so mark **NEEDS HUMAN** unless the host config was checked directly
 - `package.json` `name` is `astro-playground` — **NIT**
+
+Check the build log from Step 1 for the `[site]` placeholder warning — it is the cheapest confirmation, but its absence proves nothing, so still read `site.ts` directly.
 
 ### Indexing control
 

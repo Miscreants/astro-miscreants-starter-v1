@@ -13,29 +13,17 @@ import { site } from './src/data/site.ts';
 // from src/data/site.ts rather than repeating the domain. Two copies plus a
 // checklist item to keep them in sync is not a single source of truth.
 //
-// Hosts (Cloudflare, Netlify) set CI=true, so a real deploy can never ship
-// placeholder canonicals, og:url or schema @ids. Local builds warn instead.
-//
-// ESCAPE HATCH — ALLOW_PLACEHOLDER_SITE=1. This starter deploys its own
-// Cloudflare preview while legitimately keeping the placeholder origin, so that
-// build sets the variable. A CLIENT REPO MUST NEVER SET IT: leaving it unset is
-// what stops a placeholder domain reaching production.
+// A placeholder origin warns, in every environment, and never fails the build.
+// Previewing on a *.pages.dev URL before the client's domain is decided is
+// normal and harmless — nothing is indexed or linked yet. The real gate is the
+// pre-launch audit, which blocks on this at cutover, when it actually matters.
 const PLACEHOLDER_ORIGIN = 'example.com';
-const isPlaceholderOrigin = site.url.includes(PLACEHOLDER_ORIGIN);
-const placeholderAllowed = ['1', 'true'].includes(process.env.ALLOW_PLACEHOLDER_SITE ?? '');
 
-if (isPlaceholderOrigin && process.env.CI && !placeholderAllowed) {
-  throw new Error(
-    `site.url is still the ${PLACEHOLDER_ORIGIN} placeholder. Set the real domain in ` +
-      `src/data/site.ts before deploying — canonical URLs, og:url and schema.org @id all resolve against it. ` +
-      `If this is the starter's own preview build, set ALLOW_PLACEHOLDER_SITE=1 in the build environment instead.`
-  );
-}
-
-if (isPlaceholderOrigin) {
+if (site.url.includes(PLACEHOLDER_ORIGIN)) {
   console.warn(
-    `[site] url is still the ${PLACEHOLDER_ORIGIN} placeholder — expected in the starter, ` +
-      `a deploy blocker in a client repo.`
+    `\n[site] url is still the ${PLACEHOLDER_ORIGIN} placeholder.\n` +
+      `       Canonical URLs, og:url and schema.org @id all resolve against it.\n` +
+      `       Fine for previews — set the real domain in src/data/site.ts before launch.\n`
   );
 }
 
