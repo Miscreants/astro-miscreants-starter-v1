@@ -16,6 +16,10 @@ Reference definitions are invisible when rendered, so citations became clickable
 
 **`Doc/` — deleted.** 27 per-component reference docs that duplicated `src/content/components/*.mdx`, the live showcase and the documented home ([components.docs]). Four of them (Modal, AccordionMorph, Button, AnimatedTags) carried mechanism and design-rationale sections their MDX counterparts lack; that content is recoverable from git history if it's ever wanted. [components.docs] now states one home and raises the bar for what an MDX entry must cover, so the gap doesn't reopen.
 
+**The `launch` skill's staging rule reconciled with [seo.staging].** It was the last place a shipped tool gave a wrong answer: it blocked when `Disallow: /` was *missing* from staging and treated its presence as protection — so it would have passed a staging site that search engines could index, which is precisely what [seo.staging] was rewritten to prevent.
+
+It now checks for one of the four real methods, splitting them by what an audit can actually see: `X-Robots-Tag` and meta-`noindex` are verifiable from the repo and built output; host-level access control and a non-public preview URL are `NEEDS HUMAN`. It also gained the inverse production check — a blanket `X-Robots-Tag: noindex` in `public/_headers` ships to production and deindexes the live site — and is explicitly barred from auto-fixing the finding, because adding `Disallow: /` would close the report while leaving the site indexable.
+
 **`Plan.md` — moved to [plan].** It was direction notes at the repo root competing for attention with the rulebook. Its "Component showcase site (in-repo)" section was dropped — that shipped, and is live at `/components`. The rest (template-repo distribution, component roadmap, long-term registry) is still live direction and now sits in `docs/` labelled as explicitly not rules.
 
 ### v2.2 — 2026-08-01 — the gates become true

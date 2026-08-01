@@ -8,6 +8,7 @@
 - ✅ Generated `STANDARDS.md` retired; rule ids are now clickable in every file via generated `rule-links` blocks ([guardrails.docs-check]).
 - ✅ `Doc/` removed — component documentation has one home, `src/content/components/*.mdx` ([components.docs]).
 - ✅ `Plan.md` moved to [plan], with its shipped showcase section dropped.
+- ✅ `launch` skill's staging rule reconciled with [seo.staging] ([conformance]).
 
 ### Done — v2.2
 - ✅ Type gate swapped to `astro check`; the three errors it surfaced are fixed ([structure.gate], [conformance]).
@@ -30,7 +31,6 @@
 2. Split the component templates into the three of [templates] and update `ComponentTemplate*`.
 3. Add `prefetch` config ([perf.prefetch]).
 4. `starterVersion` + upstream-remote workflow ([structure.git]).
-5. Reconcile the `launch` skill's staging rule with [seo.staging] — it still treats `Disallow: /` as sufficient protection ([conformance]).
 
 ### P2 — tooling
 1. Clear the 32 remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.

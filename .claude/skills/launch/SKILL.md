@@ -16,7 +16,8 @@ Read `$ARGUMENTS` (or the arguments passed to this skill) as `staging` or `produ
 
 | Check | staging | production |
 |---|---|---|
-| `robots.txt` crawl rule | Must contain `Disallow: /`; otherwise **BLOCKER** | Must not block crawling; `Disallow: /` is **BLOCKER** |
+| Indexing control | At least one [seo.staging] method in place; none found is **BLOCKER** | Must be indexable — any `noindex` reaching production is **BLOCKER** |
+| `robots.txt` crawl rule | `Disallow: /` is a secondary signal only, never the control itself | Must not block crawling; `Disallow: /` is **BLOCKER** |
 | Sitemap | Do not advertise one | `sitemap-index.xml` required; missing is **BLOCKER** |
 | Empty public links | Ignore as work in progress | **BLOCKER** |
 | Placeholder copy | **SHOULD FIX** | **BLOCKER** |
@@ -46,13 +47,36 @@ Report each finding with its severity:
 - `site.ts` still contains `Your Site Name` or `One-line description of the site…` — **BLOCKER**
 - `package.json` `name` is `astro-playground` — **NIT**
 
-Inspect the repository copy of `public/robots.txt` and its body:
+### Indexing control
 
-- Staging does not contain `Disallow: /` — **BLOCKER**
+**`Disallow: /` is not indexing control** ([seo.staging]). A disallowed URL can still be indexed from external links, and a crawler blocked by robots.txt never reads a page-level `noindex` — so a staging site protected only by robots.txt can and does end up in search results.
+
+**In staging mode**, establish that at least one real method is in place. Two are verifiable from the repository, two are not:
+
+| Method | How to verify |
+|---|---|
+| `X-Robots-Tag: noindex, nofollow` on the preview host | Look for it in `public/_headers` or host config **scoped to preview only**. A blanket rule in `public/_headers` also hits production — report that as a production **BLOCKER** (see below) |
+| `<meta name="robots" content="noindex">` on every page | Confirm `noindex` reaches the built HTML for every route, not just some |
+| Host-level access control (password/SSO) | **NEEDS HUMAN** — not visible in the repo |
+| Non-public preview URL, never linked | **NEEDS HUMAN** — not visible in the repo |
+
+- No method found and none confirmable — **BLOCKER**
+- Only `Disallow: /` present, with no other method — **BLOCKER**. State plainly that this does not prevent indexing
+- A method is present but unverifiable from here — **NEEDS HUMAN**, naming which one and how to confirm it
+
+**In production mode**, the risk inverts — the danger is a staging protection surviving cutover:
+
+- `public/_headers` carries a blanket `X-Robots-Tag: noindex` — **BLOCKER**. It ships to production and deindexes the live site
+- Any built page carries `<meta name="robots" content="noindex">` that isn't a deliberate draft or internal route — **BLOCKER**
+- Verify the **response headers** of the production deploy, not just the repo — a host-level preview rule can outlive the preview
+
+Then inspect the repository copy of `public/robots.txt` and its body:
+
 - Production contains a crawl-blocking rule such as `Disallow: /` — **BLOCKER**
 - Production file is missing, lacks `Sitemap:`, or points to a host other than `site` — **SHOULD FIX**
+- Staging lacks `Disallow: /` — **NIT** when a real method from the table is in place; it is a useful secondary signal, not the control
 
-Do not use HTTP 200 alone as proof: Cloudflare may synthesize a `robots.txt` that lacks the required rules.
+Do not use HTTP 200 alone as proof: a host may synthesize a `robots.txt` that lacks the required rules.
 
 ## Step 3 — Referenced assets
 
@@ -213,6 +237,8 @@ Unless verified during this run, always include these under `NEEDS HUMAN`:
 
 - Keyboard-only and screen-reader pass ([checklist.a11y])
 - Colour contrast in every active `data-theme`
+- In staging: host-level access control or a non-public preview URL, when that is the [seo.staging] method in use
+- In production: the deployed response headers carry no `X-Robots-Tag: noindex` left over from preview
 - Contact form deployed and a real email received ([components.forms])
 - Client sign-off on production copy
 - DNS or domain cutover and verification on the real host
@@ -224,13 +250,15 @@ End with the number of findings safe to auto-fix and ask before changing files.
 
 Auto-fix only:
 
-- `robots.txt` sitemap host and mode-appropriate crawl rule
+- `robots.txt` sitemap host, and removing a crawl-blocking rule in production
 - `package.json` `name`
-- `site.ts` and `astro.config.mjs` URL alignment when the real domain is known
+- `site.ts` `url` when the real domain is known
 - sitemap integration or `SITEMAP_EXCLUDE` entries
 - `_headers` immutable caching rule
 
 Never auto-fix user-visible copy, legal text, favicons, OG artwork, or redirect maps.
+
+**Never auto-fix indexing control.** Adding `Disallow: /` to staging looks like a fix and isn't one ([seo.staging]) — it would close the finding while leaving the site indexable. Choosing between access control, an `X-Robots-Tag` header and meta-`noindex` depends on host setup you cannot see, so report it and let a human choose. Likewise never auto-remove a production `noindex` without confirming it isn't a deliberate draft route.
 
 After approved fixes, rerun the audit and report the delta.
 
@@ -240,4 +268,5 @@ After approved fixes, rerun the audit and report the delta.
 [components.forms]: ../../../docs/rules/components.md#forms-----progressively-enhanced-and-hardened
 [perf.third-party]: ../../../docs/rules/performance.md#third-party-scripts
 [seo.identity]: ../../../docs/rules/seo.md#site-identity--one-source-of-truth
+[seo.staging]: ../../../docs/rules/seo.md#staging--preview-indexing-control
 <!-- /rule-links -->
