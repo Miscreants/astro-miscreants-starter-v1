@@ -14,13 +14,13 @@ Reading the whole rulebook for a copy change wastes everyone's time; skipping it
 |---|---|---|
 | **Adding a page** | [`rules/components.md`](./rules/components.md) (composition model) · [`rules/seo.md`](./rules/seo.md) (Layout contract) | [`checklists/page.md`](./checklists/page.md) |
 | **Building a new component** | [`rules/components.md`](./rules/components.md) · [`rules/component-templates.md`](./rules/component-templates.md) · [`rules/accessibility.md`](./rules/accessibility.md) | [`checklists/component.md`](./checklists/component.md) |
-| **Building a page section** | [`rules/components.md`](./rules/components.md) (§5.0 — sections build on `SectionMain`) · [`rules/tokens.md`](./rules/tokens.md) | [`checklists/page.md`](./checklists/page.md) |
+| **Building a page section** | [`rules/components.md`](./rules/components.md) ([components.composition] — sections build on `SectionMain`) · [`rules/tokens.md`](./rules/tokens.md) | [`checklists/page.md`](./checklists/page.md) |
 | **Changing colors, type, spacing or motion** | [`rules/tokens.md`](./rules/tokens.md) · the client's [`../DESIGN.md`](../DESIGN.md) | [`checklists/accessibility.md`](./checklists/accessibility.md) — contrast in every theme |
-| **Adding interactivity / a `<script>`** | [`rules/components.md`](./rules/components.md) (§5.6) · [`rules/accessibility.md`](./rules/accessibility.md) · [`rules/performance.md`](./rules/performance.md) | [`checklists/component.md`](./checklists/component.md) |
-| **Adding a form** | [`rules/components.md`](./rules/components.md) (§5.7 — including the endpoint security requirements) | [`checklists/pre-launch.md`](./checklists/pre-launch.md) |
+| **Adding interactivity / a `<script>`** | [`rules/components.md`](./rules/components.md) ([components.scripting]) · [`rules/accessibility.md`](./rules/accessibility.md) · [`rules/performance.md`](./rules/performance.md) | [`checklists/component.md`](./checklists/component.md) |
+| **Adding a form** | [`rules/components.md`](./rules/components.md) ([components.forms] — including the endpoint security requirements) | [`checklists/pre-launch.md`](./checklists/pre-launch.md) |
 | **Adding or changing content** | [`rules/content.md`](./rules/content.md) · [`rules/seo.md`](./rules/seo.md) | [`checklists/seo.md`](./checklists/seo.md) |
 | **Adding images, fonts or an embed** | [`rules/performance.md`](./rules/performance.md) | [`checklists/page.md`](./checklists/page.md) |
-| **Building an animated canvas / heavy effect** | [`rules/performance.md`](./rules/performance.md) (§10.6) · [`rules/accessibility.md`](./rules/accessibility.md) (reduced motion) | [`checklists/component.md`](./checklists/component.md) |
+| **Building an animated canvas / heavy effect** | [`rules/performance.md`](./rules/performance.md) ([perf.canvas]) · [`rules/accessibility.md`](./rules/accessibility.md) (reduced motion) | [`checklists/component.md`](./checklists/component.md) |
 | **Setting up a new client repo** | [`runbook.md`](./runbook.md) · [`rules/structure.md`](./rules/structure.md) | the runbook's own phase gates |
 | **Wiring hosting, redirects or headers** | [`rules/deployment.md`](./rules/deployment.md) | [`checklists/pre-launch.md`](./checklists/pre-launch.md) |
 | **Preparing a launch** | [`checklists/pre-launch.md`](./checklists/pre-launch.md) | run the `launch` skill (see [`guardrails.md`](./guardrails.md)) |

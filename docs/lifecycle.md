@@ -1,19 +1,20 @@
 <!--docs-module: lifecycle | order: 02-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-## 2. The build process (lifecycle)
+## The build process (lifecycle)
+<!--rule: lifecycle | tier: reference-->
 
-Every client engagement follows the same arc. Each phase has a checklist in §11 and a step-by-step in §12.
+Every client engagement follows the same arc. Each phase has a checklist in [checklists] and a step-by-step in [runbook].
 
 ```
 ┌─ 0. Kickoff ──────────────────────────────────────────────────────┐
 │  Gather brand assets: colors, fonts, logos, design refs (Figma).   │
-│  Choose the production host (§10.8) and record it. Static output.  │
+│  Choose the production host ([deploy.static]) and record it. Static output.  │
 └────────────────────────────────────────────────────────────────────┘
             │
 ┌─ 1. Scaffold ─────────────────────────────────────────────────────┐
 │  Clone starter → rename → set site identity, analytics, host cfg.  │
-│  Record starterVersion + upstream remote (§3.7).                   │
+│  Record starterVersion + upstream remote ([structure.git]).                   │
 └────────────────────────────────────────────────────────────────────┘
             │
 ┌─ 2. Design system intake ─────────────────────────────────────────┐
@@ -23,7 +24,7 @@ Every client engagement follows the same arc. Each phase has a checklist in §11
             │
 ┌─ 3. Componentize ─────────────────────────────────────────────────┐
 │  Build page sections from starter primitives. New components       │
-│  follow §5 + §6. Reuse before you create.                          │
+│  follow [components] + [templates]. Reuse before you create.                          │
 └────────────────────────────────────────────────────────────────────┘
             │
 ┌─ 4. Content & SEO ────────────────────────────────────────────────┐
@@ -32,7 +33,7 @@ Every client engagement follows the same arc. Each phase has a checklist in §11
 └────────────────────────────────────────────────────────────────────┘
             │
 ┌─ 5. Optimize & QA ────────────────────────────────────────────────┐
-│  astro:assets images, fonts, budgets (§10.7), a11y audit, clean    │
+│  astro:assets images, fonts, budgets ([perf.budgets]), a11y audit, clean    │
 │  `npm run check`.                                                  │
 └────────────────────────────────────────────────────────────────────┘
             │

@@ -1,27 +1,35 @@
 <!--docs-module: roadmap | order: 21-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-## 15. Roadmap
+## Roadmap
+<!--rule: roadmap | tier: reference-->
+
+### Done — v2.1
+- ✅ Split the rulebook into task-scoped modules with a router ([guardrails.docs-check], [changelog]).
+- ✅ Stable rule ids replace section numbers everywhere; `§N` is banned syntax.
+- ✅ `scripts/check-docs.mjs` wired into `npm run check`.
+- ✅ Verification tiers so the gate scales with blast radius.
+- ✅ `AGENTS.md` reduced to a contract of pointers; `CLAUDE.md` points at it *(P1.5)*.
+- ✅ `build-component` command deleted; its unique content rescued into [components.styling] *(part of P1.6)*.
 
 ### P0 — correctness of the gate
-1. Swap the type gate to `astro check` and fix the three errors it surfaces (§14).
-2. Single-source the site URL with the placeholder guard (§7.1).
-3. Ship a reference form endpoint meeting §5.7, or document the per-project requirement in the runbook.
-4. Put preview/staging protection into the scaffold step so it's never left to launch day (§7.6).
+1. Swap the type gate to `astro check` and fix the three errors it surfaces ([conformance]).
+2. Single-source the site URL with the placeholder guard ([seo.identity]).
+3. Ship a reference form endpoint meeting [components.forms], or document the per-project requirement in the runbook.
+4. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging]).
 
 ### P1 — authoring quality
-1. `sideRules` opt-out on `SectionMain` (§14).
-2. Split the component templates into the three of §6 and update `ComponentTemplate*`.
-3. Add `prefetch` config (§10.4).
-4. `starterVersion` + upstream-remote workflow (§3.7).
-5. Reduce `AGENTS.md`/`CLAUDE.md` to pointers; delete restated rules (§1).
-6. Reconcile the shipped skills with v2 (§14): the `launch` staging rule against §7.6, and `build-component` against §4.2 / §5.6 / §13.6.
+1. `sideRules` opt-out on `SectionMain` ([conformance]).
+2. Split the component templates into the three of [templates] and update `ComponentTemplate*`.
+3. Add `prefetch` config ([perf.prefetch]).
+4. `starterVersion` + upstream-remote workflow ([structure.git]).
+5. Reconcile the `launch` skill's staging rule with [seo.staging] — it still treats `Disallow: /` as sufficient protection ([conformance]).
 
 ### P2 — tooling
-1. Stand up linting (§13.2) with the listed rules; run inside `check`.
-2. Prettier + shared config (§13.3).
-3. Minimal CI: `check` + eslint on PR (§13.4).
-4. Lighthouse CI asserting §10.7 budgets, and `axe-core` (§13.5).
-5. Adopt `astro:env` for typed env (§3.6).
-6. Cookie-consent gating as a reusable component (§10.5).
-7. Two more skills (§13.6): design-system intake (§12 phases 1–2) and a standalone accessibility audit (§11.4).
+1. Stand up linting ([guardrails.lint]) with the listed rules; run inside `check`.
+2. Prettier + shared config ([guardrails.format]).
+3. Minimal CI: `check` + eslint on PR ([guardrails.ci]).
+4. Lighthouse CI asserting [perf.budgets] budgets, and `axe-core` ([guardrails.axe]).
+5. Adopt `astro:env` for typed env ([structure.env]).
+6. Cookie-consent gating as a reusable component ([perf.third-party]).
+7. Two more skills ([guardrails.skills]): design-system intake ([runbook] phases 1–2) and a standalone accessibility audit ([checklist.a11y]).

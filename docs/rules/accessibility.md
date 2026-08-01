@@ -1,22 +1,26 @@
 <!--docs-module: rules/accessibility | order: 08-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-## 8. Accessibility
+## Accessibility
+<!--rule: a11y | tier: reference-->
 
 Accessibility is a build requirement, not a phase.
 
 **Every component ships with the accessibility behavior it needs — semantics, keyboard, focus and reduced motion — from the start.** Prefer native HTML; add ARIA only where native semantics are insufficient. Redundant or incorrect ARIA is worse than none.
 
-### 8.1 Semantic HTML first
+### Semantic HTML first
+<!--rule: a11y.semantics | tier: required-->
 Use `<nav>`, `<button>`, `<dialog>`, `<header>`, `<main>`, `<details>` before `<div role="…">`. Add an explicit `role` only when no element fits.
 
-### 8.2 Labels & state
+### Labels & state
+<!--rule: a11y.labels | tier: required-->
 - Icon-only controls get an accessible name (`aria-label` or visually-hidden text). Decorative icons get `aria-hidden="true"`.
 - Toggles set `aria-expanded` + `aria-controls`; checkable items `aria-checked`; tabs `aria-selected`.
 - Every landmark of a repeated type gets a distinguishing `aria-label`.
 - Meaningful images get real `alt`; decorative get `alt=""`.
 
-### 8.3 Keyboard support
+### Keyboard support
+<!--rule: a11y.keyboard | tier: required-->
 
 Required keys are what the pattern actually requires; optional keys are worth adding but not gated.
 
@@ -32,16 +36,19 @@ Required keys are what the pattern actually requires; optional keys are worth ad
 
 Automatic tab activation (selection follows focus) is appropriate when showing a panel is instantaneous; manual activation is required when it isn't. Choose per project and apply consistently.
 
-### 8.4 Focus management
+### Focus management
+<!--rule: a11y.focus | tier: required-->
 - Never drop focus to `<body>`. On close/remove, move focus to the next logical element.
 - Dialogs store `document.activeElement` on open and restore on close.
 - Roving tabindex: only the active item is `tabindex="0"`.
 - **Focus must not be obscured** by sticky headers, banners or footers (WCAG 2.2 SC 2.4.11). Use `scroll-margin-top` matched to the sticky header height.
 
-### 8.5 Reduced motion
+### Reduced motion
+<!--rule: a11y.reduced-motion | tier: required-->
 Wrap every animation in `@media (prefers-reduced-motion: reduce)`, **and** gate JS/GSAP animations on `matchMedia("(prefers-reduced-motion: reduce)")`, updating on its `change` event.
 
-### 8.6 Measurable thresholds
+### Measurable thresholds
+<!--rule: a11y.thresholds | tier: required-->
 
 Reviewers check numbers, not adjectives:
 
@@ -56,7 +63,8 @@ Reviewers check numbers, not adjectives:
 
 Every threshold is checked **in each theme the project ships**.
 
-### 8.7 Page-level
+### Page-level
+<!--rule: a11y.page | tier: default-->
 - Skip link to `#main` in `Layout.astro`.
 - Logical heading order, no skipped levels.
 - **One `h1` per page** — an agency convention for clarity and SEO, not a WCAG requirement. Deviate only with a reason.

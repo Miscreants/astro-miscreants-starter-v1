@@ -1,7 +1,8 @@
 <!--docs-module: rules/deployment | order: 11-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-### 10.8 Deployment — static
+## Deployment — static
+<!--rule: deploy.static | tier: required-->
 
 Default target is **pure-static**, deployed by Git build. Choose the host at kickoff and record it; every later step refers to "the production host."
 
@@ -17,6 +18,6 @@ Default target is **pure-static**, deployed by Git build. Choose the host at kic
   - **Cloudflare** → `wrangler.jsonc`: `assets.directory: "./dist"`, no `main` Worker, `compatibility_flags: ["nodejs_compat"]`, `observability.enabled`.
   - **Netlify** → `netlify.toml`: `[build] command = "npm run build"`, `publish = "dist"`.
 - **Redirects — portable.** Ship `public/_redirects`; both hosts read the same format (`/old  /new  301`). **Essential for migrations:** map every old URL to its new path so link equity survives the cutover.
-- **Headers & caching — portable.** Ship `public/_headers`: `/_astro/*` gets `Cache-Control: public, max-age=31536000, immutable` (hashed filenames), plus baseline security headers (`X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, a conservative CSP). Remember these apply to production (§7.6).
-- Forms → a separate function/Worker with an email binding (§5.7).
+- **Headers & caching — portable.** Ship `public/_headers`: `/_astro/*` gets `Cache-Control: public, max-age=31536000, immutable` (hashed filenames), plus baseline security headers (`X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, a conservative CSP). Remember these apply to production ([seo.staging]).
+- Forms → a separate function/Worker with an email binding ([components.forms]).
 - **Demo/showcase routes are gated, not deleted.** `/styleguide`, `/components` and previews live in `src/demos/`, injected by an integration only in `astro dev` or when `SHOW_DEMOS=true`. The client keeps the full showcase locally; production deploys without it.

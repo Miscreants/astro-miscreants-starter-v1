@@ -1,12 +1,13 @@
 <!--docs-module: checklists/accessibility | order: 16-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-### 11.4 Accessibility audit (per page)
+### Accessibility audit (per page)
+<!--rule: checklist.a11y | tier: checklist-->
 - [ ] Keyboard-only pass: every control reachable/operable; visible focus throughout; focus never obscured
 - [ ] Screen-reader pass on nav, forms, dialogs
 - [ ] Skip link works
-- [ ] Contrast meets §8.6 thresholds in every active theme — text **and** non-text
-- [ ] Target sizes meet §8.6
+- [ ] Contrast meets [a11y.thresholds] thresholds in every active theme — text **and** non-text
+- [ ] Target sizes meet [a11y.thresholds]
 - [ ] 400% zoom / 320px reflow with no horizontal scroll
 - [ ] `forced-colors: active` renders usably
 - [ ] Reduced-motion: animations disabled/simplified with the OS setting on

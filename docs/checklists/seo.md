@@ -1,7 +1,8 @@
 <!--docs-module: checklists/seo | order: 15-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-### 11.3 SEO (per page / template)
+### SEO (per page / template)
+<!--rule: checklist.seo | tier: checklist-->
 - [ ] `title` (+ `description`) passed to Layout, or set via frontmatter
 - [ ] Canonical resolves correctly (absolute, no trailing-slash mismatch)
 - [ ] OG + Twitter present; OG image absolute and exists

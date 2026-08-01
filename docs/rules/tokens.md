@@ -1,11 +1,13 @@
 <!--docs-module: rules/tokens | order: 04-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-## 4. Design tokens & styling
+## Design tokens & styling
+<!--rule: tokens | tier: reference-->
 
 **Get this right at intake (phase 2) and the rest of the build is fast.**
 
-### 4.1 The token model
+### The token model
+<!--rule: tokens.model | tier: required-->
 
 All design decisions live as CSS custom properties in `src/styles/global.css`, declared in a Tailwind v4 `@theme` block, with themes registered via `@custom-variant` and overridden per theme via `[data-theme="…"]`. Components never see raw values — only semantic roles.
 
@@ -45,7 +47,8 @@ A single `data-theme` attribute on any ancestor flips every descendant through t
 
 **Required:** every role is defined in every theme the project ships. A role that exists in one theme and not another is a bug.
 
-### 4.2 Per-client design decisions (set at intake)
+### Per-client design decisions (set at intake)
+<!--rule: tokens.per-client | tier: reference-->
 
 Decide these and record them in the client's `DESIGN.md`.
 
@@ -58,7 +61,8 @@ Decide these and record them in the client's `DESIGN.md`.
 | Depth | tonal by default; `--shadow-popover` / `--shadow-header` exist for floating UI | add more only if the design uses them |
 | Fonts | three roles: heading / sans / mono | swap per brand; keep the three roles |
 
-### 4.3 Typography
+### Typography
+<!--rule: tokens.typography | tier: required-->
 
 Type is **fluid** via `clamp()` driven by container-query units (`cqi`), declared as `@utility` recipes so they're available as class names:
 
@@ -80,7 +84,8 @@ Each size interpolates linearly between two anchors: MIN at a 20rem container, M
 - Fluid type needs a query container. `body` is the default; drop `container-type: inline-size` (the `cq` / `container-large` utilities) on a wrapper to **re-anchor** the scale to that wrapper's width.
 - Three font roles only: `--font-heading`, `--font-sans`, `--font-mono`.
 
-### 4.4 Layout & spacing utilities
+### Layout & spacing utilities
+<!--rule: tokens.layout | tier: default-->
 
 Use the semantic layout `@utility` recipes instead of ad-hoc padding:
 
@@ -93,7 +98,8 @@ Use the semantic layout `@utility` recipes instead of ad-hoc padding:
 
 `container-page` is the page box every top-level element (sections, nav, footer) aligns to; its width cap is a per-client value, changed once in `global.css`. Sections reach for the rhythm utilities rather than raw `py-*`/`px-*`.
 
-### 4.5 Responsive contract
+### Responsive contract
+<!--rule: tokens.responsive | tier: required-->
 
 **Mobile-first.** Author the base case for narrow viewports and add `md:` / `lg:` upward. Don't write desktop-first and undo it.
 
@@ -106,7 +112,8 @@ Two overflow rules that account for most real breakage:
 
 Anything intrinsically wide (tables, code blocks, diagrams) scrolls **inside its own container**; the page body never scrolls horizontally.
 
-### 4.6 Motion tokens
+### Motion tokens
+<!--rule: tokens.motion | tier: required-->
 
 Durations and easings are centralized so "how long is a hover" has one answer:
 
@@ -118,7 +125,8 @@ Durations and easings are centralized so "how long is a hover" has one answer:
 
 **Required:** components reference `--timing-*` / `--duration-*`. Don't hardcode `300ms` or invent a one-off easing. If a motion need isn't covered, add a token.
 
-### 4.7 Accessing tokens inside scoped `<style>` — the #1 gotcha
+### Accessing tokens inside scoped `<style>` — the #1 gotcha
+<!--rule: tokens.scoped-styles | tier: required-->
 
 Astro scoped / `is:global` `<style>` blocks **cannot resolve** `@theme` tokens through `@apply` / `theme()` by default. **The standard, in priority order:**
 
@@ -133,11 +141,12 @@ Astro scoped / `is:global` `<style>` blocks **cannot resolve** `@theme` tokens t
 
 **Allowed with reason:** a self-contained visual effect (canvas, gradient effect) may define local `--*` literals for values that are not theme roles — but they must be declared as custom properties at the component root, per theme where the effect is visible, and documented in the component header.
 
-### 4.8 Global base rules
+### Global base rules
+<!--rule: tokens.base | tier: default-->
 
 These live in `global.css` `@layer base`:
 
 - **Cursor:** all interactive controls get `cursor: pointer`; disabled gets `not-allowed`.
 - **Body defaults:** `body { @apply bg-canvas text-fg min-h-screen; }`
 - **Orphans:** headings `text-wrap: balance`; body `text-wrap: pretty`.
-- **Reduced motion:** every `transition`/`animation` respects `@media (prefers-reduced-motion: reduce)` (§8).
+- **Reduced motion:** every `transition`/`animation` respects `@media (prefers-reduced-motion: reduce)` ([a11y]).

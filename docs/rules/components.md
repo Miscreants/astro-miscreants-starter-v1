@@ -1,14 +1,16 @@
 <!--docs-module: rules/components | order: 05-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-## 5. Components: the authoring standard
+## Components: the authoring standard
+<!--rule: components | tier: reference-->
 
-### 5.0 Composition model: pages → sections → components
+### Composition model: pages → sections → components
+<!--rule: components.composition | tier: required-->
 
 Treat the UI as **three tiers**, and let each page read like a table of contents.
 
 **1. Primitives & blocks — *open* components (props + slots).**
-Reusable UI units with a clear identity: `Button`, `Card`, `Field`, `Tag`. They live flat in `components/`, are fully parameterized (typed props + slots — §5.1/§5.3), are styled only with tokens, and contain **no page-specific content**.
+Reusable UI units with a clear identity: `Button`, `Card`, `Field`, `Tag`. They live flat in `components/`, are fully parameterized (typed props + slots — [components.props]/[components.slots]), are styled only with tokens, and contain **no page-specific content**.
 
 **2. Sections — *closed* components (little or no props).**
 A whole page section: `Hero`, `SectionFeatures`, `SectionContact`. Lives flat in `components/` with a `Section*` prefix, **owns its own semantic `<section>` landmark**, and composes primitives + content inline. **Closed by default**: it bakes in its content and exposes *no* props. A section's job is to encapsulate a chunk of a page so the page file stays readable — not to be reusable.
@@ -24,7 +26,7 @@ A whole page section: `Hero`, `SectionFeatures`, `SectionContact`. Lives flat in
 >
 > Components that manage their own grid and padding (`FlowSteps`, `FeatureScrollSpy`) still go *inside* `SectionMain`, with `padding="none" contentPadding="none"`.
 >
-> **Visual framing is a brand decision.** The side rules are currently unconditional; a client whose design has no section borders needs an opt-out prop rather than bespoke markup (§14). Width and border color are already token-driven (`container-page`, `border-stroke`) and are tuned in `global.css`, not in the component.
+> **Visual framing is a brand decision.** The side rules are currently unconditional; a client whose design has no section borders needs an opt-out prop rather than bespoke markup ([conformance]). Width and border color are already token-driven (`container-page`, `border-stroke`) and are tuned in `global.css`, not in the component.
 >
 > ```astro
 > ---
@@ -58,11 +60,12 @@ Rule of thumb: **components for *things*, raw markup for *arrangement*.**
 
 **"Raw markup" ≠ inline CSS/JS.** Keep the three concerns separated:
 - **Structure** → semantic HTML + Tailwind utilities.
-- **Styling** → Tailwind utilities or a scoped `<style>` using `var(--token)` (§4.7). **Never inline `style="…"`** — it bypasses tokens/theming, can't express hover/focus/media states, and isn't cacheable.
-- **Behavior** → an Astro `<script>` (bundled, type-checked, tree-shaken; §5.6). **Never inline `onclick="…"`.**
+- **Styling** → Tailwind utilities or a scoped `<style>` using `var(--token)` ([tokens.scoped-styles]). **Never inline `style="…"`** — it bypasses tokens/theming, can't express hover/focus/media states, and isn't cacheable.
+- **Behavior** → an Astro `<script>` (bundled, type-checked, tree-shaken; [components.scripting]). **Never inline `onclick="…"`.**
 - Long Tailwind class lists are the one real noise source — fix by extracting a recurring combo into an `@utility` recipe, not by reaching for inline `style`.
 
-### 5.1 Props typing
+### Props typing
+<!--rule: components.props | tier: default-->
 
 **Default: `interface Props`** for ordinary object-shaped props. It gives the cleanest consumer IDE hints and is what most components need.
 
@@ -101,7 +104,8 @@ const { variant = "primary", withArrow = true, class: className, ...rest } = Ast
 
 Prefer (1) by default; reach for (2) when a component's invalid combinations are genuinely dangerous. **Do not** use a flat `HTMLAttributes<"button"> & HTMLAttributes<"a">` intersection — it makes every attribute optional on both and weakens the hints callers get.
 
-### 5.2 Defaults
+### Defaults
+<!--rule: components.defaults | tier: default-->
 
 Set defaults in the destructure, not with `??` scattered through the template:
 
@@ -109,7 +113,8 @@ Set defaults in the destructure, not with `??` scattered through the template:
 const { label = "Learn More", variant = "primary", arrowDirection = "right" } = Astro.props;
 ```
 
-### 5.3 Slots — default + named, with introspection
+### Slots — default + named, with introspection
+<!--rule: components.slots | tier: default-->
 
 - **Default slot** for the main content; provide a fallback if optional: `<slot>{label}</slot>`.
 - **Named slots** for distinct regions: `<slot name="title" />`, `<slot name="media" />`.
@@ -124,22 +129,43 @@ const { label = "Learn More", variant = "primary", arrowDirection = "right" } = 
 
 **Prop vs slot:** plain string/number/boolean → **prop**. Rich markup the caller composes → **slot**. Don't accept HTML strings as props.
 
-### 5.4 Variants & polymorphism
+### Variants & polymorphism
+<!--rule: components.variants | tier: default-->
 
 - Variants are a **typed union prop** (`variant?: "primary" | "secondary" | "tertiary"`), resolved via `class:list` or a lookup map. Never a freeform string.
 - Polymorphic tag selection: `const Tag = href && !disabled ? "a" : "button"`, then `<Tag …>`.
 
-### 5.5 Styling components
+### Styling components
+<!--rule: components.styling | tier: required-->
 
 - Reach for **Tailwind utilities with semantic tokens** first (`bg-panel`, `text-fg-muted`, `border-stroke`).
 - **Focus ring is mandatory and built-in** on every interactive element:
   ```
   focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas
   ```
+  The equivalent hand-rolled form, for a component that already uses a `<style>` block, is `box-shadow: 0 0 0 2px var(--color-canvas), 0 0 0 4px var(--color-focus);` on `:focus-visible`. **Pick one per component — never mix the two**, or the offsets fight each other.
 - **`is:global` is allowed with reason and must be namespaced.** Components that style slotted children (Field, Modal, Media, sliders) may use it, but **only** scoped under a component data attribute: `[data-field="component"] { … }`. Never emit a bare global class — it leaks site-wide and collides. Document the reason in a comment above the block.
 - **External links:** `target="_blank"` always ships `rel="noopener noreferrer"`, and the link's accessible name indicates it opens a new context.
 
-### 5.6 Client-side scripting
+**Class naming.** Match the file you're in rather than imposing one style everywhere:
+- **Tailwind utilities** for atomic components (`Button`, `Tag`, `Icon`, `Avatar`) — a class list is shorter than a stylesheet.
+- **BEM-style names** for components with meaningful internal structure and cross-element selectors, where a scoped `<style>` block is doing real work. The class root matches the component (`accordion__item`, `bento-card__header`).
+
+**The Astro scoping trap.** Astro appends its scope hash to **both** ends of a descendant selector. If the ancestor you're keying off is rendered by a *different* component, the rule silently never matches:
+
+```css
+/* Wrong — Astro hashes [data-state] as well as .child, but the state
+   attribute lives on a parent rendered elsewhere. Matches nothing. */
+[data-state="open"] .child { … }
+
+/* Right — keep the ancestor unhashed. */
+:global([data-state="open"]) .child { … }
+```
+
+This is the most common cause of "my CSS isn't applying" in an Astro component, and it fails silently — no error, no warning, just no styling.
+
+### Client-side scripting
+<!--rule: components.scripting | tier: required-->
 
 - **Drive behavior from `data-*` attributes**; keep ARIA/semantic attributes separate from scripting hooks (`data-modal-open` for JS; `role="dialog"` for a11y).
 - **Guard single initialization per behavior, not per element.** A single shared flag means the first behavior to claim an element blocks every other behavior on that element, silently. Use a module-level `WeakSet`:
@@ -182,7 +208,8 @@ const { label = "Learn More", variant = "primary", arrowDirection = "right" } = 
 
 - **Custom events bubble and are cancelable** so parents can intercept: `namespace:verb` — `form:success`, `tag:close`.
 
-### 5.7 Forms — `Form` + `Field`, progressively enhanced and hardened
+### Forms — `Form` + `Field`, progressively enhanced and hardened
+<!--rule: components.forms | tier: required-->
 
 `Form.astro` is the standard for every form:
 
@@ -204,14 +231,16 @@ const { label = "Learn More", variant = "primary", arrowDirection = "right" } = 
 
 On a pure-static site the endpoint is a separate function/Worker mounted on a same-origin `/api/*` route. When hand-rolling email MIME, build the RFC 5322 string directly and sanitize header values rather than pulling in a MIME library that isn't runtime-compatible.
 
-### 5.8 Documentation & shared components
+### Documentation & shared components
+<!--rule: components.docs | tier: default-->
 
 - **Per-component reference docs live in `Doc/<Component>.md`** — purpose, props, gotchas. Every reusable component has one, plus a header comment in the file itself.
 - **The live showcase is `src/content/components/*.mdx`**, rendered at `/components` in dev. This is the canonical target for component documentation; `Doc/` is the current, simpler home and the two should not disagree.
 - **`src/components/_docs/`** holds showcase-only helpers (`Preview`, `PropsTable`) — never product components.
 - **Don't modify a shared component for a one-off page need.** Add a prop or build a page-local wrapper. If a shared primitive genuinely must change, that's a deliberate, reviewed change — ask first, don't drive-by edit.
 
-### 5.9 Prop & event naming
+### Prop & event naming
+<!--rule: components.naming | tier: default-->
 
 - **Booleans read as flags/state**, positive: `disabled`, `withArrow`, `hideLabel`, `isOpen` — prefer `is*/has*/with*`; avoid negatives.
 - **Always accept a `class` passthrough** (`class?: string`, merged via `class:list`).

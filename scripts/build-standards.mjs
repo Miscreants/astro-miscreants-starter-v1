@@ -70,7 +70,52 @@ const banner = [
   "",
 ].join("\n");
 
-const assembled = banner + modules.map((m) => m.body).join("\n\n---\n\n") + "\n";
+/**
+ * GitHub-compatible heading anchor: lowercase, drop punctuation, then replace
+ * each remaining space with a hyphen — GitHub does not collapse runs, so
+ * "Structure & conventions" becomes "structure--conventions".
+ */
+const slug = (text) =>
+  text
+    .toLowerCase()
+    .replace(/[`*_]/g, "")
+    .replace(/[^\w\s-]/g, "")
+    .trim()
+    .replace(/\s/g, "-");
+
+// Map every declared rule id to the anchor of the heading it sits under, so
+// `[components.scripting]` references become clickable in the assembled file.
+const anchors = new Map();
+const sections = [];
+for (const m of modules) {
+  const lines = m.body.split("\n");
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    // Headings and rule declarations inside a fence are examples, not real ones.
+    if (/^\s*(```|~~~)/.test(lines[i])) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const heading = lines[i].match(/^(#{2,4})\s+(.+)$/);
+    if (!heading) continue;
+    const next = lines[i + 1]?.match(/<!--rule:\s*([\w.-]+)\s*\|\s*tier:\s*([\w-]+)\s*-->/);
+    const anchor = slug(heading[2]);
+    if (next) anchors.set(next[1], { anchor, tier: next[2], title: heading[2] });
+    // The table of contents doesn't list itself.
+    if (heading[1] === "##" && anchor !== "table-of-contents") sections.push({ title: heading[2], anchor });
+  }
+}
+
+const toc = sections.map((s, i) => `${i + 1}. [${s.title}](#${s.anchor})`).join("\n");
+
+const linkify = (text) =>
+  text.replace(/\[([a-z][\w-]*(?:\.[\w-]+)*)\](?!\()/g, (match, id) =>
+    anchors.has(id) ? `[${id}](#${anchors.get(id).anchor})` : match
+  );
+
+const assembled =
+  banner + linkify(modules.map((m) => m.body).join("\n\n---\n\n")).replace("<!--toc-->", toc) + "\n";
 
 if (process.argv.includes("--check")) {
   let current = "";

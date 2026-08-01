@@ -1,11 +1,13 @@
 <!--docs-module: rules/component-templates | order: 06-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
 
-## 6. Component author templates
+## Component author templates
+<!--rule: templates | tier: reference-->
 
 Three templates, because most components are not interactive and shouldn't be born with a script, a style block and a lifecycle they never use. **Start with the static template.** The starter ships `ComponentTemplateBasic.astro` / `ComponentTemplateAdvanced.astro` — keep them in sync with this section.
 
-### 6.1 Static component (the default)
+### Static component (the default)
+<!--rule: templates.static | tier: reference-->
 
 Props, slots, semantic markup, tokens. No script. No style block unless a utility genuinely can't express it.
 
@@ -45,9 +47,10 @@ const styles = {
 </div>
 ```
 
-### 6.2 Interactive component
+### Interactive component
+<!--rule: templates.interactive | tier: reference-->
 
-Adds state, ARIA, keyboard, a scoped style block only if needed, and the §5.6 lifecycle. Pass an `id` in rather than generating a random one — generated ids churn build output and can't be targeted by the caller.
+Adds state, ARIA, keyboard, a scoped style block only if needed, and the [components.scripting] lifecycle. Pass an `id` in rather than generating a random one — generated ids churn build output and can't be targeted by the caller.
 
 ```astro
 ---
@@ -77,7 +80,7 @@ const panelId = `${id}-panel`;
 </div>
 
 <style>
-  /* Only when a utility can't express it. Tokens via var() — §4.7. */
+  /* Only when a utility can't express it. Tokens via var() — [tokens.scoped-styles]. */
   [data-disclosure-panel] { border-top: 1px solid var(--color-stroke); }
   @media (prefers-reduced-motion: reduce) {
     [data-disclosure-panel] { transition: none; }
@@ -115,9 +118,10 @@ const panelId = `${id}-panel`;
 </script>
 ```
 
-### 6.3 Native / polymorphic control
+### Native / polymorphic control
+<!--rule: templates.polymorphic | tier: reference-->
 
-Attribute passthrough plus the few props of the alternate element (§5.1).
+Attribute passthrough plus the few props of the alternate element ([components.props]).
 
 ```astro
 ---

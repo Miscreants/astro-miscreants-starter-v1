@@ -6,7 +6,7 @@ description: Audit an Astro site before launch. Verify production identity, cano
 Run a pre-launch audit. Never report an unrun check as passed; mark it `NEEDS HUMAN`.
 Do not fix anything before Step 8. Audit, report, then fix only with permission.
 
-This is the executable form of `STANDARDS.md` §11.5; every `§` reference below points to that file.
+This is the executable form of the pre-launch checklist [checklist.pre-launch]. Bracketed tokens below are **rule ids** — look them up in `docs/` (the router is `docs/workflow.md`, the assembled view is `STANDARDS.md`). `npm run docs:check` fails if any id cited here no longer exists.
 
 **Severity standard.** `BLOCKER` means a visitor experiences something broken, or there is a legal or brand exposure. Everything else is `SHOULD FIX` or lower. If every check is a blocker, the label stops meaning anything and people start overriding it.
 
@@ -159,7 +159,7 @@ List every key and where it must be configured. Do not infer deployment configur
 
 ### Analytics and consent
 
-For GTM, GA, or HubSpot IDs, verify the ID is real, not inherited from the starter, and consent gating required by §10.5 is present — **SHOULD FIX**.
+For GTM, GA, or HubSpot IDs, verify the ID is real, not inherited from the starter, and consent gating required by [perf.third-party] is present — **SHOULD FIX**.
 
 ### Legal pages
 
@@ -212,9 +212,9 @@ Every finding must include `file:line` or route plus a one-line concrete fix.
 
 Unless verified during this run, always include these under `NEEDS HUMAN`:
 
-- Keyboard-only and screen-reader pass (§11.4)
+- Keyboard-only and screen-reader pass ([checklist.a11y])
 - Colour contrast in every active `data-theme`
-- Contact form deployed and a real email received (§5.7)
+- Contact form deployed and a real email received ([components.forms])
 - Client sign-off on production copy
 - DNS or domain cutover and verification on the real host
 - Git history committed under the correct author identity
