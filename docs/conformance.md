@@ -12,11 +12,12 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 |---|---|---|
 | [perf.prefetch] prefetch | Not configured | Add `prefetch` config with `defaultStrategy: 'hover'` |
 | [tokens.scoped-styles] raw values | `HeroCanvas` and `ShinyButton` declare literal hex custom properties that don't follow the theme | Either promote to theme-aware tokens or document them under the [tokens.scoped-styles] allowance |
-| [structure.git] lineage | No `starterVersion` field or upstream-remote convention in place yet | Add the field; document the pull workflow |
 | [components.forms] forms | The starter ships the `Form`/`Field` UI only; no reference endpoint implements the security requirements | Ship a reference endpoint meeting [components.forms], or state per-project that it must be built |
 | [structure.env] env | No build-time assertion for required env keys | Add assertions; revisit when `astro:env` is adopted |
 
 ### Cleared
+
+**v2.9 — [structure.git] now holds.** `starterVersion` ships in the starter's `package.json` and is inherited by every template copy. The `upstream` remote requirement was dropped: builds come from the GitHub template repo, which has no upstream link by design, so the rule was describing a workflow nobody uses.
 
 **v2.9 — not a gap, a decision.** `SectionMain`'s unconditional side rules were logged as needing an opt-out prop. They stay as they are: the shared frame is the reason the primitive exists, and a per-section prop would reintroduce the drift it prevents. A project without section borders edits `SectionMain` in its own repo — client repos own their component set ([components.composition]).
 

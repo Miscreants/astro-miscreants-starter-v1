@@ -8,7 +8,7 @@ Phase numbers map to [lifecycle].
 
 **1. Scaffold**
 
-1. Copy the starter → `<client>-build`. Record `starterVersion` in `package.json` and add the starter as an `upstream` remote ([structure.git]).
+1. Create the repo from the starter's **GitHub template**. Leave `starterVersion` in `package.json` exactly as inherited — it records the baseline this build was cut from and is never bumped in a client repo ([structure.git]).
 2. Update `package.json` `name` and README; confirm the [structure.gate] scripts.
 3. Fill in `src/data/site.ts` (name, url, description, ogImage, logo, socials). `astro.config.mjs` reads the URL from it ([seo.identity]). The domain can stay the placeholder while previewing — the build warns, and [checklist.pre-launch] is what blocks on it at cutover.
 4. Add host config for the chosen target ([deploy.static]). Add `public/_headers` and, for a migration, `public/_redirects`.

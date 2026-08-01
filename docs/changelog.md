@@ -4,6 +4,16 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.9 — 2026-08-02 — two rules corrected against how work actually happens
+
+**`SectionMain`'s side rules stay unconditional.** Logged as a gap needing a `sideRules` opt-out prop; it isn't a gap, it's the design. The shared frame is the reason the primitive exists, and a per-section prop to switch off part of it reintroduces exactly the drift `SectionMain` prevents. A project whose design has no section borders edits `SectionMain` in its own repo — client repos own their component set. The rule is that every section goes *through* `SectionMain`, not that it looks identical on every project.
+
+**Starter lineage rewritten around the template repo.** The rule required keeping the starter as an `upstream` remote and called resetting history "not acceptable" — but new builds are created from the **GitHub template repository**, which gives a fresh history with no upstream link by design. The rule was describing a workflow nobody uses.
+
+What survives is the part that carries weight: knowing which starter version a build began from. `starterVersion` now lives in the **starter's own `package.json`**, so a template copy **inherits it automatically** and simply never bumps it again — no scaffold step to forget, no remote to configure. Add the starter as a remote ad hoc when you actually want to port a fix, diff from the recorded version, cherry-pick, drop the remote. Cherry-pick works across unrelated histories; merge and rebase don't, and aren't the workflow.
+
+`starterVersion` tracks the changelog release and must be bumped in the same change as a new entry — a stamp that lags points a future port at the wrong baseline.
+
 ### v2.8 — 2026-08-02 — the starter ships DESIGN.md unanswered
 
 v2.7 removed the values from `DESIGN.md` but kept this build's *answers* — monochrome with `intent` equal to `fg`, tonal depth, sharp rectangles, one intent action per screen. Wrong for a template. **A starter pre-loaded with someone else's brand decisions is worse than an empty one**: the next build inherits them silently, nobody rewrites a file that already looks finished, and the agent then generates confidently to the wrong brand.
