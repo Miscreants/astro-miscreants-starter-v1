@@ -11,6 +11,8 @@
     "preview": "astro preview",
     "typecheck": "astro sync && tsc --noEmit",
     "check": "npm run typecheck && astro build",
+    "docs:build": "node scripts/build-standards.mjs",
+    "docs:check": "node scripts/build-standards.mjs --check",
     "astro": "astro"
   },
   "dependencies": {

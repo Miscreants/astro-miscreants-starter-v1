@@ -1,43 +1,57 @@
-# Astro Starter Kit: Minimal
+# Miscreants Astro Starter
+
+A production Astro site: static output, Tailwind v4 with a semantic token system, 50+ documented components, a live component showcase, and a full SEO and accessibility baseline.
+
+This repo is the canonical baseline every client build inherits — and it is built to be worked on by an AI agent as well as a person, so the documentation is part of the deliverable.
+
+## Quickstart
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev          # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open **`/components`** in dev for the live component showcase, and **`/styleguide`** for the token and type reference. Both are dev-only and never ship to production.
 
-## 🚀 Project Structure
+## Commands
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command | What it does |
+|---|---|
+| `npm run dev` | dev server with HMR |
+| `npm run build` | production build to `./dist/` |
+| `npm run preview` | serve the production build locally |
+| `npm run check` | the gate: type check + production build |
+| `npm run docs:build` | regenerate `STANDARDS.md` from `docs/` |
+| `npm run docs:check` | fail if `STANDARDS.md` is stale |
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Where things are
+
+```
+src/
+├── components/   one PascalCase file per component, flat
+├── content/      Zod-typed collections (+ the component showcase)
+├── data/         site identity and static registries
+├── demos/        dev-only routes — never shipped
+├── images/       source images, imported through astro:assets
+├── layouts/      Layout.astro — the head and SEO contract
+├── lib/          logic helpers (JSON-LD builders)
+├── pages/        production routes only
+└── styles/       global.css — every design token
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Documentation
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Start here | For |
+|---|---|
+| **[`docs/workflow.md`](./docs/workflow.md)** | **the router** — find your task, read only what it needs, pick a verification tier |
+| [`docs/README.md`](./docs/README.md) | the full documentation map |
+| [`AGENTS.md`](./AGENTS.md) | the agent contract: non-negotiables, edit surface, definition of done |
+| [`DESIGN.md`](./DESIGN.md) | this client's brand values — colors, type, motion |
+| [`STANDARDS.md`](./STANDARDS.md) | every rule as one generated file, for review and print |
+| [`docs/learn/astro-for-beginners.md`](./docs/learn/astro-for-beginners.md) | Astro onboarding, if you're new to the framework |
 
-Any static assets, like images, can be placed in the `public/` directory.
+`STANDARDS.md` is generated from the modules in `docs/` — edit a module and run `npm run docs:build`, never the assembled file.
 
-## 🧞 Commands
+## Building a site from this starter
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Follow [`docs/runbook.md`](./docs/runbook.md). It walks the six phases from scaffold to launch, and the pre-launch audit is executable as the `launch` skill.

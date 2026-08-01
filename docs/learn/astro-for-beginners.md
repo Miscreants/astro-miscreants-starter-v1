@@ -1,6 +1,8 @@
 # Astro for Beginners
 
-A practical guide to Astro 6 + Tailwind 4, written from a real learning conversation. Concepts are introduced in the order they tend to come up when building your first project, not in dictionary order.
+> **Background material — not a rule source.** This is onboarding for people new to Astro. It is *not* part of the build standard and must never be cited as one: where it and [`docs/rules/`](../README.md) disagree, the rules win. It also predates the current framework baseline (see `docs/rules/structure.md` for the versions actually in use), so treat specific version numbers here as illustrative.
+
+A practical guide to Astro + Tailwind 4, written from a real learning conversation. Concepts are introduced in the order they tend to come up when building your first project, not in dictionary order.
 
 ---
 
