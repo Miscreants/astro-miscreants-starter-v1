@@ -22,7 +22,7 @@ Phase numbers map to [lifecycle].
 9. Decide the theme set and register the `@custom-variant`s.
 10. Set per-client decisions ([tokens.per-client]): radius stance, depth, accents.
 11. Wire fonts ([perf.fonts]); set `--font-heading/-sans/-mono`. Tune the fluid type clamps.
-11b. Rewrite `DESIGN.md` — the decisions from steps 8–11 **and the reasoning behind them**, plus this brand's hard constraints. Answer its "Decide per project" section and replace it. No values: they live in `global.css`, and the gate rejects them here ([tokens.design-doc]).
+11b. **Answer `DESIGN.md`.** It ships as prompts, not content — work through every one, record the decisions from steps 8–11 **with the reasoning behind them**, and delete each prompt as you replace it. Write project rules normatively ("never…") rather than descriptively ("cards have…"). No values, and no repeating house rules from `docs/rules/` ([tokens.design-doc]).
 
 **3. Componentize**
 

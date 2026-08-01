@@ -4,6 +4,18 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.8 — 2026-08-02 — the starter ships DESIGN.md unanswered
+
+v2.7 removed the values from `DESIGN.md` but kept this build's *answers* — monochrome with `intent` equal to `fg`, tonal depth, sharp rectangles, one intent action per screen. Wrong for a template. **A starter pre-loaded with someone else's brand decisions is worse than an empty one**: the next build inherits them silently, nobody rewrites a file that already looks finished, and the agent then generates confidently to the wrong brand.
+
+`DESIGN.md` now ships as **prompts**, not content — brand character, a decisions table, project rules, "deliberately not doing", open questions. Scaffold phase 2 answers them and deletes each prompt.
+
+**It also stopped restating house rules.** Semantic tokens only, no fixed font sizes, focus rings, reduced-motion paths, explicit theming, section-owned rhythm — every one of those already lives in `docs/rules/` and applies to every build. Repeating them in the brand doc was the same duplication problem one layer up. `DESIGN.md` now covers only what makes a given project *different*.
+
+The one piece of authoring guidance it keeps is the lesson from v2.7, aimed at whoever fills it in: **write project rules normatively, not descriptively.** *"Never a radius above 4px"* survives any change to the code and correctly flags a violation; *"cards have a 4px radius"* is false the moment someone edits a card, and an agent reads a description as an instruction.
+
+The `launch` audit now flags an unanswered `DESIGN.md` in production as SHOULD FIX — nothing user-visible breaks, but it means every build decision on that project was made without a brand contract.
+
 ### v2.7 — 2026-08-02 — DESIGN.md records decisions, not values
 
 `DESIGN.md` was 233 lines, of which **155 were frontmatter duplicating `global.css`** — the full palette, the type ramp, the radius and spacing scales, and per-component specs. Nothing read that frontmatter. It existed only to go stale, and it had:

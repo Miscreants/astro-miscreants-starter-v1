@@ -45,6 +45,7 @@ Report each finding with its severity:
 - `astro.config.mjs` declares its own `site` string instead of importing `site.url` from `src/data/site.ts` — **BLOCKER**, the two-source drift [seo.identity] exists to prevent
 - In production, `site.ts` `url` is not the client's real domain, including protocol, host and no trailing slash — **BLOCKER**
 - `site.ts` still contains `Your Site Name` or `One-line description of the site…` — **BLOCKER**
+- `DESIGN.md` still carries the starter's unanswered prompts (`<Client name>`, "Prompt — replace this section") — **SHOULD FIX**. Nothing user-visible breaks, but the brand contract was never filled in, so every later build decision on this project was made without one ([tokens.design-doc])
 - `package.json` `name` is `astro-playground` — **NIT**
 
 Check the build log from Step 1 for the `[site]` placeholder warning — it is the cheapest confirmation, but its absence proves nothing, so still read `site.ts` directly.
@@ -283,4 +284,5 @@ After approved fixes, rerun the audit and report the delta.
 [seo.ai-crawlers]: ../../../docs/rules/seo.md#ai-crawler-policy
 [seo.identity]: ../../../docs/rules/seo.md#site-identity--one-source-of-truth
 [seo.staging]: ../../../docs/rules/seo.md#staging--preview-indexing-control
+[tokens.design-doc]: ../../../docs/rules/tokens.md#designmd-records-decisions-not-values
 <!-- /rule-links -->

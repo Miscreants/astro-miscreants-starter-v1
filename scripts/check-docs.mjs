@@ -143,9 +143,10 @@ if (existsSync(designFile)) {
     [/\b\d+(?:\.\d+)?\s?px\b/g, "pixel value", "src/styles/global.css"],
     [/\b\d+(?:\.\d+)?\s?ms\b/g, "duration", "the --duration-* tokens in global.css"],
   ];
+  // No keyword exemptions: a heuristic that excuses lines containing "never" or
+  // "don't" would excuse real violations too. Illustrative examples are written
+  // to reference token names rather than values, so nothing needs excusing.
   design.split(/\r?\n/).forEach((line, i) => {
-    // The rule that forbids literals has to be able to name them.
-    if (/it's a bug|belongs|lives in|Don't|Never/i.test(line)) return;
     for (const [pattern, label, home] of LITERALS) {
       const hit = line.match(pattern);
       if (hit) fail(designFile, `line ${i + 1}: ${label} "${hit[0]}" — DESIGN.md records decisions, not values. This belongs in ${home}`);
