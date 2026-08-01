@@ -4,6 +4,16 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.6 — 2026-08-02 — the starter itself ships blocked
+
+The AI crawler policy landed as allow-all in the starter's own `robots.txt`, which was the wrong file to put it in. The starter is a template: its preview deployment has no reason to be crawled, indexed, or used as training data.
+
+`public/robots.txt` now ships `User-agent: * / Disallow: /`, with the full allow policy sitting directly beneath it as a commented block. Scaffold step 5 swaps them and sets the `Sitemap:` host. Keeping both in one file makes the flip a single edit with nothing to retype, and no drift between the rule and the file it describes.
+
+The safety net was already in place: the launch audit blocks on a production `Disallow: /`, so a client site that never got flipped is caught rather than shipped. It now names that case directly, since "the scaffold step was skipped" is the most likely way it occurs.
+
+**The starter deliberately does not ship `X-Robots-Tag: noindex` in `public/_headers`**, even though it would be a stronger signal. That file inherits into every client repo, and a blanket `noindex` reaching production deindexes the live site — the exact BLOCKER [seo.staging] defines. Keeping the landmine out of the template beats relying on an audit to defuse it in every project. The starter's preview leans on `Disallow: /` plus an unlinked URL; if it is ever shared widely, the fix is host-level access control or an `X-Robots-Tag` rule in the dashboard, where nothing can inherit it.
+
 ### v2.5 — 2026-08-02 — AI crawler policy stated, not inferred
 
 `public/robots.txt` was `User-agent: * / Allow: /` — which does permit every AI crawler, but silently. An undeclared default is indistinguishable from nobody having considered the question, and it changes meaning the first time someone tightens the wildcard group.
@@ -156,7 +166,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [perf.third-party]: ./rules/performance.md#third-party-scripts
 [plan]: ./plan.md#plan--direction-notes
 [principles]: ./rules/principles.md#why-this-exists
-[seo.ai-crawlers]: ./rules/seo.md#ai-crawlers--allowed-by-default
+[seo.ai-crawlers]: ./rules/seo.md#ai-crawler-policy
 [seo.identity]: ./rules/seo.md#site-identity--one-source-of-truth
 [seo.layout-contract]: ./rules/seo.md#the--contract
 [seo.sitemap]: ./rules/seo.md#sitemap

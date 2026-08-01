@@ -26,7 +26,7 @@
 [components.forms]: ../rules/components.md#forms-----progressively-enhanced-and-hardened
 [guardrails.skills]: ../guardrails.md#agent-skills--commands-required--shipped
 [perf.budgets]: ../rules/performance.md#budgets--targets
-[seo.ai-crawlers]: ../rules/seo.md#ai-crawlers--allowed-by-default
+[seo.ai-crawlers]: ../rules/seo.md#ai-crawler-policy
 [seo.identity]: ../rules/seo.md#site-identity--one-source-of-truth
 [seo.staging]: ../rules/seo.md#staging--preview-indexing-control
 <!-- /rule-links -->

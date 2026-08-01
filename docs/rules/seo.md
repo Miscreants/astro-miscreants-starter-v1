@@ -126,13 +126,19 @@ Note what this does **not** do: demo routes are already excluded from production
 ### robots.txt & error pages
 <!--rule: seo.robots-404 | tier: default-->
 
-- Ship **`public/robots.txt`**: allow crawling, link the sitemap (`Sitemap: https://<site>/sitemap-index.xml`).
+- Ship **`public/robots.txt`**. On a client site it allows crawling and links the sitemap (`Sitemap: https://<site>/sitemap-index.xml`); the starter ships it blocked and scaffold step 5 flips it ([seo.ai-crawlers]).
 - Ship a styled **`src/pages/404.astro`** using `Layout`. Both hosts serve it for unknown static routes.
 
-### AI crawlers — allowed by default
+### AI crawler policy
 <!--rule: seo.ai-crawlers | tier: default-->
 
-**House policy: AI crawlers are allowed.** Clients want to be findable in LLM answers, so `public/robots.txt` permits both answer engines and training crawlers, each as an explicitly named group.
+**House policy on a client site: AI crawlers are allowed.** Clients want to be findable and cited in LLM answers, so `public/robots.txt` permits both answer engines and training crawlers, each as an explicitly named group.
+
+**The starter itself ships blocked.** It is a template — its preview deployment has no reason to be crawled, indexed, or used as training data. `public/robots.txt` therefore ships as `User-agent: * / Disallow: /`, with the full allow policy sitting directly beneath it as a commented block. **Scaffold step 5 swaps them** ([runbook]); the launch audit blocks on a production `Disallow: /`, so forgetting is caught rather than shipped.
+
+Keeping the allow policy inside the same file, rather than only in this document, means the flip is one edit with nothing to retype and no drift between the rule and the file.
+
+> **Why the starter does not ship `X-Robots-Tag: noindex` in `public/_headers`.** It would be a stronger signal, but that file inherits into every client repo and a blanket `noindex` reaching production deindexes the live site — the exact BLOCKER [seo.staging] defines. Better to keep the landmine out of the template than to rely on an audit to defuse it in every project. The starter's preview relies on `Disallow: /` plus its URL not being linked publicly; if that preview is ever shared widely, add host-level access control or an `X-Robots-Tag` rule in the host dashboard, where it can't be inherited.
 
 The named groups are technically redundant against `User-agent: *`. They exist so the decision is **written down rather than inferred** — an undeclared default is indistinguishable from nobody having thought about it, and it silently changes meaning the first time someone tightens the wildcard group.
 
@@ -154,5 +160,8 @@ The named groups are technically redundant against `User-agent: *`. They exist s
 [checklist.pre-launch]: ../checklists/pre-launch.md#pre-launch
 [deploy.static]: ./deployment.md#deployment--static
 [guardrails.local-dev]: ../guardrails.md#local-development-notes
+[runbook]: ../runbook.md#new-client-setup-runbook
+[seo.ai-crawlers]: ./seo.md#ai-crawler-policy
 [seo.json-ld]: ./seo.md#json-ld-via
+[seo.staging]: ./seo.md#staging--preview-indexing-control
 <!-- /rule-links -->

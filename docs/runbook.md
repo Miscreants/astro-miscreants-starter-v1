@@ -12,7 +12,7 @@ Phase numbers map to [lifecycle].
 2. Update `package.json` `name` and README; confirm the [structure.gate] scripts.
 3. Fill in `src/data/site.ts` (name, url, description, ogImage, logo, socials). `astro.config.mjs` reads the URL from it ([seo.identity]). The domain can stay the placeholder while previewing — the build warns, and [checklist.pre-launch] is what blocks on it at cutover.
 4. Add host config for the chosen target ([deploy.static]). Add `public/_headers` and, for a migration, `public/_redirects`.
-5. Add `public/robots.txt` + `src/pages/404.astro`.
+5. **Flip `public/robots.txt` from the blocked starter default to the allow policy** commented directly beneath it, and set the `Sitemap:` host ([seo.ai-crawlers]). The starter ships `Disallow: /` because a template shouldn't be crawled; a client site must not. Check `src/pages/404.astro` is in place.
 6. Add `.env` keys; commit `.env.example` ([structure.env]). Write the per-client agent brief ([structure.agent-brief]).
 7. Set up preview/staging protection now, not at launch ([seo.staging]).
 
@@ -55,6 +55,7 @@ Phase numbers map to [lifecycle].
 [perf.budgets]: ./rules/performance.md#budgets--targets
 [perf.fonts]: ./rules/performance.md#fonts--self-hosted
 [principles]: ./rules/principles.md#why-this-exists
+[seo.ai-crawlers]: ./rules/seo.md#ai-crawler-policy
 [seo.identity]: ./rules/seo.md#site-identity--one-source-of-truth
 [seo.staging]: ./rules/seo.md#staging--preview-indexing-control
 [structure.agent-brief]: ./rules/structure.md#repo-as-an-agent-platform

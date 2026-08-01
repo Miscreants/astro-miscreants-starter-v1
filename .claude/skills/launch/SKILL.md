@@ -80,8 +80,9 @@ Then inspect the repository copy of `public/robots.txt` and its body:
 
 ### AI crawler policy
 
-House default is allow-all ([seo.ai-crawlers]) — clients want to be cited in LLM answers.
+House default on a client site is allow-all ([seo.ai-crawlers]) — clients want to be cited in LLM answers. **The starter ships blocked**, and scaffold step 5 flips it, so the most likely finding here is that the flip never happened.
 
+- In production, `robots.txt` is still the starter's `User-agent: * / Disallow: /` with the allow policy sitting commented beneath it — **BLOCKER**. The site is invisible to every crawler, AI and search alike
 - An AI crawler is `Disallow`ed with no recorded client decision — **SHOULD FIX**. Confirm it was deliberate; nothing in the code explains it later
 - A `Disallow` was added to `User-agent: *` expecting it to cover AI bots that have their own named groups — **BLOCKER**. It does not apply to them, so the site is blocked for general crawlers while still open to the ones that were meant to be blocked
 - The named AI groups are missing entirely — **NIT**. `User-agent: * / Allow: /` still permits them; the groups exist to make the decision explicit
@@ -279,7 +280,7 @@ After approved fixes, rerun the audit and report the delta.
 [checklist.pre-launch]: ../../../docs/checklists/pre-launch.md#pre-launch
 [components.forms]: ../../../docs/rules/components.md#forms-----progressively-enhanced-and-hardened
 [perf.third-party]: ../../../docs/rules/performance.md#third-party-scripts
-[seo.ai-crawlers]: ../../../docs/rules/seo.md#ai-crawlers--allowed-by-default
+[seo.ai-crawlers]: ../../../docs/rules/seo.md#ai-crawler-policy
 [seo.identity]: ../../../docs/rules/seo.md#site-identity--one-source-of-truth
 [seo.staging]: ../../../docs/rules/seo.md#staging--preview-indexing-control
 <!-- /rule-links -->
