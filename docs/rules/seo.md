@@ -129,6 +129,19 @@ Note what this does **not** do: demo routes are already excluded from production
 - Ship **`public/robots.txt`**: allow crawling, link the sitemap (`Sitemap: https://<site>/sitemap-index.xml`).
 - Ship a styled **`src/pages/404.astro`** using `Layout`. Both hosts serve it for unknown static routes.
 
+### AI crawlers — allowed by default
+<!--rule: seo.ai-crawlers | tier: default-->
+
+**House policy: AI crawlers are allowed.** Clients want to be findable in LLM answers, so `public/robots.txt` permits both answer engines and training crawlers, each as an explicitly named group.
+
+The named groups are technically redundant against `User-agent: *`. They exist so the decision is **written down rather than inferred** — an undeclared default is indistinguishable from nobody having thought about it, and it silently changes meaning the first time someone tightens the wildcard group.
+
+**The gotcha that makes this worth doing:** a crawler with its own named group ignores the `*` group entirely. A `Disallow` added to `*` does **not** apply to any bot with its own group. Add it to each group you mean it for.
+
+**The split that matters when a client opts out** is answer engines versus training crawlers — being cited in AI answers is a different trade from having content train a model, and a client can reasonably allow the first while refusing the second. `Google-Extended` and `Applebot-Extended` are not crawlers at all; they are control tokens for whether content grounds Gemini/AI Overviews and Apple Intelligence. Record any deviation from allow-all in the client's `DESIGN.md` or brief, since nothing in the code will explain it later.
+
+> **`llms.txt` is not required, and not part of launch.** Measurements across hundreds of millions of AI bot visits put direct `/llms.txt` fetches at roughly **0.1% of AI crawler traffic** — GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot and Google-Extended crawl HTML directly — and no major provider has committed to reading it in production. What actually earns citations is what this starter already does: static HTML, real semantics, correct headings, and JSON-LD ([seo.json-ld]). Add `llms.txt` if a client asks for it; don't sell it as visibility work, and don't gate a launch on it.
+
 ### Astro/host gotchas (pure-static)
 <!--rule: seo.host-gotchas | tier: reference-->
 
@@ -141,4 +154,5 @@ Note what this does **not** do: demo routes are already excluded from production
 [checklist.pre-launch]: ../checklists/pre-launch.md#pre-launch
 [deploy.static]: ./deployment.md#deployment--static
 [guardrails.local-dev]: ../guardrails.md#local-development-notes
+[seo.json-ld]: ./seo.md#json-ld-via
 <!-- /rule-links -->

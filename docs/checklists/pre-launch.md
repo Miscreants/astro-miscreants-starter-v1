@@ -11,6 +11,7 @@
 - [ ] Budgets met on home + 2 representative templates ([perf.budgets])
 - [ ] All active `data-theme`s render correctly; no contrast regressions
 - [ ] Sitemap generated + filtered; `robots.txt` correct for production
+- [ ] AI crawlers allowed, or any exclusion recorded as a deliberate client decision ([seo.ai-crawlers])
 - [ ] **Staging/preview is protected by [seo.staging] method 1–4** — not robots.txt alone; production headers verified to *not* carry `noindex`
 - [ ] Migrations: `public/_redirects` maps every old URL → new
 - [ ] `public/_headers`: `/_astro/*` immutable cache + security headers
@@ -25,6 +26,7 @@
 [components.forms]: ../rules/components.md#forms-----progressively-enhanced-and-hardened
 [guardrails.skills]: ../guardrails.md#agent-skills--commands-required--shipped
 [perf.budgets]: ../rules/performance.md#budgets--targets
+[seo.ai-crawlers]: ../rules/seo.md#ai-crawlers--allowed-by-default
 [seo.identity]: ../rules/seo.md#site-identity--one-source-of-truth
 [seo.staging]: ../rules/seo.md#staging--preview-indexing-control
 <!-- /rule-links -->

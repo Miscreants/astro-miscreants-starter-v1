@@ -78,6 +78,16 @@ Then inspect the repository copy of `public/robots.txt` and its body:
 - Production file is missing, lacks `Sitemap:`, or points to a host other than `site` — **SHOULD FIX**
 - Staging lacks `Disallow: /` — **NIT** when a real method from the table is in place; it is a useful secondary signal, not the control
 
+### AI crawler policy
+
+House default is allow-all ([seo.ai-crawlers]) — clients want to be cited in LLM answers.
+
+- An AI crawler is `Disallow`ed with no recorded client decision — **SHOULD FIX**. Confirm it was deliberate; nothing in the code explains it later
+- A `Disallow` was added to `User-agent: *` expecting it to cover AI bots that have their own named groups — **BLOCKER**. It does not apply to them, so the site is blocked for general crawlers while still open to the ones that were meant to be blocked
+- The named AI groups are missing entirely — **NIT**. `User-agent: * / Allow: /` still permits them; the groups exist to make the decision explicit
+
+Do not treat a missing `llms.txt` as a finding at any severity ([seo.ai-crawlers]).
+
 Do not use HTTP 200 alone as proof: a host may synthesize a `robots.txt` that lacks the required rules.
 
 ## Step 3 — Referenced assets
@@ -269,6 +279,7 @@ After approved fixes, rerun the audit and report the delta.
 [checklist.pre-launch]: ../../../docs/checklists/pre-launch.md#pre-launch
 [components.forms]: ../../../docs/rules/components.md#forms-----progressively-enhanced-and-hardened
 [perf.third-party]: ../../../docs/rules/performance.md#third-party-scripts
+[seo.ai-crawlers]: ../../../docs/rules/seo.md#ai-crawlers--allowed-by-default
 [seo.identity]: ../../../docs/rules/seo.md#site-identity--one-source-of-truth
 [seo.staging]: ../../../docs/rules/seo.md#staging--preview-indexing-control
 <!-- /rule-links -->

@@ -4,6 +4,20 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.5 — 2026-08-02 — AI crawler policy stated, not inferred
+
+`public/robots.txt` was `User-agent: * / Allow: /` — which does permit every AI crawler, but silently. An undeclared default is indistinguishable from nobody having considered the question, and it changes meaning the first time someone tightens the wildcard group.
+
+**House policy is now explicit ([seo.ai-crawlers]): AI crawlers are allowed**, answer engines and training crawlers alike, each as a named group. Clients want to be cited in LLM answers, so allow-all is the deliberate default rather than an accident.
+
+The named groups also document the trap that makes this worth writing down: **a crawler with its own group ignores `User-agent: *` entirely**, so a `Disallow` added to the wildcard blocks general crawlers while leaving the AI bots it was aimed at untouched. The `launch` skill treats that specific mistake as a BLOCKER.
+
+`Google-Extended` and `Applebot-Extended` are documented as what they are — control tokens for Gemini/AI Overviews and Apple Intelligence grounding, not crawlers.
+
+**`llms.txt` was considered and declined.** Direct `/llms.txt` fetches measure at roughly 0.1% of AI crawler traffic, and no major provider has committed to reading it in production; crawlers fetch HTML. What earns citations is what the starter already does — static HTML, real semantics, JSON-LD. It stays available on request and is explicitly not a launch finding at any severity, with the reasoning recorded so it isn't re-litigated.
+
+Also corrects `robots.txt`'s own staging comment, which still advised `Disallow: /` "so the staging deploy is never indexed" — the claim [seo.staging] had already corrected everywhere else.
+
 ### v2.4 — 2026-08-02 — the placeholder origin warns, it doesn't block
 
 The build-failing placeholder guard is gone, along with the `ALLOW_PLACEHOLDER_SITE` variable added to work around it. A placeholder origin now warns in every environment and never fails a build.
@@ -142,6 +156,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [perf.third-party]: ./rules/performance.md#third-party-scripts
 [plan]: ./plan.md#plan--direction-notes
 [principles]: ./rules/principles.md#why-this-exists
+[seo.ai-crawlers]: ./rules/seo.md#ai-crawlers--allowed-by-default
 [seo.identity]: ./rules/seo.md#site-identity--one-source-of-truth
 [seo.layout-contract]: ./rules/seo.md#the--contract
 [seo.sitemap]: ./rules/seo.md#sitemap
