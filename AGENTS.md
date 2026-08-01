@@ -33,7 +33,7 @@ One line each. The rule and its reasoning live behind the link.
 - **Keep routes thin** — a route composes sections and passes `Layout` props.
 - **`src/demos/` never becomes `src/pages/`.** Anything in `pages/` ships to production.
 - **Don't modify a shared component for a one-off page need.** Add a prop or wrap it locally; changing a shared primitive is a reviewed change.
-- **Don't edit `STANDARDS.md`** — it is generated from `docs/`. Edit the module, then run `npm run docs:build`.
+- **Don't hand-edit a `rule-links` block** — those are generated. After moving a rule or changing a citation, run `npm run docs:build`.
 - **Don't restate a rule** here, in `CLAUDE.md`, or in a skill. Link to it.
 
 ## How to add a page

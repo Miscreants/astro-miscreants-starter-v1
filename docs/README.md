@@ -42,6 +42,7 @@ The only place a rule is *stated*. One module per surface.
 | [`guardrails.md`](./guardrails.md) | the gates, the shipped skills, local-development notes |
 | [`conformance.md`](./conformance.md) | where the starter does **not** yet meet its own Required rules, dated |
 | [`roadmap.md`](./roadmap.md) | prioritized follow-up work |
+| [`plan.md`](./plan.md) | longer-horizon direction notes — explicitly not rules |
 | [`changelog.md`](./changelog.md) | what changed between versions of the standard |
 
 ## Reference
@@ -63,17 +64,22 @@ AGENTS.md ─────────► the contract: non-negotiables + where t
     ▼
 docs/workflow.md ──► the router: task → modules → verification tier
     │
-    ▼
-docs/rules/*.md ───► the rules            docs/checklists/*.md ──► the gates
-    │                                              │
-    └──────────────► STANDARDS.md ◄────────────────┘
-                     generated assembly of every module,
-                     for review and print — never edited directly
+    ├──────────────► docs/rules/*.md ──────► the rules, stated once
+    │                                        each carries a stable id
+    │
+    └──────────────► docs/checklists/*.md ─► the gates, citing those ids
 ```
 
-Regenerate the single-file view after changing any module:
+**Rules are cited by id, never by section number or page.** Each rule declares one beside its heading:
+
+```md
+### Client-side scripting
+<!--rule: components.scripting | tier: required-->
+```
+
+Write `[components.scripting]` anywhere in the repo to cite it. Ids survive rules moving between files, which section numbers did not. `npm run docs:build` keeps the generated `rule-links` footer in each file current so every citation renders as a working link; `npm run check` fails on a citation to an id that doesn't exist.
 
 ```sh
-npm run docs:build      # write STANDARDS.md
-npm run docs:check      # fail if STANDARDS.md is stale
+npm run docs:build      # refresh the rule-link footers
+npm run docs:check      # citations, links, ids, footers
 ```

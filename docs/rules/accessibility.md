@@ -1,5 +1,5 @@
-<!--docs-module: rules/accessibility | order: 08-->
-<!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
+<!--docs-module: rules/accessibility-->
+<!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md-->
 
 ## Accessibility
 <!--rule: a11y | tier: reference-->

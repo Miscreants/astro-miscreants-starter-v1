@@ -21,8 +21,8 @@ Open **`/components`** in dev for the live component showcase, and **`/styleguid
 | `npm run build` | production build to `./dist/` |
 | `npm run preview` | serve the production build locally |
 | `npm run check` | the gate: type check + production build |
-| `npm run docs:build` | regenerate `STANDARDS.md` from `docs/` |
-| `npm run docs:check` | fail if `STANDARDS.md` is stale |
+| `npm run docs:build` | refresh the generated rule-link footers in `docs/` |
+| `npm run docs:check` | validate rule citations, ids and links |
 
 ## Where things are
 
@@ -47,10 +47,10 @@ src/
 | [`docs/README.md`](./docs/README.md) | the full documentation map |
 | [`AGENTS.md`](./AGENTS.md) | the agent contract: non-negotiables, edit surface, definition of done |
 | [`DESIGN.md`](./DESIGN.md) | this client's brand values — colors, type, motion |
-| [`STANDARDS.md`](./STANDARDS.md) | every rule as one generated file, for review and print |
+| [`docs/plan.md`](./docs/plan.md) | direction notes — what's coming, what to avoid. Not rules |
 | [`docs/learn/astro-for-beginners.md`](./docs/learn/astro-for-beginners.md) | Astro onboarding, if you're new to the framework |
 
-`STANDARDS.md` is generated from the modules in `docs/` — edit a module and run `npm run docs:build`, never the assembled file.
+Rules are cited by stable id — `[components.scripting]` — so they survive moving between files. Run `npm run docs:build` after changing a rule or a citation; `npm run check` fails on a citation that no longer resolves.
 
 ## Building a site from this starter
 

@@ -7,12 +7,12 @@
  * it runs in `npm run check` alongside the type gate.
  *
  * Checks:
- *   1. every module declares a unique `docs-module` id and `order`
+ *   1. every module declares a unique `docs-module` id
  *   2. every declared rule id is unique
  *   3. every `[rule.id]` citation resolves to a declared rule
  *   4. no `§N` section references survive anywhere (the banned old syntax)
  *   5. every relative .md link resolves on disk
- *   6. STANDARDS.md is not stale
+ *   6. the generated rule-link blocks are current
  *
  *   node scripts/check-docs.mjs
  */
@@ -74,16 +74,16 @@ const citing = [
 ];
 
 // ---------------------------------------------------------------- 1 + 2
-const orders = new Map();
+const moduleIds = new Map();
 const rules = new Map();
 
 for (const file of docFiles) {
   const text = stripFences(readFileSync(file, "utf8"));
 
-  const mod = text.match(/<!--docs-module:\s*(.+?)\s*\|\s*order:\s*(\S+?)\s*-->/);
+  const mod = text.match(/<!--docs-module:\s*(.+?)\s*-->/);
   if (mod) {
-    if (orders.has(mod[2])) fail(file, `duplicate module order "${mod[2]}" (also ${rel(orders.get(mod[2]))})`);
-    orders.set(mod[2], file);
+    if (moduleIds.has(mod[1])) fail(file, `duplicate module id "${mod[1]}" (also ${rel(moduleIds.get(mod[1]))})`);
+    moduleIds.set(mod[1], file);
   }
 
   for (const m of text.matchAll(/<!--rule:\s*([\w.-]+)\s*\|\s*tier:\s*([\w-]+)\s*-->/g)) {
@@ -133,9 +133,10 @@ for (const file of citing) {
 
 // ---------------------------------------------------------------- 6
 try {
-  execFileSync(process.execPath, [join(ROOT, "scripts", "build-standards.mjs"), "--check"], { stdio: "pipe" });
-} catch {
-  errors.push("STANDARDS.md is stale — run: npm run docs:build");
+  execFileSync(process.execPath, [join(ROOT, "scripts", "build-doc-links.mjs"), "--check"], { stdio: "pipe" });
+} catch (e) {
+  const detail = String(e.stderr ?? "").trim();
+  errors.push(`rule-link blocks are stale — run: npm run docs:build${detail ? `\n${detail}` : ""}`);
 }
 
 // ---------------------------------------------------------------- report

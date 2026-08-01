@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "typecheck": "astro check --minimumFailingSeverity warning",
     "check": "npm run typecheck && npm run docs:check && npm run build",
-    "docs:build": "node scripts/build-standards.mjs",
+    "docs:build": "node scripts/build-doc-links.mjs",
     "docs:check": "node scripts/check-docs.mjs",
     "astro": "astro"
   },

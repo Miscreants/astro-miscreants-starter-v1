@@ -1,5 +1,5 @@
-<!--docs-module: checklists/seo | order: 15-->
-<!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
+<!--docs-module: checklists/seo-->
+<!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md-->
 
 ### SEO (per page / template)
 <!--rule: checklist.seo | tier: checklist-->

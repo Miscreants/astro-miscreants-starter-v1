@@ -1,5 +1,5 @@
-<!--docs-module: rules/content | order: 09-->
-<!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md · Generated single file: STANDARDS.md-->
+<!--docs-module: rules/content-->
+<!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md-->
 
 ## Content collections & data
 <!--rule: content | tier: reference-->
