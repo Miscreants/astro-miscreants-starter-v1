@@ -23,17 +23,25 @@ export const site = {
 
 **Required:** `astro.config.mjs` **imports** this value for its `site` field rather than repeating the URL. Astro loads the config through Vite, so importing a `.ts` module works. Two copies of the domain plus a checklist item to keep them in sync is not a single source of truth.
 
-```js
-import { site } from './src/data/site';
+**Required:** the placeholder origin fails a host build. Hosts set `CI=true`, so a deploy can never ship placeholder canonicals, while local builds — including the starter's own, which legitimately still has the placeholder — warn instead of failing:
 
-if (site.url.includes('example.com')) {
-  throw new Error('site.url is still the placeholder — set the real domain before building.');
+```js
+import { site } from './src/data/site.ts';
+
+const PLACEHOLDER_ORIGIN = 'example.com';
+const isPlaceholderOrigin = site.url.includes(PLACEHOLDER_ORIGIN);
+
+if (isPlaceholderOrigin && process.env.CI) {
+  throw new Error(`site.url is still the ${PLACEHOLDER_ORIGIN} placeholder. Set the real domain in src/data/site.ts before deploying.`);
+}
+if (isPlaceholderOrigin) {
+  console.warn(`[site] url is still the ${PLACEHOLDER_ORIGIN} placeholder.`);
 }
 
 export default defineConfig({ site: site.url, /* … */ });
 ```
 
-The placeholder guard means a build can't ship with `example.com` canonicals.
+Don't make the guard unconditional: the starter itself must stay buildable with the placeholder, and a rule that forces the reference implementation to violate it isn't a rule anyone keeps.
 
 ### The `Layout.astro` contract
 <!--rule: seo.layout-contract | tier: required-->

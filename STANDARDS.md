@@ -904,17 +904,25 @@ export const site = {
 
 **Required:** `astro.config.mjs` **imports** this value for its `site` field rather than repeating the URL. Astro loads the config through Vite, so importing a `.ts` module works. Two copies of the domain plus a checklist item to keep them in sync is not a single source of truth.
 
-```js
-import { site } from './src/data/site';
+**Required:** the placeholder origin fails a host build. Hosts set `CI=true`, so a deploy can never ship placeholder canonicals, while local builds — including the starter's own, which legitimately still has the placeholder — warn instead of failing:
 
-if (site.url.includes('example.com')) {
-  throw new Error('site.url is still the placeholder — set the real domain before building.');
+```js
+import { site } from './src/data/site.ts';
+
+const PLACEHOLDER_ORIGIN = 'example.com';
+const isPlaceholderOrigin = site.url.includes(PLACEHOLDER_ORIGIN);
+
+if (isPlaceholderOrigin && process.env.CI) {
+  throw new Error(`site.url is still the ${PLACEHOLDER_ORIGIN} placeholder. Set the real domain in src/data/site.ts before deploying.`);
+}
+if (isPlaceholderOrigin) {
+  console.warn(`[site] url is still the ${PLACEHOLDER_ORIGIN} placeholder.`);
 }
 
 export default defineConfig({ site: site.url, /* … */ });
 ```
 
-The placeholder guard means a build can't ship with `example.com` canonicals.
+Don't make the guard unconditional: the starter itself must stay buildable with the placeholder, and a rule that forces the reference implementation to violate it isn't a rule anyone keeps.
 
 ### The `Layout.astro` contract
 <!--rule: seo.layout-contract | tier: required-->
@@ -1451,7 +1459,6 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 | Rule | Gap | Action |
 |---|---|---|
-| [seo.identity](#site-identity--one-source-of-truth) site identity | `astro.config.mjs` hardcodes `site: 'https://example.com'` separately from `data/site.ts` | Import `site.url`; add the placeholder guard |
 | [components.composition](#composition-model-pages--sections--components) SectionMain | Side rules (`border-l border-r`) are unconditional — no opt-out prop | Add `sideRules?: boolean` (or a `frame` variant) |
 | [perf.prefetch](#navigation-prefetch) prefetch | Not configured | Add `prefetch` config with `defaultStrategy: 'hover'` |
 | [tokens.scoped-styles](#accessing-tokens-inside-scoped-style--the-1-gotcha) raw values | `HeroCanvas` and `ShinyButton` declare literal hex custom properties that don't follow the theme | Either promote to theme-aware tokens or document them under the [tokens.scoped-styles](#accessing-tokens-inside-scoped-style--the-1-gotcha) allowance |
@@ -1463,6 +1470,8 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 **Cleared in v2** (verified against the code, previously listed as debts): `Button.astro` already uses `interface Props extends HTMLAttributes<"button">` with the intersection deliberately rejected; the script-init flag is already uniform across every component; there are **zero** raw Tailwind neutral classes in `components/`.
 
 **Cleared in v2.1:** the `build-component` command — which hardcoded one client's radius stance, pointed at a machine-specific path, and restated rules — was deleted. Its three pieces of unique content (the Astro `:global()` scoping trap, the hand-rolled focus-ring equivalent, and the BEM-vs-utilities naming guidance) were rescued into [components.styling](#styling-components) first.
+
+**Cleared in v2.2 — [seo.identity](#site-identity--one-source-of-truth) now holds.** `astro.config.mjs` imports `site.url` from `src/data/site.ts`; the domain is declared in one place. A placeholder origin warns on a local build and throws on any host build (`CI=true`), verified in all three paths: placeholder + local warns and succeeds, placeholder + CI exits 1, real domain + CI succeeds and the canonical picks it up.
 
 **Cleared in v2.2 — [structure.gate](#required-scripts--the-type--build-gate) now holds.** `typecheck` runs `astro check --minimumFailingSeverity warning`, and the three errors it surfaced are fixed: ambient declarations for the untyped `@fontsource-variable/*` packages, `CodeBlock`'s `lang` prop derived from `<Code />` instead of a bare `string`, and `SliderBasicMap`'s `items` typed optional to match its own default and documented usage. Result: **0 errors, 0 warnings**, 71 files. 32 hints remain (unused locals, and the deprecated `z` re-export in `content.config.ts`) — hints don't fail the gate; see [roadmap](#roadmap).
 
@@ -1481,11 +1490,11 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 ### Done — v2.2
 - ✅ Type gate swapped to `astro check`; the three errors it surfaced are fixed ([structure.gate](#required-scripts--the-type--build-gate), [conformance](#starter-conformance-gaps)).
+- ✅ Site URL single-sourced, with a CI-gated placeholder guard ([seo.identity](#site-identity--one-source-of-truth)).
 
 ### P0 — correctness of the gate
-1. Single-source the site URL with the placeholder guard ([seo.identity](#site-identity--one-source-of-truth)).
-3. Ship a reference form endpoint meeting [components.forms](#forms--form--field-progressively-enhanced-and-hardened), or document the per-project requirement in the runbook.
-4. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging](#staging--preview-indexing-control)).
+1. Ship a reference form endpoint meeting [components.forms](#forms--form--field-progressively-enhanced-and-hardened), or document the per-project requirement in the runbook.
+2. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging](#staging--preview-indexing-control)).
 
 ### P1 — authoring quality
 1. `sideRules` opt-out on `SectionMain` ([conformance](#starter-conformance-gaps)).
@@ -1509,7 +1518,15 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
-### v2.2 — 2026-08-01 — the type gate actually type-checks
+### v2.2 — 2026-08-01 — the gates become true
+
+**Site identity single-sourced ([seo.identity](#site-identity--one-source-of-truth)).** `astro.config.mjs` now imports `site.url` from `src/data/site.ts` instead of repeating the domain, so there is one declaration rather than two plus a checklist item asking someone to keep them equal.
+
+A placeholder origin is now structurally un-shippable: hosts set `CI=true`, so the config throws on a host build, while a local build — including the starter's own, which legitimately still has the placeholder — logs a warning and continues. Making the guard unconditional would force the reference implementation to violate its own rule, and a rule the starter breaks is a rule nobody keeps.
+
+Downstream, the `launch` skill's "`site` and `url` are not byte-identical" check is gone — that drift is now impossible — and is replaced by a check that the config still imports rather than redeclaring.
+
+### The type gate actually type-checks
 
 `typecheck` ran `tsc --noEmit`, which never opens a `.astro` file — so every component, prop type and component usage in the repo passed the gate unread. It now runs `astro check --minimumFailingSeverity warning` ([structure.gate](#required-scripts--the-type--build-gate)), which checks `.astro` **and** `.ts` and runs `astro sync` itself.
 

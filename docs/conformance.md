@@ -10,7 +10,6 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 | Rule | Gap | Action |
 |---|---|---|
-| [seo.identity] site identity | `astro.config.mjs` hardcodes `site: 'https://example.com'` separately from `data/site.ts` | Import `site.url`; add the placeholder guard |
 | [components.composition] SectionMain | Side rules (`border-l border-r`) are unconditional — no opt-out prop | Add `sideRules?: boolean` (or a `frame` variant) |
 | [perf.prefetch] prefetch | Not configured | Add `prefetch` config with `defaultStrategy: 'hover'` |
 | [tokens.scoped-styles] raw values | `HeroCanvas` and `ShinyButton` declare literal hex custom properties that don't follow the theme | Either promote to theme-aware tokens or document them under the [tokens.scoped-styles] allowance |
@@ -22,5 +21,7 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 **Cleared in v2** (verified against the code, previously listed as debts): `Button.astro` already uses `interface Props extends HTMLAttributes<"button">` with the intersection deliberately rejected; the script-init flag is already uniform across every component; there are **zero** raw Tailwind neutral classes in `components/`.
 
 **Cleared in v2.1:** the `build-component` command — which hardcoded one client's radius stance, pointed at a machine-specific path, and restated rules — was deleted. Its three pieces of unique content (the Astro `:global()` scoping trap, the hand-rolled focus-ring equivalent, and the BEM-vs-utilities naming guidance) were rescued into [components.styling] first.
+
+**Cleared in v2.2 — [seo.identity] now holds.** `astro.config.mjs` imports `site.url` from `src/data/site.ts`; the domain is declared in one place. A placeholder origin warns on a local build and throws on any host build (`CI=true`), verified in all three paths: placeholder + local warns and succeeds, placeholder + CI exits 1, real domain + CI succeeds and the canonical picks it up.
 
 **Cleared in v2.2 — [structure.gate] now holds.** `typecheck` runs `astro check --minimumFailingSeverity warning`, and the three errors it surfaced are fixed: ambient declarations for the untyped `@fontsource-variable/*` packages, `CodeBlock`'s `lang` prop derived from `<Code />` instead of a bare `string`, and `SliderBasicMap`'s `items` typed optional to match its own default and documented usage. Result: **0 errors, 0 warnings**, 71 files. 32 hints remain (unused locals, and the deprecated `z` re-export in `content.config.ts`) — hints don't fail the gate; see [roadmap].

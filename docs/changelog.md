@@ -4,7 +4,15 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
-### v2.2 — 2026-08-01 — the type gate actually type-checks
+### v2.2 — 2026-08-01 — the gates become true
+
+**Site identity single-sourced ([seo.identity]).** `astro.config.mjs` now imports `site.url` from `src/data/site.ts` instead of repeating the domain, so there is one declaration rather than two plus a checklist item asking someone to keep them equal.
+
+A placeholder origin is now structurally un-shippable: hosts set `CI=true`, so the config throws on a host build, while a local build — including the starter's own, which legitimately still has the placeholder — logs a warning and continues. Making the guard unconditional would force the reference implementation to violate its own rule, and a rule the starter breaks is a rule nobody keeps.
+
+Downstream, the `launch` skill's "`site` and `url` are not byte-identical" check is gone — that drift is now impossible — and is replaced by a check that the config still imports rather than redeclaring.
+
+### The type gate actually type-checks
 
 `typecheck` ran `tsc --noEmit`, which never opens a `.astro` file — so every component, prop type and component usage in the repo passed the gate unread. It now runs `astro check --minimumFailingSeverity warning` ([structure.gate]), which checks `.astro` **and** `.ts` and runs `astro sync` itself.
 

@@ -14,11 +14,11 @@
 
 ### Done — v2.2
 - ✅ Type gate swapped to `astro check`; the three errors it surfaced are fixed ([structure.gate], [conformance]).
+- ✅ Site URL single-sourced, with a CI-gated placeholder guard ([seo.identity]).
 
 ### P0 — correctness of the gate
-1. Single-source the site URL with the placeholder guard ([seo.identity]).
-3. Ship a reference form endpoint meeting [components.forms], or document the per-project requirement in the runbook.
-4. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging]).
+1. Ship a reference form endpoint meeting [components.forms], or document the per-project requirement in the runbook.
+2. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging]).
 
 ### P1 — authoring quality
 1. `sideRules` opt-out on `SectionMain` ([conformance]).

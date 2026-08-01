@@ -7,6 +7,32 @@ import icon from 'astro-icon';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
+import { site } from './src/data/site.ts';
+
+// Single source of truth for the production origin: this config derives `site`
+// from src/data/site.ts rather than repeating the domain. Two copies plus a
+// checklist item to keep them in sync is not a single source of truth.
+//
+// Hosts (Cloudflare, Netlify) set CI=true, so a real deploy can never ship
+// placeholder canonicals, og:url or schema @ids. Local builds — including the
+// starter's own, which legitimately still has the placeholder — warn instead.
+const PLACEHOLDER_ORIGIN = 'example.com';
+const isPlaceholderOrigin = site.url.includes(PLACEHOLDER_ORIGIN);
+
+if (isPlaceholderOrigin && process.env.CI) {
+  throw new Error(
+    `site.url is still the ${PLACEHOLDER_ORIGIN} placeholder. Set the real domain in ` +
+      `src/data/site.ts before deploying — canonical URLs, og:url and schema.org @id all resolve against it.`
+  );
+}
+
+if (isPlaceholderOrigin) {
+  console.warn(
+    `[site] url is still the ${PLACEHOLDER_ORIGIN} placeholder — expected in the starter, ` +
+      `a deploy blocker in a client repo.`
+  );
+}
+
 // Internal / demo routes excluded from the public sitemap. A path is dropped if
 // it equals one of these or sits under it. Extend per project.
 const SITEMAP_EXCLUDE = ['/styleguide', '/components', '/tve-preview'];
@@ -49,10 +75,10 @@ function demoRoutes() {
 
 // https://astro.build/config
 export default defineConfig({
-  // Set this to the client's production origin. Required for canonical URLs,
-  // og:url/og:image, JSON-LD @id values (keep src/data/site.ts `url` in sync),
-  // and the sitemap. Replace the placeholder per project.
-  site: 'https://example.com',
+  // The production origin, derived from src/data/site.ts — set it there, not
+  // here. Drives canonical URLs, og:url/og:image, JSON-LD @id values and the
+  // sitemap.
+  site: site.url,
   output: 'static',
   // Astro 7 defaults compressHTML to 'jsx' (JSX-style whitespace stripping).
   // Keep the v6 HTML-aware behaviour so inline spacing doesn't shift.

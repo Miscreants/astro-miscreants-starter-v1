@@ -40,10 +40,9 @@ Trust project files and built output over stale notes or TODOs.
 
 Report each finding with its severity:
 
-- `astro.config.mjs` `site` is `https://example.com` — **BLOCKER**
-- `site.ts` `url` is `https://example.com` — **BLOCKER**
-- In production, either value is not the client's real domain — **BLOCKER**
-- `site` and `url` are not byte-identical, including protocol, host, and trailing slash — **BLOCKER**
+- `site.ts` `url` is `https://example.com` — **BLOCKER**. A host build fails on this by design ([seo.identity]), so it also means the site has never deployed.
+- `astro.config.mjs` declares its own `site` string instead of importing `site.url` from `src/data/site.ts` — **BLOCKER**, the two-source drift [seo.identity] exists to prevent
+- In production, `site.ts` `url` is not the client's real domain, including protocol, host and no trailing slash — **BLOCKER**
 - `site.ts` still contains `Your Site Name` or `One-line description of the site…` — **BLOCKER**
 - `package.json` `name` is `astro-playground` — **NIT**
 

@@ -2,8 +2,12 @@
 // both read from here, so there's a single source of truth for name, URL, social
 // image, logo, and social profiles.
 //
-// IMPORTANT: keep `url` in sync with `site` in astro.config.mjs. Canonical URLs,
-// og:url/og:image, and schema.org @id identifiers are all resolved against it.
+// This file is the ONLY place the production origin is declared: astro.config.mjs
+// imports `url` for its `site` field. Canonical URLs, og:url/og:image, schema.org
+// @id identifiers and the sitemap all resolve against it.
+//
+// A build with the example.com placeholder warns locally and FAILS on any host
+// (CI=true), so a deploy can't ship placeholder canonicals.
 
 export const site = {
   /** Brand / site name — used for og:site_name and schema.org Organization. */
