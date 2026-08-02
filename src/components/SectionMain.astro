@@ -40,11 +40,29 @@ const contentPaddingClass = {
 }[contentPadding];
 ---
 
-<section
-  {...rest}
-  class:list={["container-page", className]}
->
-  <div class:list={[ptClass, pbClass, "flex flex-col relative border-l border-r border-stroke", borderTop && "border-t border-stroke", contentPaddingClass, contentClass]}>
-    <slot />
+{/* STRUCTURE — three elements, one concern each:
+
+      <section>  FULL-BLEED. The background and any full-width effect lives
+                 here. Nothing caps its width.
+        <div>    the page box: max width plus the side padding that keeps
+                 content off the screen edges.
+          <div>  vertical rhythm and the side rules.
+
+    The width cap must NOT sit on the <section>. It used to, and that made a
+    whole class of thing impossible: a section set to `data-theme="dark"`, or
+    given any background, was clipped to the 90rem page box instead of bleeding
+    to the viewport, so full-width bands could not be built on this primitive
+    at all.
+
+    The vertical padding stays on the INNER div rather than moving up to the
+    section, because that div also draws the left and right rules — the
+    continuous vertical hairline running down the page. Padding on the section
+    would sit outside those rules, and they would shrink to the height of the
+    content instead of spanning the whole band. */}
+<section {...rest} class:list={[className]}>
+  <div class="container-page">
+    <div class:list={[ptClass, pbClass, "flex flex-col relative border-l border-r border-stroke", borderTop && "border-t border-stroke", contentPaddingClass, contentClass]}>
+      <slot />
+    </div>
   </div>
 </section>
