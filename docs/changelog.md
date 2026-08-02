@@ -4,6 +4,18 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.12 — 2026-08-02 — a review pass on the docs themselves
+
+Seven findings from an independent read of the documentation, all verified and all fixed. Every one was **documentation drifting from a decision** — which is precisely the class [guardrails.docs-check] cannot detect. It proves that ids resolve and links exist; it cannot know a sentence stopped being true.
+
+- **The contact-form guide taught a retired architecture.** It walked an agent through installing the Cloudflare adapter and `mimetext`, creating `src/actions/index.ts` and using Astro Actions — all of which the current standard rules out — while claiming to be "end-to-end verified" and sitting linked from the docs index. Rewritten around the actual implementation: platform setup only (Email Routing, verified destinations, the WAF rate-limit rule), pointing at `functions/api/contact.ts` for the code rather than describing it twice.
+- **The Tier 0 gate named a command that doesn't exist.** "Targeted `astro check`" — the CLI takes `--root` and `--tsconfig`, not a path. Tier 0 now splits by what changed: `docs:build` + `docs:check` for documentation, `typecheck` for copy in source, with a note that whole-project is the only mode and it takes seconds. A "maintaining the documentation" routing row was missing and is added.
+- **The lifecycle still told people to record an upstream remote**, three releases after [structure.git] removed that requirement and explained why template-derived repos have none.
+- **Tiers 2 and 3 overlapped on component API changes.** "Props on an existing component" sat in Tier 2 while "anything with more than one consumer" sat in Tier 3, leaving a prop on a shared component unclassifiable. Tier 2 is now page-local work only; any shared component API change is Tier 3, called out explicitly because adding a prop feels small and isn't.
+- **The process layer promised gates and checklists that don't exist.** The router pointed at "the runbook's own phase gates" (it has steps), and the lifecycle claimed every phase has a checklist (the setup phases don't). Both corrected, and [checklists] is now a real index that states why setup phases deliberately have none.
+- **The documented checks didn't match the checker.** It claimed duplicate module `order` was validated — `order` was removed in v2.3 — and that every module declares an id, while the implementation only checked uniqueness *when a declaration happened to exist*, so a module with no id passed silently. The check now requires a `docs-module` id on everything under `rules/` and `checklists/`, verified with a negative test.
+- **Skill locations contradicted each other** — [principles] called `.agents/skills/*` canonical while everything else said `.claude/`. `.claude/` is where they are; the `.agents/` move was proposed and then declined, and the table entry was left behind.
+
 ### v2.11 — 2026-08-02 — the conformance table is empty
 
 **Reference form endpoint hardened** ([components.forms]). `functions/api/contact.ts` already existed with a honeypot and presence checks; everything else the rule requires was missing. It now has an origin check as the CSRF strategy for a same-origin form, a body-size cap applied before reading, per-field length limits, and CR/LF stripped from every value that reaches a mail header — a newline in a name otherwise forges an extra `Bcc` or `Reply-To`.
@@ -216,6 +228,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [a11y.thresholds]: ./rules/accessibility.md#measurable-thresholds
 [checklist.page]: ./checklists/page.md#page-done
 [checklist.pre-launch]: ./checklists/pre-launch.md#pre-launch
+[checklists]: ./checklists/index.md#checklists
 [components.docs]: ./rules/components.md#documentation--shared-components
 [components.forms]: ./rules/components.md#forms--form--field-progressively-enhanced-and-hardened
 [components.props]: ./rules/components.md#props-typing

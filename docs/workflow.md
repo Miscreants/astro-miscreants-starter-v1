@@ -21,9 +21,10 @@ Reading the whole rulebook for a copy change wastes everyone's time; skipping it
 | **Adding or changing content** | [`rules/content.md`](./rules/content.md) · [`rules/seo.md`](./rules/seo.md) | [`checklists/seo.md`](./checklists/seo.md) |
 | **Adding images, fonts or an embed** | [`rules/performance.md`](./rules/performance.md) | [`checklists/page.md`](./checklists/page.md) |
 | **Building an animated canvas / heavy effect** | [`rules/performance.md`](./rules/performance.md) ([perf.canvas]) · [`rules/accessibility.md`](./rules/accessibility.md) (reduced motion) | [`checklists/component.md`](./checklists/component.md) |
-| **Setting up a new client repo** | [`runbook.md`](./runbook.md) · [`rules/structure.md`](./rules/structure.md) | the runbook's own phase gates |
+| **Setting up a new client repo** | [`runbook.md`](./runbook.md) · [`rules/structure.md`](./rules/structure.md) | the runbook steps for that phase |
 | **Wiring hosting, redirects or headers** | [`rules/deployment.md`](./rules/deployment.md) | [`checklists/pre-launch.md`](./checklists/pre-launch.md) |
 | **Preparing a launch** | [`checklists/pre-launch.md`](./checklists/pre-launch.md) | run the `launch` skill (see [`guardrails.md`](./guardrails.md)) |
+| **Maintaining the documentation itself** | [`README.md`](./README.md) for the map · [`rules/principles.md`](./rules/principles.md) for where each kind of content lives · [`guardrails.md`](./guardrails.md) for what the checker enforces | `npm run docs:build` then `npm run docs:check` |
 | **Fixing a failing gate or a dev-only oddity** | [`guardrails.md`](./guardrails.md) | — |
 | **Learning Astro itself** | [`learn/astro-for-beginners.md`](./learn/astro-for-beginners.md) — background only, not a rule source | — |
 
@@ -35,12 +36,16 @@ If your task isn't listed, read [`rules/principles.md`](./rules/principles.md) a
 
 Classify by **blast radius**, not by how many lines you changed. If you're unsure, go one tier up rather than straight to the full gate.
 
+**Prop changes are the one people get wrong.** Adding a prop feels small and local, but a prop on a shared component changes an API every consumer depends on — that is Tier 3, regardless of how few lines it took. Tier 2 is for work that stays inside the page being built.
+
+There is no file-targeted type check: `astro check` takes `--root` and `--tsconfig`, not a path. Whole-project is the only mode, and it takes seconds.
+
 | Tier | The change | Required before calling it done |
 |---|---|---|
-| **0 — copy & docs** | Text, comments, documentation, labels. No markup structure, tokens, props or behavior. | Targeted `astro check`. No browser unless text fitting is the risk. |
-| **1 — one component's presentation** | Spacing, hover, focus, a variant's styling. State shape and consumers unchanged. | `npm run check` + the component's showcase page in a browser. |
-| **2 — a section or page** | New or edited `Section*`, new route, content wiring, props on an existing component. | `npm run check` + [`checklists/page.md`](./checklists/page.md) at all five widths, in every theme the project ships. |
-| **3 — shared surface** | A shared primitive, `Layout`, `SectionMain`, `global.css`, tokens, `astro.config.mjs`, a content schema. Anything with more than one consumer. | Tier 2 **on two consuming templates**, plus [`checklists/accessibility.md`](./checklists/accessibility.md). |
+| **0 — copy & docs** | Text, comments, documentation, labels. No markup structure, tokens, props or behavior. | Editing `docs/`: `npm run docs:build` then `npm run docs:check`. Editing copy in source: `npm run typecheck`. No browser unless text fitting is the risk. |
+| **1 — one component's presentation** | Spacing, hover, focus, a variant's styling **on a single component**. Its props, state shape and consumers are unchanged. | `npm run check` + the component's showcase page in a browser. |
+| **2 — a page-local section or route** | New or edited `Section*`, new route, content wiring. Nothing outside the page being built. | `npm run check` + [`checklists/page.md`](./checklists/page.md) at all five widths, in every theme the project ships. |
+| **3 — shared surface** | **Any change to a shared component's API** — adding, renaming or retyping a prop — plus `Layout`, `SectionMain`, `global.css`, tokens, `astro.config.mjs`, a content schema. Anything with more than one consumer. | Tier 2 **on two consuming templates**, plus [`checklists/accessibility.md`](./checklists/accessibility.md). |
 | **4 — launch or infrastructure** | First deploy, domain cutover, host config, dependency or Astro major bump, form endpoint. | Full [`checklists/pre-launch.md`](./checklists/pre-launch.md) + the `launch` skill + the performance budgets. |
 
 Write the tier down before you start:

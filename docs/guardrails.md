@@ -18,7 +18,7 @@
 It fails on:
 
 - a `[rule.id]` citation that resolves to no declared rule — including a typo inside a real namespace;
-- a duplicate rule id, a duplicate module `order`, or an unknown tier;
+- a duplicate rule id, a duplicate module id, an unknown tier, or a rulebook module missing its `docs-module` declaration;
 - any surviving `§N` section reference — the banned syntax that ids replaced;
 - a relative `.md` link that doesn't resolve on disk;
 - a stale rule-link block (a rule moved or a citation changed without `npm run docs:build`);

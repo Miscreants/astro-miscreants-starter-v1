@@ -4,7 +4,7 @@
 ## The build process (lifecycle)
 <!--rule: lifecycle | tier: reference-->
 
-Every client engagement follows the same arc. Each phase has a checklist in [checklists] and a step-by-step in [runbook].
+Every client engagement follows the same arc. [runbook] is the step-by-step for all six phases; the build phases (3–6) additionally have review [checklists]. Setup phases are procedure, not verification — see [checklists] for why.
 
 ```
 ┌─ 0. Kickoff ──────────────────────────────────────────────────────┐
@@ -13,8 +13,8 @@ Every client engagement follows the same arc. Each phase has a checklist in [che
 └────────────────────────────────────────────────────────────────────┘
             │
 ┌─ 1. Scaffold ─────────────────────────────────────────────────────┐
-│  Clone starter → rename → set site identity, analytics, host cfg.  │
-│  Record starterVersion + upstream remote ([structure.git]).                   │
+│  Create from the GitHub template → rename → site identity, host.   │
+│  starterVersion is inherited from the template ([structure.git]).  │
 └────────────────────────────────────────────────────────────────────┘
             │
 ┌─ 2. Design system intake ─────────────────────────────────────────┐

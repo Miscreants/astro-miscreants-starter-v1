@@ -32,6 +32,14 @@ const DOCS = join(ROOT, "docs");
 const NOT_RULEBOOK = [join(DOCS, "learn"), join(DOCS, "how-to")];
 const NOT_CITING = [join(DOCS, "learn")];
 
+/**
+ * Files that must carry a `docs-module` id. `docs/README.md` and
+ * `docs/workflow.md` are navigation rather than rulebook modules, so they are
+ * deliberately outside this — but anything under rules/ or checklists/ is a
+ * module by definition and a missing id there is a real defect.
+ */
+const IS_RULEBOOK_MODULE = /^docs\/(rules|checklists)\/.+\.md$/;
+
 const walk = (dir) =>
   readdirSync(dir).flatMap((entry) => {
     const full = join(dir, entry);
@@ -84,6 +92,11 @@ for (const file of docFiles) {
   if (mod) {
     if (moduleIds.has(mod[1])) fail(file, `duplicate module id "${mod[1]}" (also ${rel(moduleIds.get(mod[1]))})`);
     moduleIds.set(mod[1], file);
+  } else if (IS_RULEBOOK_MODULE.test(rel(file))) {
+    // Anything under rules/ or checklists/ is a rulebook module by definition.
+    // Only checking uniqueness "when a declaration happens to exist" lets a new
+    // module ship with no id at all and pass.
+    fail(file, "missing a <!--docs-module: id--> declaration");
   }
 
   for (const m of text.matchAll(/<!--rule:\s*([\w.-]+)\s*\|\s*tier:\s*([\w-]+)\s*-->/g)) {

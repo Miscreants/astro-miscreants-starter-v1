@@ -1,110 +1,82 @@
-# Contact form + Cloudflare native email
+# Wiring the contact form to email on Cloudflare
 
-A reusable example: a simple form (first name, last name, email) captured by an
-**Astro Action** and forwarded as an email notification via Cloudflare's
-**native `send_email` binding** — no Resend, no third-party email API.
+Everything here is **platform setup**. The endpoint itself is
+[`functions/api/contact.ts`](../../functions/api/contact.ts) and documents its own
+behaviour — read it there rather than looking for a second description here.
 
-End-to-end verified locally with `wrangler dev`: filling the form triggers the
-binding, and Miniflare captures the resulting `.eml` so you can inspect the
-message before pointing it at real Email Routing.
+> **This guide previously taught a retired architecture.** It used Astro Actions
+> with the Cloudflare adapter and `mimetext`. That approach is out: the adapter
+> forces server rendering and its image service ships unoptimised assets, and
+> `mimetext` either fails the esbuild step on node built-ins or throws inside
+> workerd at runtime. The endpoint is now a host function outside the Astro
+> build, so the site stays static. See [components.forms] and [deploy.static].
 
-## Files
+## What already works
 
-| File | Role |
-| --- | --- |
-| `astro.config.mjs` | `output: 'static'` + `@astrojs/cloudflare` adapter. Pages stay prerendered; the adapter mounts actions at `/_actions/<name>` as on-demand endpoints. `platformProxy` is intentionally **off** (see "Local dev" below). |
-| `wrangler.jsonc` | Worker config. Declares the `NOTIFY_EMAIL` send_email binding and `FROM_EMAIL` / `FROM_NAME` / `NOTIFY_TO` vars. **No `main` field** — the adapter writes its own `dist/server/wrangler.json` with the right entry. |
-| `src/env.d.ts` | Module-augments the Cloudflare adapter's `Env` interface so `import { env } from "cloudflare:workers"` is fully typed. |
-| `src/actions/index.ts` | The `contact` action — Zod input validation, builds a MIME message with `mimetext`, sends via the binding. Has a DEV short-circuit that logs and returns success when the binding isn't wired up. |
-| `src/pages/contact.astro` | Example page — uses the existing `<Form>` / `<Field>` / `<Button>` components, points at `/_actions/contact`. |
+`functions/api/contact.ts` runs as soon as it is deployed. Without an email
+binding it validates submissions and returns success, so the form works
+end-to-end from the first deploy — it just doesn't deliver anything yet. Wiring
+email is the step below.
 
-## How the wiring works
+## One-time Cloudflare setup
 
-1. The form posts `multipart/form-data` to `/_actions/contact`. Existing
-   `Form.astro` intercepts via JS and `fetch()`s; without JS the browser
-   does a native form POST. Both paths hit the same endpoint.
-2. The adapter routes that path to `src/actions/index.ts → server.contact`.
-3. Zod validates the input. Honeypot field (`website`) silently 200s.
-4. The handler imports `env` from `cloudflare:workers` (the Astro 6 API —
-   `Astro.locals.runtime.env` was removed) and calls
-   `env.NOTIFY_EMAIL.send(new EmailMessage(from, to, mime))`.
+The native `send_email` binding only works on a domain hosted at Cloudflare with
+Email Routing enabled, sending to **verified** destination addresses.
 
-## Prerequisites for production (one-time Cloudflare setup)
+1. The client's domain is on Cloudflare (registrar or nameservers).
+2. Dashboard → the zone → **Email** → **Email Routing** → enable.
+3. **Destination addresses** → add the client's inbox and have them click the
+   verification link. An unverified destination fails at send time, not at
+   deploy time, so this is easy to miss until the first real submission.
+4. Optionally add a routing rule (`hello@clientdomain.tld` → their inbox) so
+   replies to the notification reach a real mailbox.
+5. Add the binding and vars — the commented block in
+   [`wrangler.jsonc`](../../wrangler.jsonc) has the shape:
+   - `FROM_EMAIL` must be an address **on the Cloudflare-managed zone**.
+   - `NOTIFY_TO` and the binding's `destination_address` are the verified inbox.
+   - `ALLOWED_ORIGIN` is the production origin; submissions from any other
+     origin are rejected.
 
-The native `send_email` binding only works against a domain on Cloudflare with
-Email Routing enabled, sending to verified destination addresses.
+## Rate limiting — required, and deliberately not in the repo
 
-1. Buy or transfer a domain into Cloudflare Registrar (at-cost).
-2. Cloudflare dashboard → the zone → **Email** → **Email Routing** → enable.
-3. **Destination addresses** → add your inbox (e.g. `jarsson@gmail.com`) and click the verification link.
-4. (Optional) Add a routing rule like `hello@yourdomain.tld → jarsson@gmail.com` so replies work.
-5. Update `wrangler.jsonc`:
-   - `FROM_EMAIL` → an address on the Cloudflare-managed zone (`noreply@yourdomain.tld`).
-   - `NOTIFY_TO` and `send_email[0].destination_address` → the verified inbox.
+Add a **WAF rate-limiting rule covering `/api/*`** in the dashboard. This cannot
+live in the function: edge isolates are per-colo and ephemeral, so an in-memory
+counter resets constantly and counts nothing — while looking like protection.
 
-## Local dev
+The launch audit marks this `NEEDS HUMAN` because nothing in the repository can
+prove it exists. Confirm it before launch.
 
-There are two modes — pick based on what you're testing.
+## Testing
 
-### `npm run dev` (fast iteration on UI)
+**A preview deployment is the reliable test.** Deploy, submit the form, confirm
+the mail arrives at the verified destination, then confirm a submission from
+another origin is rejected.
 
-Runs Astro's normal dev server. **Caveat:** `@astrojs/cloudflare` v13 with
-`platformProxy: { enabled: true }` runs SSR through workerd, which breaks
-projects using `astro-icon` (CJS internals). This config keeps `platformProxy`
-off so dev runs in plain Node. The contact action's DEV branch logs the
-payload and returns success without needing the binding — the form's success
-state still renders correctly.
+Locally, Miniflare does not deliver mail — it writes each message to a `.eml`
+file under the temp directory and logs the path, so the composed body and
+headers can be inspected. Useful for checking the message, but it exercises
+Miniflare's stub rather than Email Routing: a verification or binding problem
+still only surfaces on a real deployment.
 
-```sh
-npm run dev
-# open http://localhost:4321/contact
-```
+## Checklist
 
-### `wrangler dev` (test the real binding)
+- [ ] Domain on Cloudflare, Email Routing enabled, destination **verified**
+- [ ] `send_email` binding named `NOTIFY_EMAIL` on the project
+- [ ] `ALLOWED_ORIGIN`, `NOTIFY_TO`, `FROM_EMAIL`, `FROM_NAME` set on the host
+- [ ] WAF rate-limiting rule on `/api/*`
+- [ ] Something watches for the `[contact:error]` log prefix — a form that stops
+      delivering silently is the failure that costs a client real leads
+- [ ] A real submission received end to end on the production domain
 
-Builds the project and runs it under workerd with the actual `send_email`
-binding wired up. Miniflare doesn't deliver email — instead it writes each
-sent message to a `.eml` file in `%TEMP%/miniflare-*/email/email/` and logs
-the path. Open that file to verify the message body.
+## Worth adding when a project needs it
 
-```sh
-npm run build
-npx wrangler dev --config dist/server/wrangler.json --port 4400
-# open http://127.0.0.1:4400/contact
-```
+- `Reply-To` is already set to the submitter's address by the endpoint.
+- An HTML body alongside the plain-text one.
+- Persistence to D1 if submissions need to be auditable beyond the inbox — note
+  that this brings retention and data-handling obligations with it.
+- A challenge (Turnstile) if the honeypot and rate limit prove insufficient.
 
-If you change `src/actions/index.ts` or any page, `Ctrl+C`, run
-`npm run build`, and start wrangler again. (Astro doesn't watch under
-wrangler dev.) On Windows, sometimes the `dist/server/.wrangler/state/*.sqlite`
-files stay locked for a few seconds after stopping wrangler — wait or kill
-any leftover `workerd.exe` processes.
-
-## Deploy
-
-```sh
-npm run build
-npx wrangler deploy --config dist/server/wrangler.json
-```
-
-Then submit the form on the deployed URL. Tail logs with
-`npx wrangler tail` if email doesn't arrive — most failures are
-unverified destination address or `FROM_EMAIL` on a zone without Email
-Routing.
-
-## Reuse checklist
-
-To drop this into a new Astro 6 project:
-
-1. `npm i @astrojs/cloudflare mimetext`
-2. In `astro.config.mjs`: `output: 'static'` + `adapter: cloudflare()`.
-3. Copy `wrangler.jsonc`, `src/env.d.ts`, `src/actions/index.ts`, `src/pages/contact.astro`.
-4. Update in `wrangler.jsonc`: `name`, `FROM_EMAIL`, `NOTIFY_TO`, and `send_email[0].destination_address`.
-5. Make sure the form posts to `/_actions/contact` (or whatever you rename the action).
-6. If the project doesn't already have `Form.astro` / `Field.astro` / `Button.astro`, copy those over too.
-
-## Things to add later (not in this example)
-
-- Rate limiting (Cloudflare Turnstile, or KV-backed per-IP counter).
-- `Reply-To` header set to the submitter's email so you can reply from Gmail.
-- HTML body alongside the plain-text one.
-- Persistence to D1 if you want submissions auditable beyond email.
+<!-- rule-links: generated by scripts/build-doc-links.mjs — do not edit -->
+[components.forms]: ../rules/components.md#forms--form--field-progressively-enhanced-and-hardened
+[deploy.static]: ../rules/deployment.md#deployment--static
+<!-- /rule-links -->

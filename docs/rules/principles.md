@@ -40,7 +40,7 @@ These ten principles are the spine of the system; every section below is an elab
 | `DESIGN.md` | the client's brand **decisions and constraints, with their reasoning** — never values; those live in `global.css` ([tokens.design-doc]) |
 | `AGENTS.md` | the vendor-neutral agent contract and entry point; routes, states non-negotiables in one line each |
 | `CLAUDE.md` | a pointer to `AGENTS.md`, nothing more |
-| `.agents/skills/*` | executable procedures; state *what to check and at what severity*, never the rule itself |
+| `.claude/skills/*` | executable procedures; state *what to check and at what severity*, never the rule itself ([guardrails.skills]) |
 
 A rule written twice drifts twice. If you find yourself explaining a rule outside `docs/rules/`, link to it instead.
 
@@ -52,6 +52,7 @@ A rule written twice drifts twice. If you find yourself explaining a rule outsid
 [components.scripting]: ./components.md#client-side-scripting
 [conformance]: ../conformance.md#starter-conformance-gaps
 [deploy.static]: ./deployment.md#deployment--static
+[guardrails.skills]: ../guardrails.md#agent-skills--commands-required--shipped
 [perf]: ./performance.md#performance--build-optimization
 [roadmap]: ../roadmap.md#roadmap
 [runbook]: ../runbook.md#new-client-setup-runbook
