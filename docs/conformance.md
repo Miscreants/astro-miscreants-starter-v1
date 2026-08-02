@@ -8,12 +8,13 @@ Where the starter does not yet meet a rule in this document. Every entry is date
 
 *Verified 2026-08-02.*
 
-| Rule | Gap | Action |
-|---|---|---|
-| [components.forms] forms | The starter ships the `Form`/`Field` UI only; no reference endpoint implements the security requirements | Ship a reference endpoint meeting [components.forms], or state per-project that it must be built |
-| [structure.env] env | No build-time assertion for required env keys | Add assertions; revisit when `astro:env` is adopted |
+**None.** Every rule marked Required is true of the starter as of the date above. New gaps go in a table here the moment one is found — an empty section is a claim, so it is only honest while someone keeps checking.
 
 ### Cleared
+
+**v2.11 — [components.forms] now holds.** `functions/api/contact.ts` is a hardened reference endpoint: origin check, body-size cap, per-field length limits, CR/LF stripping on everything reaching a mail header, PII-free logging, and a stable `[contact:error]` prefix to alert on. Rate limiting is explicitly platform-level and marked NEEDS HUMAN in the audit — an in-memory counter in an ephemeral edge isolate counts nothing and looks like protection.
+
+**v2.11 — [structure.env] now holds, by correcting the rule.** The starter has no required build-time keys: `PUBLIC_GTAG_ID` is optional by design and the endpoint keys are runtime, not build-time. The rule now carries the assertion helper to use when a project gains its first required key, and says why the starter ships none.
 
 **v2.10 — [perf.prefetch] now holds.** `prefetch` is configured with `prefetchAll` and the hover strategy; the runtime is verified present in the built page entry script.
 

@@ -4,6 +4,12 @@
 ## Roadmap
 <!--rule: roadmap | tier: reference-->
 
+### Done — v2.11
+- ✅ Hardened reference form endpoint ([components.forms]).
+- ✅ Component templates split into static / interactive / polymorphic ([templates]).
+- ✅ Env rule corrected — the starter has no required build-time keys ([structure.env]).
+- ✅ Conformance table empty: every Required rule is true of the starter.
+
 ### Done — v2.10
 - ✅ `prefetch` enabled, hover strategy, all internal links ([perf.prefetch]).
 - ✅ `HeroCanvas` and `ShinyButton` removed, clearing the last raw-value holdouts ([tokens.scoped-styles]).
@@ -29,13 +35,6 @@
 - ✅ Verification tiers so the gate scales with blast radius.
 - ✅ `AGENTS.md` reduced to a contract of pointers; `CLAUDE.md` points at it.
 - ✅ `build-component` command deleted; its unique content rescued into [components.styling].
-
-### P0 — correctness of the gate
-1. Ship a reference form endpoint meeting [components.forms], or document the per-project requirement in the runbook.
-2. Put preview/staging protection into the scaffold step so it's never left to launch day ([seo.staging]).
-
-### P1 — authoring quality
-1. Split the component templates into the three of [templates] and update `ComponentTemplate*`.
 
 ### P2 — tooling
 1. Clear the remaining `astro check` hints — unused locals, and the deprecated `z` re-export in `content.config.ts`. They don't fail the gate; raising `--minimumFailingSeverity` to `hint` only makes sense once they're at zero.

@@ -194,6 +194,17 @@ Verify:
 
 List every key and where it must be configured. Do not infer deployment configuration from a successful local build.
 
+### Form endpoint
+
+If the site ships a form, the endpoint carries requirements code alone can't prove ([components.forms]).
+
+- Endpoint has no origin check, no body-size cap, or no per-field length limits — **BLOCKER**
+- Any value reaching a mail header (`Subject`, `From`, `Reply-To`) isn't stripped of CR/LF — **BLOCKER**. This is header injection: a newline in a name forges an extra `Bcc` or `Reply-To`
+- Submission contents — names, addresses, message bodies — are written to logs — **SHOULD FIX**. Personal data in a log store with an unbounded retention window
+- **Rate limiting is not visible in the repo** — **NEEDS HUMAN**. It belongs at the platform edge; an in-memory counter in an ephemeral edge isolate counts nothing while looking like protection. Confirm a WAF rate-limiting rule covers `/api/*`
+- No alert points at the endpoint's error path — **SHOULD FIX**. A form that silently stops delivering is the expensive failure, not a bounced submission. The reference endpoint logs `[contact:error]`; confirm something watches for it
+- Runtime keys and bindings (`ALLOWED_ORIGIN`, `NOTIFY_TO`, `FROM_EMAIL`, the `send_email` binding) present on the host — **NEEDS HUMAN** unless checked directly. Missing ones don't fail a build; they fail a submission, quietly
+
 ### Analytics and consent
 
 For GTM, GA, or HubSpot IDs, verify the ID is real, not inherited from the starter, and consent gating required by [perf.third-party] is present — **SHOULD FIX**.

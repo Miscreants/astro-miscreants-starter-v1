@@ -4,7 +4,7 @@
 ## Component author templates
 <!--rule: templates | tier: reference-->
 
-Three templates, because most components are not interactive and shouldn't be born with a script, a style block and a lifecycle they never use. **Start with the static template.** The starter ships `ComponentTemplateBasic.astro` / `ComponentTemplateAdvanced.astro` — keep them in sync with this section.
+Three templates, because most components are not interactive and shouldn't be born with a script, a style block and a lifecycle they never use. **Start with the static template.** The starter ships `ComponentTemplateStatic.astro`, `ComponentTemplateInteractive.astro` and `ComponentTemplatePolymorphic.astro` — keep them in sync with this section.
 
 ### Static component (the default)
 <!--rule: templates.static | tier: reference-->

@@ -4,6 +4,27 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.11 — 2026-08-02 — the conformance table is empty
+
+**Reference form endpoint hardened** ([components.forms]). `functions/api/contact.ts` already existed with a honeypot and presence checks; everything else the rule requires was missing. It now has an origin check as the CSRF strategy for a same-origin form, a body-size cap applied before reading, per-field length limits, and CR/LF stripped from every value that reaches a mail header — a newline in a name otherwise forges an extra `Bcc` or `Reply-To`.
+
+Two deliberate non-implementations, both written into the file:
+
+- **Rate limiting stays platform-level.** Edge isolates are per-colo and ephemeral, so an in-memory counter resets constantly and counts nothing — worse than none, because it looks like protection. It belongs in a WAF rule, and the audit marks it `NEEDS HUMAN`.
+- **Alerting needs a destination the repo doesn't have.** Every failure path logs a stable `[contact:error]` prefix to point a drain at instead.
+
+Logging also stopped writing submission contents. Names, addresses and message bodies are personal data; they belong in the notification, not in a log store with an unbounded retention window.
+
+The commented email path was rewritten too: it recommended `mimetext`, whose default build fails esbuild on node built-ins and whose browser build throws inside workerd. Replaced with a hand-rolled RFC 5322 string, which is what the message actually needs.
+
+**Component templates split three ways** ([templates]) — `Static` (the default), `Interactive` and `Polymorphic`, replacing `Basic`/`Advanced`. The interactive one now demonstrates the `WeakSet` init guard and full `AbortController` teardown the rules require, rather than describing them somewhere else.
+
+**The env rule was corrected rather than implemented.** It demanded build-time assertions for required keys; the starter has none — `PUBLIC_GTAG_ID` is optional by design, and the endpoint's keys are read at *runtime* by the function, where a missing key can't fail a build. The rule now carries the assertion helper for a project's first genuinely required key, explains why the starter ships none, and treats runtime keys as a launch check instead.
+
+`wrangler.jsonc` lost a personal email address and a note claiming the form path was disabled — it isn't, and hasn't been since the Pages Function landed.
+
+**Conformance is now empty.** Every rule marked Required is true of the starter. Three of the gaps closed in this release turned out to be the rule over-specifying rather than the code falling short.
+
 ### v2.10 — 2026-08-02 — prefetch on, two components out
 
 **Navigation prefetch enabled** ([perf.prefetch]) — `prefetchAll` with the hover strategy, so every internal link warms when a visitor signals intent and the navigation lands instantly. On a static site the pages are already built, so the cost is one cheap fetch for a link someone is about to click. It works without the client router; prefetch and view transitions are independent. Verified present in the built page entry script rather than assumed from config.

@@ -121,7 +121,19 @@ Prefer aliases over deep relative paths. Sibling imports may stay relative.
 - Read via `import.meta.env.PUBLIC_*` (client) or `import.meta.env.*` (build-only).
 - **Commit `.env.example`** (keys, no values); **never commit `.env`**.
 - Build-time vars are set in the host dashboard. Runtime secrets (e.g. a form Worker) live in the host's secret store / bindings ([components.forms]) — never in the repo.
-- **A missing required key must fail the build, not render `undefined`.** Until typed env lands ([roadmap]), assert required keys explicitly at config load.
+- **A missing *required* key must fail the build, not render `undefined`.** Assert it at config load:
+
+  ```js
+  const requireEnv = (key) => {
+    const value = process.env[key];
+    if (!value) throw new Error(`Missing required env var ${key} — set it in the host's build environment.`);
+    return value;
+  };
+  ```
+
+  **The starter has no required build-time keys**, which is why `astro.config.mjs` carries no assertions. `PUBLIC_GTAG_ID` is optional by design — the layout injects the tag only when it is set — and the contact endpoint's keys are read at *runtime* by the Pages Function, not at build. Add the helper when a project introduces its first genuinely required key; don't ship it unused.
+
+- **Runtime keys are a different problem.** A host function reads its environment at request time, so a missing key can't fail a build — it fails a submission, quietly. List every runtime key in `.env.example` even though the file doesn't supply them, so the set is discoverable, and treat "is it actually set on the host?" as a launch check rather than something the repo can prove.
 
 > **Roadmap — `astro:env`.** Astro's typed env schema validates keys at build time and gives typed access with no manual assertions. Adopting it is the intended direction; until it ships in the starter, the `import.meta.env` rules above are the standard.
 
@@ -164,6 +176,5 @@ Keep it short and imperative — it's the agent's front door, not a manual.
 [guardrails.docs-check]: ../guardrails.md#documentation-integrity-check-required--shipped
 [guardrails.skills]: ../guardrails.md#agent-skills--commands-required--shipped
 [principles]: ./principles.md#why-this-exists
-[roadmap]: ../roadmap.md#roadmap
 [structure.git]: ./structure.md#git-branching-deploy--starter-lineage
 <!-- /rule-links -->
