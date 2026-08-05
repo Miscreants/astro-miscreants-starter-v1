@@ -114,6 +114,7 @@ for (const file of docFiles) {
 // namespace — so [tokens], [components.scripting] and a typo like
 // [tokens.semantik] are all checked, while stray brackets such as the "[x]" in
 // a task list are ignored.
+// cspell:ignore semantik
 const CITATION = /\[([a-z][\w-]*(?:\.[\w-]+)*)\](?!\()/g;
 const SECTION_REF = /§\s*\d/;
 const MD_LINK = /\]\((\.[^)#\s]*?\.md)(?:#[^)]*)?\)/g;
@@ -152,7 +153,7 @@ const designFile = join(ROOT, "DESIGN.md");
 if (existsSync(designFile)) {
   const design = stripFences(readFileSync(designFile, "utf8"));
   const LITERALS = [
-    [/#[0-9a-fA-F]{6}\b/g, "colour value", "src/styles/global.css"],
+    [/#[0-9a-fA-F]{6}\b/g, "color value", "src/styles/global.css"],
     [/\b\d+(?:\.\d+)?\s?px\b/g, "pixel value", "src/styles/global.css"],
     [/\b\d+(?:\.\d+)?\s?ms\b/g, "duration", "the --duration-* tokens in global.css"],
   ];

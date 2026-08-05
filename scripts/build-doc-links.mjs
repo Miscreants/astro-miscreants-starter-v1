@@ -114,7 +114,7 @@ for (const file of citingFiles) {
   // Work in LF, write back in whatever the file already used. On Windows git
   // checks these out as CRLF; a script that always wrote LF rewrote every file
   // on every run, so `--check` reported all of them stale and `npm run check`
-  // failed on a fresh clone — while the resulting diff was one git normalises
+  // failed on a fresh clone — while the resulting diff was one git normalizes
   // away to nothing. Compare like for like.
   const eol = rawOnDisk.includes("\r\n") ? "\r\n" : "\n";
   const raw = rawOnDisk.replace(/\r\n/g, "\n");

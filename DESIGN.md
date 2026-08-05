@@ -18,7 +18,7 @@ Values live in code — a value written in two places drifts in one of them, and
 
 | Looking for | Read |
 |---|---|
-| Colour values, per theme | `src/styles/global.css` — `@theme` and the `[data-theme]` blocks |
+| Color values, per theme | `src/styles/global.css` — `@theme` and the `[data-theme]` blocks |
 | The type ramp, rendered | `/styleguide` in dev |
 | A component's shape, props and states | `/components` in dev, and `src/content/components/*.mdx` |
 | Spacing, rhythm, layout and motion tokens | `src/styles/global.css` |

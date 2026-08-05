@@ -1,3 +1,5 @@
+<!-- cspell:ignore labl primry — deliberate typos used as teaching examples -->
+
 # Astro for Beginners
 
 > **Background material — not a rule source.** This is onboarding for people new to Astro. It is *not* part of the build standard and must never be cited as one: where it and [`docs/rules/`](../README.md) disagree, the rules win. It also predates the current framework baseline (see `docs/rules/structure.md` for the versions actually in use), so treat specific version numbers here as illustrative.
@@ -2204,7 +2206,7 @@ Each override block just redeclares the semantic tokens. The cascade does the re
   --color-panel: #141414;
   /* …same structural tokens as dark… */
   /* …but brand-distinctive accent colors: */
-  --color-intent: #8b5cf6;        /* brand hue — the primary-action colour */
+  --color-intent: #8b5cf6;        /* brand hue — the primary-action color */
   --color-intent-hover: #7c3aed;
   --color-focus: #8b5cf6;         /* focus ring inherits brand */
   --accent-line: rgb(139 92 246);

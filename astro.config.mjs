@@ -75,7 +75,7 @@ export default defineConfig({
   site: site.url,
   output: 'static',
   // Astro 7 defaults compressHTML to 'jsx' (JSX-style whitespace stripping).
-  // Keep the v6 HTML-aware behaviour so inline spacing doesn't shift.
+  // Keep the v6 HTML-aware behavior so inline spacing doesn't shift.
   compressHTML: true,
   // Every internal link warms on hover. On a static site the pages are already
   // built, so this costs one cheap fetch for a link the visitor has signalled

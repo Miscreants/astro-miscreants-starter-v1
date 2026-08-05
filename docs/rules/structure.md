@@ -100,7 +100,7 @@ Prefer aliases over deep relative paths. Sibling imports may stay relative.
   "build":      "astro build",
   "preview":    "astro preview",
   "typecheck":  "astro check --minimumFailingSeverity warning",
-  "spellcheck": "cspell \"src/**\" --no-progress --no-must-find-files --no-exit-code --unique",
+  "spellcheck": "cspell \"**/*.{astro,ts,mjs,md,mdx,css,json,jsonc}\" --no-progress --no-must-find-files --no-exit-code --unique",
   "docs:build": "node scripts/build-doc-links.mjs",
   "docs:check": "node scripts/check-docs.mjs",
   "check":      "npm run typecheck && npm run docs:check && npm run build"

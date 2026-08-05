@@ -61,7 +61,7 @@ One line each. The rule and its reasoning live behind the link.
 
 ```sh
 npm run check       # type gate + production build
-npm run spellcheck  # after touching any visitor-readable copy — advisory report, never fails
+npm run spellcheck  # whole repo — advisory report, never fails a build
 npm run docs:build  # after editing anything in docs/
 ```
 

@@ -1,23 +1,28 @@
 <!--docs-module: changelog-->
 <!--nav: Part of the Astro Build Standards. Map: docs/README.md · Router: docs/workflow.md-->
+<!-- cspell:ignore ropdown recieve behaviour initialised initialises normalised normalises Penalising recognises colour Colour colours tokenised tokenisation unoptimised labl primry semantik — misspellings quoted deliberately in the v2.13 entry -->
 
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
 ### v2.13 — 2026-08-05 — spell-check, deliberately advisory
 
-**Copy quality is now a stated rule** ([content.copy]) with a tool behind it. `npm run spellcheck` runs `cspell` over `src/**` — collection entries, `data/*` labels, section copy, `alt` text, meta descriptions, form and error strings, `aria-label`s.
+**Copy quality is now a stated rule** ([content.copy]) with a tool behind it. `npm run spellcheck` runs `cspell` over **the whole repo — every page, not just `src/`**: collection entries, `data/*` labels, section copy, `alt` text, meta descriptions, form and error strings, `aria-label`s, and equally the rulebook under `docs/`, `DESIGN.md`, `AGENTS.md` and comments in config and scripts. A typo in the rulebook misleads the next agent that reads it, so it is worth the same attention as one on a page.
 
 **It is not part of `npm run check`, and that is the design decision, not an oversight.** The script carries `--no-exit-code`: it prints a report and always exits 0. Client copy is dense with niche vocabulary — product names, industry jargon, coined terms — and a spelling gate that blocks a deploy over a correctly-spelled word nobody's dictionary knows is a gate people learn to route around. Every other entry in `check` is machine-decidable; this one needs a human to read the list. `[structure.gate]` says so explicitly so the omission doesn't read as a bug and get "fixed" later.
 
 The first run proved the point in both directions:
 
-- **It found real drift.** Six en-GB spellings had crept into the starter — `behaviour`, `initialised`, `initialises`, `normalised`, `Penalising`, `recognises` — across component comments and four `.mdx` docs. **`en-US` is the priority spelling**, set once via `"language": "en-US"` in `cspell.json`, and an en-GB flag is always fixed in the copy, never silenced by adding it to `words`.
-- **It also flagged correct copy.** `ropdown` in `search.mdx` is `**D**ropdown` — markdown bold splitting a word mid-token. Resolved with a scoped `cspell:ignore` on that one file, which is the pattern the rule prescribes over any blanket disable.
+- **It found real drift.** Nineteen en-GB spellings across the repo — `behaviour`, `initialised`, `initialises`, `normalised`, `normalises`, `Penalising`, `recognises`, `colour`/`Colour`/`colours`, `tokenised`, `tokenisation`, `unoptimised` — in component comments, seven `.mdx` docs, four rulebook modules, `DESIGN.md`, `astro.config.mjs` and both doc scripts, including one in a message string the checker prints. **`en-US` is the priority spelling**, set once via `"language": "en-US"` in `cspell.json`, and an en-GB flag is always fixed in the copy, never silenced by adding it to `words`.
+- **It also flagged correct copy.** `ropdown` in `search.mdx` is `**D**ropdown` — markdown bold splitting a word mid-token. On a hard gate that is a blocked deploy over correct text. Resolved with a scoped `cspell:ignore` on that one file, the pattern the rule prescribes over any blanket disable.
 
-`cspell.json` ships with 48 starter terms (`astro`, `gsap`, `workerd`, `wordmark`, `grainient`…) and the ignore patterns that keep imports, URLs, hex colors and `class`/`href` attributes out of the report. Adding a word is still a reviewed decision: a change that adds `recieve` to `words` is a change that ships `recieve`. `src/**` is clean at 115 files, 0 issues.
+Widening past `src/` surfaced a category worth naming: docs that **quote** misspellings on purpose — the teaching typos `labl` and `primry` in the beginners guide, the `[tokens.semantik]` example in `check-docs.mjs`, and this entry's own list above. Each carries a scoped `cspell:ignore` naming why, rather than the words being added globally — a repo-wide `words` entry for `recieve` would silence the real thing everywhere.
+
+`cspell.json` ships with 82 starter terms (`astro`, `gsap`, `workerd`, `wordmark`, `nosniff`, `footgun`…) and the ignore patterns that keep imports, URLs, hex colors and `class`/`href` attributes out of the report. Adding a word is still a reviewed decision: a change that adds `recieve` to `words` is a change that ships `recieve`. The repo is clean at 155 files, 0 issues.
 
 Cited from [checklist.page] (with a companion line for the human read-through the tool can't do — `form`/`from`, duplicated words), [checklist.pre-launch] for sitewide strings, and Tier 0 in the router, since a copy edit is exactly when it should run.
+
+Four **attribution comments** were also removed — `ComboboxGrouped`, `Footer`, `AnimatedTags` and `footer.mdx` credited the sources they were modeled on. The technical substance of each comment stays; only the credit line went.
 
 ### v2.12 — 2026-08-02 — a review pass on the docs themselves
 
@@ -58,7 +63,7 @@ The commented email path was rewritten too: it recommended `mimetext`, whose def
 
 `viewport` was deliberately not used: it prefetches everything on screen, which on a long marketing page spends real bandwidth on links nobody follows.
 
-**`HeroCanvas` and `ShinyButton` removed.** They were the last two components carrying literal hex custom properties that don't follow the theme — resolved by deletion rather than tokenisation. Neither had a showcase entry, so neither was reachable from `/components` or visible to a client's agent; nothing in `src/` referenced either. `HeroCanvas` was also the only consumer of `src/lib/simplex-noise.js`, which went with it — four files in total.
+**`HeroCanvas` and `ShinyButton` removed.** They were the last two components carrying literal hex custom properties that don't follow the theme — resolved by deletion rather than tokenization. Neither had a showcase entry, so neither was reachable from `/components` or visible to a client's agent; nothing in `src/` referenced either. `HeroCanvas` was also the only consumer of `src/lib/simplex-noise.js`, which went with it — four files in total.
 
 That leaves the animated-canvas rules in [perf.canvas] with no in-repo example. They stay: the guidance is about what to do when a project needs an effect like that, and it was written from the failure mode, not from the component.
 
@@ -88,7 +93,7 @@ The `launch` audit now flags an unanswered `DESIGN.md` in production as SHOULD F
 
 `DESIGN.md` was 233 lines, of which **155 were frontmatter duplicating `global.css`** — the full palette, the type ramp, the radius and spacing scales, and per-component specs. Nothing read that frontmatter. It existed only to go stale, and it had:
 
-- **status colours already wrong** — `#dc2626` / `#16a34a` documented against `#841B20` / `#4C6649` actually rendering, so an agent would build bright red/green state styling for a maroon-and-olive site;
+- **status colors already wrong** — `#dc2626` / `#16a34a` documented against `#841B20` / `#4C6649` actually rendering, so an agent would build bright red/green state styling for a maroon-and-olive site;
 - **an internal contradiction** — "This build does not use rounded corners… Pills are off the table" three paragraphs above "**Nav (pill)** — a pill-rounded panel", with `nav-pill.rounded: {rounded.pill}` in the frontmatter backing the wrong one;
 - **motion documented as "150–300 ms linear or ease-out"** against tokens of 0.2–1.6s on a custom bezier;
 - a framework version two majors behind.

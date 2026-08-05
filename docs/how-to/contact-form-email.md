@@ -2,11 +2,11 @@
 
 Everything here is **platform setup**. The endpoint itself is
 [`functions/api/contact.ts`](../../functions/api/contact.ts) and documents its own
-behaviour — read it there rather than looking for a second description here.
+behavior — read it there rather than looking for a second description here.
 
 > **This guide previously taught a retired architecture.** It used Astro Actions
 > with the Cloudflare adapter and `mimetext`. That approach is out: the adapter
-> forces server rendering and its image service ships unoptimised assets, and
+> forces server rendering and its image service ships unoptimized assets, and
 > `mimetext` either fails the esbuild step on node built-ins or throws inside
 > workerd at runtime. The endpoint is now a host function outside the Astro
 > build, so the site stays static. See [components.forms] and [deploy.static].

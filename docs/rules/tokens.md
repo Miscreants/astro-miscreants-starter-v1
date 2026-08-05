@@ -64,7 +64,7 @@ Decide these and record them in the client's `DESIGN.md`.
 ### `DESIGN.md` records decisions, not values
 <!--rule: tokens.design-doc | tier: required-->
 
-**`DESIGN.md` is the brand contract: what was decided for *this project*, and why. It must not contain a single colour value, pixel measurement or duration.** Those live in `global.css`, which is the only place they can be true — a value written in two places drifts in one of them, and it is always the copy that nobody renders from.
+**`DESIGN.md` is the brand contract: what was decided for *this project*, and why. It must not contain a single color value, pixel measurement or duration.** Those live in `global.css`, which is the only place they can be true — a value written in two places drifts in one of them, and it is always the copy that nobody renders from.
 
 **The starter ships it unanswered**, as prompts rather than content. A template pre-loaded with one project's brand decisions is worse than an empty one: the next build inherits them silently, nobody rewrites a file that already looks finished, and the agent then generates to the wrong brand with total confidence. Scaffold phase 2 fills it in ([runbook]).
 
