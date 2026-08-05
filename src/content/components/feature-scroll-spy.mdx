@@ -84,7 +84,7 @@ A panel becomes active as its top crosses into that band. Tall panels and fast s
 
 ### Click-to-scroll
 
-TOC clicks are intercepted rather than left to native anchor behaviour, so the component can smooth-scroll **without** setting a global `html { scroll-behavior: smooth }` that would affect every other scroll on the page. After scrolling it calls `history.replaceState` so the anchor shows in the URL and stays shareable — `replaceState`, not `pushState`, so browser-back doesn't have to walk through every section the reader clicked.
+TOC clicks are intercepted rather than left to native anchor behavior, so the component can smooth-scroll **without** setting a global `html { scroll-behavior: smooth }` that would affect every other scroll on the page. After scrolling it calls `history.replaceState` so the anchor shows in the URL and stays shareable — `replaceState`, not `pushState`, so browser-back doesn't have to walk through every section the reader clicked.
 
 ### Anchor offset
 

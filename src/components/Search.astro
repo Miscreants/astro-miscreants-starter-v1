@@ -199,7 +199,7 @@ const inputId = id ?? `search-${Math.random().toString(36).slice(2, 10)}`;
 
   /** Fuzzy subsequence scorer.
    *
-   *  Returns a normalised score in [0..1]:
+   *  Returns a normalized score in [0..1]:
    *    - 1.0  → full prefix match
    *    - 0.9  → word-boundary substring match
    *    - 0.7  → mid-word substring match
@@ -226,7 +226,7 @@ const inputId = id ?? `search-${Math.random().toString(36).slice(2, 10)}`;
 
     // Fuzzy subsequence. The naive "first occurrence wins" walk produces
     // false positives on long descriptions where stray characters happen to
-    // appear in the right order. Penalising by match span (last - first)
+    // appear in the right order. Penalizing by match span (last - first)
     // collapses sparse hits to ~0 while keeping tight matches strong.
     let qi = 0;
     let raw = 0;

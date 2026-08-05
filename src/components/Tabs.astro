@@ -127,7 +127,7 @@ const hasControls = Astro.slots.has("controls");
   // on the site sits below the fold — so defer it: dynamically import GSAP and
   // run setup only once a tab component nears the viewport. This keeps GSAP's
   // parse/eval off the initial critical path (lower Total Blocking Time)
-  // without changing any behaviour once a component is initialized.
+  // without changing any behavior once a component is initialized.
   // (Ported from ghost-build's Tabs.)
   let gsap: any;
   let ScrollTrigger: any;

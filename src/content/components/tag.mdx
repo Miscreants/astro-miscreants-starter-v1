@@ -109,4 +109,4 @@ The event is `cancelable` — call `preventDefault()` to keep the tag in the DOM
 
 - Tag is a `<span>` (inline-flex) — drop it inside any text flow without disrupting layout.
 - `warning` variant uses a literal `#d97706` (amber-600) since the project tokens don't include a warning color. Add `--color-warning` to `global.css` if you want to centralize it.
-- Closable tags self-remove from the DOM after dispatch — for controlled behaviour, listen to `tag:close` and call `preventDefault()` then handle removal in your own state.
+- Closable tags self-remove from the DOM after dispatch — for controlled behavior, listen to `tag:close` and call `preventDefault()` then handle removal in your own state.

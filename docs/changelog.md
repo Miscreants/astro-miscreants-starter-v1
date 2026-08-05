@@ -4,6 +4,21 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.13 — 2026-08-05 — spell-check, deliberately advisory
+
+**Copy quality is now a stated rule** ([content.copy]) with a tool behind it. `npm run spellcheck` runs `cspell` over `src/**` — collection entries, `data/*` labels, section copy, `alt` text, meta descriptions, form and error strings, `aria-label`s.
+
+**It is not part of `npm run check`, and that is the design decision, not an oversight.** The script carries `--no-exit-code`: it prints a report and always exits 0. Client copy is dense with niche vocabulary — product names, industry jargon, coined terms — and a spelling gate that blocks a deploy over a correctly-spelled word nobody's dictionary knows is a gate people learn to route around. Every other entry in `check` is machine-decidable; this one needs a human to read the list. `[structure.gate]` says so explicitly so the omission doesn't read as a bug and get "fixed" later.
+
+The first run proved the point in both directions:
+
+- **It found real drift.** Six en-GB spellings had crept into the starter — `behaviour`, `initialised`, `initialises`, `normalised`, `Penalising`, `recognises` — across component comments and four `.mdx` docs. **`en-US` is the priority spelling**, set once via `"language": "en-US"` in `cspell.json`, and an en-GB flag is always fixed in the copy, never silenced by adding it to `words`.
+- **It also flagged correct copy.** `ropdown` in `search.mdx` is `**D**ropdown` — markdown bold splitting a word mid-token. Resolved with a scoped `cspell:ignore` on that one file, which is the pattern the rule prescribes over any blanket disable.
+
+`cspell.json` ships with 48 starter terms (`astro`, `gsap`, `workerd`, `wordmark`, `grainient`…) and the ignore patterns that keep imports, URLs, hex colors and `class`/`href` attributes out of the report. Adding a word is still a reviewed decision: a change that adds `recieve` to `words` is a change that ships `recieve`. `src/**` is clean at 115 files, 0 issues.
+
+Cited from [checklist.page] (with a companion line for the human read-through the tool can't do — `form`/`from`, duplicated words), [checklist.pre-launch] for sitewide strings, and Tier 0 in the router, since a copy edit is exactly when it should run.
+
 ### v2.12 — 2026-08-02 — a review pass on the docs themselves
 
 Seven findings from an independent read of the documentation, all verified and all fixed. Every one was **documentation drifting from a decision** — which is precisely the class [guardrails.docs-check] cannot detect. It proves that ids resolve and links exist; it cannot know a sentence stopped being true.
@@ -234,6 +249,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [components.props]: ./rules/components.md#props-typing
 [components.scripting]: ./rules/components.md#client-side-scripting
 [conformance]: ./conformance.md#starter-conformance-gaps
+[content.copy]: ./rules/content.md#copy-quality--spell-check-flags-a-human-decides
 [content.md-vs-mdx]: ./rules/content.md#md-vs-mdx--pick-by-whether-the-author-places-components
 [content.source-seam]: ./rules/content.md#content-source-seam
 [deploy.static]: ./rules/deployment.md#deployment--static

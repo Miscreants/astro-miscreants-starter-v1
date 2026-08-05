@@ -1,6 +1,6 @@
 ---
 /**
- * ComponentTemplateInteractive — for components with real behaviour.
+ * ComponentTemplateInteractive — for components with real behavior.
  *
  * Adds state, ARIA, keyboard handling and the script lifecycle to the static
  * template. Everything here is load-bearing; if a component doesn't need the
@@ -60,9 +60,9 @@ const panelId = `${id}-panel`;
 </style>
 
 <script>
-  // Per-behaviour init guard. A WeakSet rather than a shared data attribute:
-  // one flag on the element would let whichever behaviour ran first block
-  // every other behaviour bound to the same root, silently.
+  // Per-behavior init guard. A WeakSet rather than a shared data attribute:
+  // one flag on the element would let whichever behavior ran first block
+  // every other behavior bound to the same root, silently.
   const initialized = new WeakSet<HTMLElement>();
 
   function initDisclosure() {
@@ -112,6 +112,6 @@ const panelId = `${id}-panel`;
   initDisclosure();
 
   // No-op unless a project enables Astro's client router; the direct call above
-  // is what actually initialises on a normal page load.
+  // is what actually initializes on a normal page load.
   document.addEventListener("astro:page-load", initDisclosure);
 </script>

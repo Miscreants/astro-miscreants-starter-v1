@@ -42,7 +42,7 @@ There is no file-targeted type check: `astro check` takes `--root` and `--tsconf
 
 | Tier | The change | Required before calling it done |
 |---|---|---|
-| **0 — copy & docs** | Text, comments, documentation, labels. No markup structure, tokens, props or behavior. | Editing `docs/`: `npm run docs:build` then `npm run docs:check`. Editing copy in source: `npm run typecheck`. No browser unless text fitting is the risk. |
+| **0 — copy & docs** | Text, comments, documentation, labels. No markup structure, tokens, props or behavior. | Editing `docs/`: `npm run docs:build` then `npm run docs:check`. Editing copy in source: `npm run typecheck` **plus `npm run spellcheck`, flags resolved** ([content.copy]). No browser unless text fitting is the risk. |
 | **1 — one component's presentation** | Spacing, hover, focus, a variant's styling **on a single component**. Its props, state shape and consumers are unchanged. | `npm run check` + the component's showcase page in a browser. |
 | **2 — a page-local section or route** | New or edited `Section*`, new route, content wiring. Nothing outside the page being built. | `npm run check` + [`checklists/page.md`](./checklists/page.md) at all five widths, in every theme the project ships. |
 | **3 — shared surface** | **Any change to a shared component's API** — adding, renaming or retyping a prop — plus `Layout`, `SectionMain`, `global.css`, tokens, `astro.config.mjs`, a content schema. Anything with more than one consumer. | Tier 2 **on two consuming templates**, plus [`checklists/accessibility.md`](./checklists/accessibility.md). |
@@ -63,5 +63,6 @@ A skipped check is fine when the tier says so and you say why. A skipped check r
 [components.composition]: ./rules/components.md#composition-model-pages--sections--components
 [components.forms]: ./rules/components.md#forms--form--field-progressively-enhanced-and-hardened
 [components.scripting]: ./rules/components.md#client-side-scripting
+[content.copy]: ./rules/content.md#copy-quality--spell-check-flags-a-human-decides
 [perf.canvas]: ./rules/performance.md#animated-canvases--heavy-client-js
 <!-- /rule-links -->

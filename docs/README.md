@@ -19,7 +19,7 @@ The only place a rule is *stated*. One module per surface.
 | [`rules/component-templates.md`](./rules/component-templates.md) | the three starting points: static, interactive, polymorphic |
 | [`rules/seo.md`](./rules/seo.md) | site identity, the `Layout` contract, `Seo.astro`, JSON-LD, sitemap, staging indexing control |
 | [`rules/accessibility.md`](./rules/accessibility.md) | native-first semantics, keyboard, focus, the measurable thresholds |
-| [`rules/content.md`](./rules/content.md) | collections, the content-source seam, data registries, `.md` vs `.mdx` |
+| [`rules/content.md`](./rules/content.md) | collections, the content-source seam, data registries, copy quality & spell-check, `.md` vs `.mdx` |
 | [`rules/performance.md`](./rules/performance.md) | images, fonts, CSS, prefetch, third-party, animated canvases, budgets |
 | [`rules/deployment.md`](./rules/deployment.md) | hosts, redirects, headers, demo-route gating |
 

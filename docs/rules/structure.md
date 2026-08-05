@@ -100,6 +100,7 @@ Prefer aliases over deep relative paths. Sibling imports may stay relative.
   "build":      "astro build",
   "preview":    "astro preview",
   "typecheck":  "astro check --minimumFailingSeverity warning",
+  "spellcheck": "cspell \"src/**\" --no-progress --no-must-find-files --no-exit-code --unique",
   "docs:build": "node scripts/build-doc-links.mjs",
   "docs:check": "node scripts/check-docs.mjs",
   "check":      "npm run typecheck && npm run docs:check && npm run build"
@@ -111,6 +112,8 @@ Prefer aliases over deep relative paths. Sibling imports may stay relative.
 `--minimumFailingSeverity warning` means compiler warnings — including accessibility warnings — fail the gate. That is deliberate and consistent with [a11y]. Hints do not fail.
 
 **`docs:check`** is the documentation half of the gate ([guardrails.docs-check]): it fails the build on a citation to a rule id that doesn't exist, on a stale rule-link block, on a broken relative link, and on any surviving `§` section reference.
+
+**`spellcheck` is required to exist and required to be run ([content.copy]) — and deliberately outside `check`.** It carries `--no-exit-code`, so it prints a report and always exits 0. Client copy is dense with niche vocabulary, and a spelling gate that blocks a deploy over a correctly-spelled term is a gate people learn to bypass. Every other entry in `check` is machine-decidable; this one needs a human to read the list, so it runs beside the gate rather than inside it.
 
 `npm run check` is the local gate before every PR. See [conformance] for the starter's current conformance state.
 
@@ -172,6 +175,7 @@ Keep it short and imperative — it's the agent's front door, not a manual.
 [components.composition]: ./components.md#composition-model-pages--sections--components
 [components.forms]: ./components.md#forms--form--field-progressively-enhanced-and-hardened
 [conformance]: ../conformance.md#starter-conformance-gaps
+[content.copy]: ./content.md#copy-quality--spell-check-flags-a-human-decides
 [deploy.static]: ./deployment.md#deployment--static
 [guardrails.docs-check]: ../guardrails.md#documentation-integrity-check-required--shipped
 [guardrails.skills]: ../guardrails.md#agent-skills--commands-required--shipped

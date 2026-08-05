@@ -12,6 +12,8 @@ import Preview from "@components/_docs/Preview.astro";
 import PropsTable from "@components/_docs/PropsTable.astro";
 import Search from "@components/Search.astro";
 
+{/* cspell:ignore ropdown — bold markers split "Dropdown" mid-word below; the copy is correct. */}
+
 Lightweight client-side search. Drop the input above any list of items, point it at them with a CSS selector, and the script hides anything that doesn't match the query. Matching is fuzzy (subsequence) with bonuses for prefix matches and word-boundary hits, so `"btn"` finds **B**u**t**to**n**, `"drp"` finds **D**ropdown, etc.
 
 It's wired into the live [Components index](/components/) at the top of the page — try it there to see fuzzy scoring against this exact list.
@@ -177,7 +179,7 @@ Use it to update a result counter, log analytics, or persist the query to the UR
 
 ## Accessibility
 
-- Real `<input type="search">` — gets `Cmd/Ctrl+F`-style browser affordances and supports the native Escape-clear behaviour.
+- Real `<input type="search">` — gets `Cmd/Ctrl+F`-style browser affordances and supports the native Escape-clear behavior.
 - `<label>` is visually hidden by default but always present — screen readers announce the input's purpose.
 - Polite `aria-live` status region announces `"N results for 'query'"` after each filter pass, so screen-reader users know the list shrank.
 - Clear button is a real `<button>` with `aria-label="Clear search"`. Hidden when the input is empty, so the tab order isn't cluttered.
