@@ -5,6 +5,30 @@
 ## Changelog
 <!--rule: changelog | tier: reference-->
 
+### v2.14 — 2026-08-08 — tighter section rhythm, one naming scheme
+
+**Every tier of the vertical rhythm scale moves down one rung.** The shape of the scale is unchanged — five tiers, still stepping up at `md:` — but each one lost a step:
+
+| Tier | Before (mobile → `md:`) | After |
+|------|------------------------|-------|
+| `xs` | 48 → 64px | 32 → 40px |
+| `sm` | 64 → 80px | 48 → 64px |
+| `md` | 96 → 128px | 64 → 96px |
+| `lg` | 128 → 192px | 96 → 128px |
+| `xl` | 192 → 256px | 128 → 192px |
+
+`SectionMain` defaults to `padding="md"`, so two stacked default sections now sit 192px apart on desktop rather than 256px, and 128px on mobile rather than 192px. The old values read as a page that had been pulled apart rather than composed.
+
+**The `section-padding-*` block had been inert at `md:` the whole time.** It was written `py-12 md:py-12` — a no-op breakpoint that scaled nothing — while the `section-pt-*` / `section-pb-*` blocks it was supposed to mirror did step up. The same tier name meant two different things depending on which axis you reached for: `section-padding-lg` was a flat 128px, `section-pt-lg` was 128 → 192px. All three blocks now share one scale, with a comment above them saying to keep them in sync.
+
+**The middle tier has a name now.** `section-padding` followed Tailwind's bare-base idiom (`border`, `rounded`, `shadow`), which reads fine in isolation but stopped being consistent the moment `section-pt-md` / `section-pb-md` existed — the same conceptual tier spelled two ways, a scale that scans as `xs, sm, ⟨blank⟩, lg, xl`, and a `grep` for `section-padding-` that misses the default tier. The canonical name is **`section-padding-md`**; bare `section-padding` stays as a one-line alias so anything already reaching for it keeps working.
+
+**The default was never `lg` — the examples were.** `SectionMain` has always defaulted to `padding="md"`, but both canonical snippets in the rulebook wrote `<SectionMain id="features" padding="lg">`, and an example is what gets copied. Both now omit the prop, and [components.composition] states the rule directly: leave `padding` off unless you mean to break rhythm — `lg`/`xl` to isolate a hero or a page-closing CTA, `xs`/`sm` for a dense strip, `none` when the child owns its own spacing. A page where most sections carry an explicit `padding` has drifted from the scale rather than used it.
+
+The stale numbers that documented the old scale were corrected alongside: the padding map in `section-main.mdx`, the swatch table in the styleguide, the `section-padding` snippet under [tokens.layout], and the lookup map in the beginners guide.
+
+A build whose design genuinely wants more air changes the default in `SectionMain` in its own repo, the same way [components.composition] already handles the side rules — the rule is that sections go through `SectionMain`, not that its spacing is identical on every project.
+
 ### v2.13 — 2026-08-05 — spell-check, deliberately advisory
 
 **Copy quality is now a stated rule** ([content.copy]) with a tool behind it. `npm run spellcheck` runs `cspell` over **the whole repo — every page, not just `src/`**: collection entries, `data/*` labels, section copy, `alt` text, meta descriptions, form and error strings, `aria-label`s, and equally the rulebook under `docs/`, `DESIGN.md`, `AGENTS.md` and comments in config and scripts. A typo in the rulebook misleads the next agent that reads it, so it is worth the same attention as one on a page.
@@ -249,6 +273,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [checklist.page]: ./checklists/page.md#page-done
 [checklist.pre-launch]: ./checklists/pre-launch.md#pre-launch
 [checklists]: ./checklists/index.md#checklists
+[components.composition]: ./rules/components.md#composition-model-pages--sections--components
 [components.docs]: ./rules/components.md#documentation--shared-components
 [components.forms]: ./rules/components.md#forms--form--field-progressively-enhanced-and-hardened
 [components.props]: ./rules/components.md#props-typing
@@ -280,6 +305,7 @@ The rulebook was a single 1,340-line file with no entry point shorter than "read
 [structure.versions]: ./rules/structure.md#versions--engines
 [templates]: ./rules/component-templates.md#component-author-templates
 [tokens.design-doc]: ./rules/tokens.md#designmd-records-decisions-not-values
+[tokens.layout]: ./rules/tokens.md#layout--spacing-utilities
 [tokens.model]: ./rules/tokens.md#the-token-model
 [tokens.per-client]: ./rules/tokens.md#per-client-design-decisions-set-at-intake
 [tokens.responsive]: ./rules/tokens.md#responsive-contract

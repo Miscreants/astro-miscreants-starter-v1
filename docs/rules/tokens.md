@@ -119,7 +119,7 @@ Use the semantic layout `@utility` recipes instead of ad-hoc padding:
 @utility container-large  { @apply mx-auto w-full max-w-7xl; container-type: inline-size; }
 @utility container-page   { @apply mx-auto w-full max-w-[90rem] px-site-margin; }
 @utility section-gutter   { @apply px-4 md:px-12 lg:px-24; }
-@utility section-padding  { @apply py-24 md:py-24; }   /* + -xs/-sm/-lg/-xl */
+@utility section-padding  { @apply py-16 md:py-24; }   /* + -xs/-sm/-lg/-xl */
 ```
 
 `container-page` is the page box every top-level element (sections, nav, footer) aligns to; its width cap is a per-client value, changed once in `global.css`. Sections reach for the rhythm utilities rather than raw `py-*`/`px-*`.

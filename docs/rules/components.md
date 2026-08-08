@@ -26,6 +26,8 @@ A whole page section: `Hero`, `SectionFeatures`, `SectionContact`. Lives flat in
 >
 > Components that manage their own grid and padding (`FlowSteps`, `FeatureScrollSpy`) still go *inside* `SectionMain`, with `padding="none" contentPadding="none"`.
 >
+> **Leave `padding` off.** The default is `"md"` — the base `section-padding` rhythm — and it is the right answer for an ordinary stacked section. Pass a tier only when the section has a reason to break rhythm: `lg`/`xl` to isolate a page-closing CTA or a hero, `xs`/`sm` for a dense strip (logo wall, stat bar), `none` when the child owns its own spacing. A page where most sections carry an explicit `padding` has drifted from the scale rather than used it.
+>
 > **The side rules are deliberate and stay unconditional.** They are part of the shared frame every section inherits — that consistency is the reason `SectionMain` exists, and a per-section opt-out prop would reintroduce exactly the drift it prevents. Width and border color are already token-driven (`container-page`, `border-stroke`) and tuned in `global.css`.
 >
 > A project whose design has no section borders **edits `SectionMain` in its own repo**. Client repos own their copy of the component set; changing a primitive to match the brand is normal work, not a deviation. The rule is that every section goes through `SectionMain` — not that `SectionMain` looks identical on every project.
@@ -34,7 +36,7 @@ A whole page section: `Hero`, `SectionFeatures`, `SectionContact`. Lives flat in
 > ---
 > import SectionMain from "@components/SectionMain.astro";
 > ---
-> <SectionMain id="features" padding="lg">
+> <SectionMain id="features">
 >   <h2 class="h2">Features</h2>
 >   <p class="text-body-lg text-fg-muted">…</p>
 > </SectionMain>

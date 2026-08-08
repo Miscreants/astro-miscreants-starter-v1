@@ -1317,7 +1317,7 @@ const {
 const paddingClass = {
   xs: "section-padding-xs",
   sm: "section-padding-sm",
-  md: "section-padding",
+  md: "section-padding-md",
   lg: "section-padding-lg",
   xl: "section-padding-xl",
 }[padding];                               // ← keyed by padding (vertical)

@@ -453,24 +453,27 @@
   background-size: 5px 5px;
 }
 
-/* Vertical rhythm only — horizontal padding is owned by .container-large */
-@utility section-padding-xs { @apply py-12 md:py-12; }
-@utility section-padding-sm { @apply py-16 md:py-16; }
-@utility section-padding    { @apply py-24 md:py-24; }
-@utility section-padding-lg { @apply py-32 md:py-32; }
-@utility section-padding-xl { @apply py-48 md:py-48; }
+/* Vertical rhythm only — horizontal padding is owned by .container-large.
+   One scale, three shapes (py / pt / pb) — keep the three blocks in sync.
+   Mobile → md, in px:  xs 32→40 · sm 48→64 · md 64→96 · lg 96→128 · xl 128→192 */
+@utility section-padding-xs { @apply py-8 md:py-10; }
+@utility section-padding-sm { @apply py-12 md:py-16; }
+@utility section-padding-md { @apply py-16 md:py-24; }
+@utility section-padding    { @apply section-padding-md; }  /* alias — prefer -md */
+@utility section-padding-lg { @apply py-24 md:py-32; }
+@utility section-padding-xl { @apply py-32 md:py-48; }
 
-@utility section-pt-xs { @apply pt-12 md:pt-16; }
-@utility section-pt-sm { @apply pt-16 md:pt-20; }
-@utility section-pt-md { @apply pt-24 md:pt-32; }
-@utility section-pt-lg { @apply pt-32 md:pt-48; }
-@utility section-pt-xl { @apply pt-48 md:pt-64; }
+@utility section-pt-xs { @apply pt-8 md:pt-10; }
+@utility section-pt-sm { @apply pt-12 md:pt-16; }
+@utility section-pt-md { @apply pt-16 md:pt-24; }
+@utility section-pt-lg { @apply pt-24 md:pt-32; }
+@utility section-pt-xl { @apply pt-32 md:pt-48; }
 
-@utility section-pb-xs { @apply pb-12 md:pb-16; }
-@utility section-pb-sm { @apply pb-16 md:pb-20; }
-@utility section-pb-md { @apply pb-24 md:pb-32; }
-@utility section-pb-lg { @apply pb-32 md:pb-48; }
-@utility section-pb-xl { @apply pb-48 md:pb-64; }
+@utility section-pb-xs { @apply pb-8 md:pb-10; }
+@utility section-pb-sm { @apply pb-12 md:pb-16; }
+@utility section-pb-md { @apply pb-16 md:pb-24; }
+@utility section-pb-lg { @apply pb-24 md:pb-32; }
+@utility section-pb-xl { @apply pb-32 md:pb-48; }
 /* DISABLED — the 5-column "pattern on the sides" grid. Kept for reference but
    no longer applied anywhere; sections/nav/footer now center via `container-page`
    instead. The middle column was the 90rem content area; columns 2 & 4 were the

@@ -56,13 +56,18 @@ nowhere.)
 | Value  | Utility          | Mobile | `md:` and up |
 |--------|------------------|--------|--------------|
 | `none` | (none)           | —      | —            |
-| `xs`   | `section-p{t,b}-xs` | `3rem`  | `4rem`  |
-| `sm`   | `section-p{t,b}-sm` | `4rem`  | `5rem`  |
-| `md`   | `section-p{t,b}-md` | `6rem`  | `8rem`  |
-| `lg`   | `section-p{t,b}-lg` | `8rem`  | `12rem` |
-| `xl`   | `section-p{t,b}-xl` | `12rem` | `16rem` |
+| `xs`   | `section-p{t,b}-xs` | `2rem`  | `2.5rem` |
+| `sm`   | `section-p{t,b}-sm` | `3rem`  | `4rem`   |
+| `md`   | `section-p{t,b}-md` | `4rem`  | `6rem`   |
+| `lg`   | `section-p{t,b}-lg` | `6rem`  | `8rem`   |
+| `xl`   | `section-p{t,b}-xl` | `8rem`  | `12rem`  |
 
 `paddingTop` / `paddingBottom` each override `padding` for that edge.
+
+**Don't pass `padding` unless you mean to break rhythm.** `md` is the default and
+suits an ordinary stacked section. Reach for `lg`/`xl` to isolate a hero or a
+page-closing CTA, `xs`/`sm` for a dense strip, `none` when the child owns its own
+spacing.
 
 ## Usage
 
@@ -83,7 +88,7 @@ import SectionMain from "@components/SectionMain.astro";
 </SectionMain>
 
 <!-- Section with anchor link target -->
-<SectionMain id="pricing" padding="lg">
+<SectionMain id="pricing">
   <h2 class="h2">Pricing</h2>
 </SectionMain>
 ```
