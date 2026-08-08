@@ -24,10 +24,12 @@ const {
   ariaLabel = "Home",
   class: className = "",
   logoClass = "h-5 w-auto",
+  // Copy-as-SVG is the only default: it works on every build with no setup.
+  // The link items that used to sit here pointed at /brand/ routes the starter
+  // doesn't ship, and they shipped to production more than once. Pass `items`
+  // to add them back on a project that actually has those pages.
   items = [
     { type: "action", label: "Copy logo as SVG", action: "copy-svg" },
-    { type: "link", label: "Download logo pack", href: "/brand/" },
-    { type: "link", label: "View brand guidelines", href: "/brand/guidelines/" },
   ] as Item[],
 } = Astro.props;
 ---

@@ -12,7 +12,7 @@ import Preview from "@components/_docs/Preview.astro";
 import PropsTable from "@components/_docs/PropsTable.astro";
 import LogoMenu from "@components/LogoMenu.astro";
 
-Wraps the site `Logo` in a normal home link and overrides the browser's right-click menu with a small custom one. The first item copies the inline `<svg>` markup to the clipboard; remaining items are arbitrary links (brand assets, press kit, guidelines, Figma file, etc.). Wired into `NavMorph` by default — right-click the wordmark in the header to see it.
+Wraps the site `Logo` in a normal home link and overrides the browser's right-click menu with a small custom one. The default single item copies the inline `<svg>` markup to the clipboard, which works on any build with no setup. Pass `items` to add arbitrary links alongside it (brand assets, press kit, guidelines, Figma file, etc.) once those pages exist on the project. Wired into `NavMorph` by default — right-click the wordmark in the header to see it.
 
 ## Preview
 
@@ -37,7 +37,7 @@ Wraps the site `Logo` in a normal home link and overrides the browser's right-cl
 <PropsTable props={[
   { name: "href", type: "string", default: '"/"', description: "Destination of the logo home link (left-click)." },
   { name: "ariaLabel", type: "string", default: '"Home"', description: "Accessible label for the trigger anchor and prefix on the menu's aria-label." },
-  { name: "items", type: "Item[]", default: "3-item default", description: "Menu entries. See item shape below. Defaults to: Copy logo as SVG / Download logo pack / View brand guidelines." },
+  { name: "items", type: "Item[]", default: "Copy logo as SVG", description: "Menu entries. See item shape below. Defaults to the copy-SVG action alone — add link items per project, once the pages they point at exist." },
   { name: "class", type: "string", description: "Extra classes on the wrapping <div> (e.g. layout padding)." },
   { name: "logoClass", type: "string", default: '"h-5 w-auto"', description: "Classes forwarded to the inner <Logo /> SVG." },
 ]} />
@@ -88,7 +88,7 @@ type Item =
 import LogoMenu from "@components/LogoMenu.astro";
 ---
 
-{/* Default — 3 items, links to /brand/ and /brand/guidelines/ */}
+{/* Default — copy-SVG only */}
 <LogoMenu />
 
 {/* Custom items */}
