@@ -99,10 +99,6 @@ const dropdowns = links.filter(
     data-nav-bar
     class="px-4 relative flex h-14 items-center justify-between border border-stroke bg-canvas/0 transition-all duration-300"
   >
-    {/* Decorative corner accents — invisible until the bar is scrolled. */}
-    <div data-accent="tl"></div><div data-accent="tr"></div>
-    <div data-accent="bl"></div><div data-accent="br"></div>
-
     {/* Home / logo link (left side of the bar). Right-click opens brand menu. */}
     <LogoMenu href={homeHref} class="px-2" logoClass="h-5 w-auto" />
 
@@ -434,13 +430,6 @@ const dropdowns = links.filter(
   }
   [data-nav-morph-trigger][aria-expanded="true"] [data-icon="chevron-down"] {
     transform: rotate(180deg);
-  }
-  [data-accent] {
-    opacity: 0;
-  }
-  [data-nav-bar].is-scrolled [data-accent] {
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
   }
   summary::-webkit-details-marker {
     display: none;
